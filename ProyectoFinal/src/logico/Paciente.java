@@ -1,8 +1,6 @@
 package logico;
 
-public class Paciente {
+public class Paciente extends Persona {
 
-	int prueba = 1;
-	int prueba2 = 2;
-	int prueba3 = 3;
+	
 }
