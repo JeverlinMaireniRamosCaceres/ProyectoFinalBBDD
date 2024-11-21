@@ -3,10 +3,21 @@ package logico;
 import java.util.Date;
 
 public class Vacuna {
-	int idVacuna;
-	Date fecha;
-	String nombreVacuna;
-	String tipo;
+	
+	private int idVacuna;
+	private Date fecha;
+	private String nombreVacuna;
+	private String tipo;
+	private String fabricante;
+	
+	public Vacuna(int idVacuna, Date fecha, String nombreVacuna, String tipo, String fabricante) {
+		super();
+		this.idVacuna = idVacuna;
+		this.fecha = fecha;
+		this.nombreVacuna = nombreVacuna;
+		this.tipo = tipo;
+		this.fabricante = fabricante;
+	}
 	
 	public int getIdVacuna() {
 		return idVacuna;
@@ -32,4 +43,14 @@ public class Vacuna {
 	public void setTipo(String tipo) {
 		this.tipo = tipo;
 	}
+
+	public String getFabricante() {
+		return fabricante;
+	}
+
+	public void setFabricante(String fabricante) {
+		this.fabricante = fabricante;
+	}
+	
+	
 }

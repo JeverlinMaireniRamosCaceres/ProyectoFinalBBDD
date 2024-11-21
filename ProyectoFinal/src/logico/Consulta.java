@@ -3,12 +3,24 @@ package logico;
 import java.util.Date;
 
 public class Consulta {
-	Date fecha;
-	Medico medico;
-	Paciente paciente;
-	String motivo;
-	String diagnostico;
-	String indicacion;
+	
+	private Date fecha;
+	private Medico medico;
+	private Paciente paciente;
+	private String motivo;
+	private String diagnostico;
+	private String indicacion;
+	
+	public Consulta(Date fecha, Medico medico, Paciente paciente, String motivo, String diagnostico,
+			String indicacion) {
+		super();
+		this.fecha = fecha;
+		this.medico = medico;
+		this.paciente = paciente;
+		this.motivo = motivo;
+		this.diagnostico = diagnostico;
+		this.indicacion = indicacion;
+	}
 	
 	public Date getFecha() {
 		return fecha;

@@ -1,10 +1,19 @@
 package logico;
 
 public class Enfermedad {
-	int idEnfermedad;
-	String nombre;
-	String sintomas;
-	String tipo;
+	
+	private int idEnfermedad;
+	private String nombre;
+	private String sintomas;
+	private String tipo;
+	
+	public Enfermedad(int idEnfermedad, String nombre, String sintomas, String tipo) {
+		super();
+		this.idEnfermedad = idEnfermedad;
+		this.nombre = nombre;
+		this.sintomas = sintomas;
+		this.tipo = tipo;
+	}
 	
 	public int getIdEnfermedad() {
 		return idEnfermedad;
