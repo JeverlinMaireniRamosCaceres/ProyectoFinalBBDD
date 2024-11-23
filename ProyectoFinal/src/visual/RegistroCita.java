@@ -26,6 +26,7 @@ public class RegistroCita extends JDialog {
 	private JTextField txtNombre;
 	private JTextField txtMedico;
 	private JTextField txtEspecialidad;
+	private JTextField txtMotivo;
 
 	/**
 	 * Launch the application.
@@ -45,7 +46,7 @@ public class RegistroCita extends JDialog {
 	 */
 	public RegistroCita() {
 		setTitle("Registrar Cita");
-		setBounds(100, 100, 466, 319);
+		setBounds(100, 100, 466, 352);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
@@ -58,7 +59,7 @@ public class RegistroCita extends JDialog {
 			
 			JPanel panel_1 = new JPanel();
 			panel_1.setBorder(new TitledBorder(null, "Informaci\u00F3n general de la cita:", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-			panel_1.setBounds(10, 11, 421, 110);
+			panel_1.setBounds(10, 11, 421, 144);
 			panel.add(panel_1);
 			panel_1.setLayout(null);
 			{
@@ -80,7 +81,7 @@ public class RegistroCita extends JDialog {
 			lblNewLabel_1.setHorizontalAlignment(SwingConstants.RIGHT);
 			
 			txtNombre = new JTextField();
-			txtNombre.setBounds(71, 55, 340, 20);
+			txtNombre.setBounds(69, 55, 342, 20);
 			panel_1.add(txtNombre);
 			txtNombre.setColumns(10);
 			
@@ -90,7 +91,7 @@ public class RegistroCita extends JDialog {
 			lblNewLabel_3.setHorizontalAlignment(SwingConstants.RIGHT);
 			
 			JSpinner spnFecha = new JSpinner();
-			spnFecha.setBounds(72, 83, 136, 20);
+			spnFecha.setBounds(69, 83, 139, 20);
 			panel_1.add(spnFecha);
 			spnFecha.setModel(new SpinnerDateModel(new Date(1732161600000L), null, null, Calendar.DAY_OF_YEAR));
 			
@@ -104,9 +105,19 @@ public class RegistroCita extends JDialog {
 			spinner.setBounds(275, 83, 136, 20);
 			panel_1.add(spinner);
 			
+			JLabel lblNewLabel_6 = new JLabel("Motivo:");
+			lblNewLabel_6.setHorizontalAlignment(SwingConstants.RIGHT);
+			lblNewLabel_6.setBounds(17, 111, 46, 14);
+			panel_1.add(lblNewLabel_6);
+			
+			txtMotivo = new JTextField();
+			txtMotivo.setBounds(69, 108, 342, 20);
+			panel_1.add(txtMotivo);
+			txtMotivo.setColumns(10);
+			
 			JPanel panel_2 = new JPanel();
 			panel_2.setBorder(new TitledBorder(null, "Informaci\u00F3n del m\u00E9dico:", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-			panel_2.setBounds(10, 132, 420, 92);
+			panel_2.setBounds(10, 166, 420, 92);
 			panel.add(panel_2);
 			panel_2.setLayout(null);
 			
