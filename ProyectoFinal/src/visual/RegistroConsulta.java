@@ -119,6 +119,13 @@ public class RegistroConsulta extends JDialog {
 				}
 				
 				JButton btnNewButton = new JButton("Ampliar datos");
+				btnNewButton.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						DetallePaciente dp = new DetallePaciente();
+						dp.setModal(true);
+						dp.setVisible(true);
+					}
+				});
 				btnNewButton.setBounds(171, 25, 124, 23);
 				panel_3.add(btnNewButton);
 			}

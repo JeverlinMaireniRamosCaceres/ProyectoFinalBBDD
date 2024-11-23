@@ -133,6 +133,13 @@ public class RegistroCita extends JDialog {
 			txtEspecialidad.setColumns(10);
 			
 			JButton btnSeleccionar = new JButton("Seleccionar");
+			btnSeleccionar.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					SeleccionarMedico sm = new SeleccionarMedico();
+					sm.setModal(true);
+					sm.setVisible(true);
+				}
+			});
 			btnSeleccionar.setBounds(20, 26, 390, 23);
 			panel_2.add(btnSeleccionar);
 		}

@@ -19,6 +19,7 @@ import java.util.Date;
 import java.util.Calendar;
 import javax.swing.JComboBox;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.DefaultComboBoxModel;
 
 public class RegistroPaciente extends JDialog {
 
@@ -135,37 +136,38 @@ public class RegistroPaciente extends JDialog {
 			{
 				JLabel lblNewLabel_6 = new JLabel("Fecha Nacimiento:");
 				lblNewLabel_6.setHorizontalAlignment(SwingConstants.RIGHT);
-				lblNewLabel_6.setBounds(0, 134, 109, 14);
+				lblNewLabel_6.setBounds(0, 134, 116, 14);
 				panel.add(lblNewLabel_6);
 			}
 			{
 				JSpinner spinner = new JSpinner();
 				spinner.setModel(new SpinnerDateModel(new Date(1732161600000L), null, null, Calendar.MILLISECOND));
-				spinner.setBounds(119, 131, 129, 20);
+				spinner.setBounds(126, 131, 122, 20);
 				panel.add(spinner);
 			}
 			{
 				JLabel lblNewLabel_7 = new JLabel("Edad:");
 				lblNewLabel_7.setHorizontalAlignment(SwingConstants.RIGHT);
-				lblNewLabel_7.setBounds(258, 134, 46, 14);
+				lblNewLabel_7.setBounds(258, 134, 35, 14);
 				panel.add(lblNewLabel_7);
 			}
 			{
 				txtEdad = new JTextField();
 				txtEdad.setEditable(false);
-				txtEdad.setBounds(314, 131, 56, 20);
+				txtEdad.setBounds(303, 131, 56, 20);
 				panel.add(txtEdad);
 				txtEdad.setColumns(10);
 			}
 			{
 				JLabel lblNewLabel_8 = new JLabel("Sexo:");
 				lblNewLabel_8.setHorizontalAlignment(SwingConstants.RIGHT);
-				lblNewLabel_8.setBounds(378, 134, 46, 14);
+				lblNewLabel_8.setBounds(369, 134, 40, 14);
 				panel.add(lblNewLabel_8);
 			}
 			{
 				JComboBox cbxSexo = new JComboBox();
-				cbxSexo.setBounds(434, 131, 90, 20);
+				cbxSexo.setModel(new DefaultComboBoxModel(new String[] {"<Seleccione>", "Masculino", "Femenino"}));
+				cbxSexo.setBounds(419, 131, 105, 20);
 				panel.add(cbxSexo);
 			}
 			{
