@@ -9,10 +9,13 @@ public class ClinicaMedica {
 	private ArrayList<Consulta> lasConsultas;
 	private ArrayList<Enfermedad> lasEnfermedades;
 	private ArrayList<Vacuna> lasVacunas;
+	private ArrayList<Cita> lasCitas;
 	public static int codVacuna;
 	public static int codPaciente;
 	public static int codMedico;
 	public static int codEnfermedad;
+	public static int codCita;
+	public static int codConsulta;
 	private static ClinicaMedica clinicaMedica = null;
 	
 	public ClinicaMedica() {
@@ -22,10 +25,13 @@ public class ClinicaMedica {
 		lasConsultas = new ArrayList<>();
 		lasEnfermedades = new ArrayList<>();
 		lasVacunas = new ArrayList<>();
+		lasCitas = new ArrayList<>();
 		codVacuna = 1;
 		codPaciente = 1;
 		codMedico = 1;
 		codEnfermedad = 1; 
+		codCita = 1;
+		codConsulta = 1;
 	}
 	
 	public static ClinicaMedica getInstance() {
@@ -67,6 +73,22 @@ public class ClinicaMedica {
 		ClinicaMedica.codEnfermedad = codEnfermedad;
 	}
 
+	public static int getCodCita() {
+		return codCita;
+	}
+
+	public static int getCodConsulta() {
+		return codConsulta;
+	}
+
+	public static void setCodConsulta(int codConsulta) {
+		ClinicaMedica.codConsulta = codConsulta;
+	}
+
+	public static void setCodCita(int codCita) {
+		ClinicaMedica.codCita = codCita;
+	}
+
 	public static ClinicaMedica getClinicaMedica() {
 		return clinicaMedica;
 	}
@@ -105,6 +127,14 @@ public class ClinicaMedica {
 	public void setLasEnfermedades(ArrayList<Enfermedad> lasEnfermedades) {
 		this.lasEnfermedades = lasEnfermedades;
 	}
+	
+	public ArrayList<Cita> getLasCitas() {
+		return lasCitas;
+	}
+
+	public void setLasCitas(ArrayList<Cita> lasCitas) {
+		this.lasCitas = lasCitas;
+	}
 
 	public void insertarPaciente(Paciente paciente) {
 		losPacientes.add(paciente);
@@ -126,5 +156,35 @@ public class ClinicaMedica {
 		codVacuna++;
 	}
 
+	public void insertarCita (Cita cita) {
+		lasCitas.add(cita);
+		codCita++;
+	}
+
+	public Medico buscarMedicoById(String codigo) {
+		Medico medico = null;
+		boolean encontrado = false;
+		int i = 0;
+		while(!encontrado && i < losMedicos.size()) {
+			if(losMedicos.get(i).getIdPersona().equalsIgnoreCase(codigo)) {
+				medico = losMedicos.get(i);
+				encontrado = true;
+			}
+		}
+		return medico;
+	}
+
+	public void insertarConsulta(Consulta consulta) {
+		lasConsultas.add(consulta);
+		codConsulta++;
+	}
 	
+	public void insertarConsultaEnHistorial(Consulta consulta, Paciente paciente) {
+		paciente.getMiHistorial().getLasConsultas().add(consulta);
+	}
+
+	public Consulta buscarConsultaById(String codigo) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

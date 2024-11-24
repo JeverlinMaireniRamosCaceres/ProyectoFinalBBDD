@@ -4,15 +4,29 @@ import java.util.Date;
 
 public class Cita {
 
+	private String idCita;
 	private String nombrePersona;
 	private Medico medico;
-	private Date fecha;
+	private String fecha;
+	private String hora;
+	private String motivo;
 	
-	public Cita(String nombrePersona, Medico medico, Date fecha) {
+	public Cita(String idCita, String nombrePersona, Medico medico, String fecha, String hora, String motivo) {
 		super();
+		this.idCita = idCita;
 		this.nombrePersona = nombrePersona;
 		this.medico = medico;
 		this.fecha = fecha;
+		this.hora = hora;
+		this.motivo = motivo;
+	}
+
+	public String getIdCita() {
+		return idCita;
+	}
+
+	public void setIdCita(String idCita) {
+		this.idCita = idCita;
 	}
 
 	public String getNombrePersona() {
@@ -31,12 +45,28 @@ public class Cita {
 		this.medico = medico;
 	}
 
-	public Date getFecha() {
+	public String getFecha() {
 		return fecha;
 	}
 
-	public void setFecha(Date fecha) {
+	public void setFecha(String fecha) {
 		this.fecha = fecha;
+	}
+
+	public String getHora() {
+		return hora;
+	}
+
+	public void setHora(String hora) {
+		this.hora = hora;
+	}
+
+	public String getMotivo() {
+		return motivo;
+	}
+
+	public void setMotivo(String motivo) {
+		this.motivo = motivo;
 	}
 	
 }

@@ -8,7 +8,14 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
+
+import logico.ClinicaMedica;
+import logico.Consulta;
+import logico.Medico;
+import logico.Paciente;
+
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 import javax.swing.JTextField;
 import javax.swing.JSpinner;
@@ -28,15 +35,22 @@ public class RegistroConsulta extends JDialog {
 	private final JPanel contentPanel = new JPanel();
 	private JTextField txtCodConsulta;
 	private JTextField txtMedico;
-	private JTextField textField;
-	private JTextField textField_2;
+	private JTextField txtPaciente;
+	private JTextField txtDiagnostico;
+	private JTextArea txtAIndicacion;
+	private JCheckBox chckbxImportante;
+	private Medico medico = null;
+	private Paciente paciente = null;
+	private Consulta updated = null;
+	private JSpinner spnFecha;
+	private JButton btnAmpliarDatos;
 
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
 		try {
-			RegistroConsulta dialog = new RegistroConsulta();
+			RegistroConsulta dialog = new RegistroConsulta(null);
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
@@ -47,7 +61,8 @@ public class RegistroConsulta extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	public RegistroConsulta() {
+	public RegistroConsulta(Consulta aux) {
+		updated = aux;
 		setTitle("Consulta");
 		setBounds(100, 100, 554, 440);
 		getContentPane().setLayout(new BorderLayout());
@@ -86,6 +101,7 @@ public class RegistroConsulta extends JDialog {
 			}
 			{
 				txtCodConsulta = new JTextField();
+				txtCodConsulta.setText("Cons-"+ClinicaMedica.getInstance().codConsulta);
 				txtCodConsulta.setBounds(66, 14, 182, 20);
 				panel_2.add(txtCodConsulta);
 				txtCodConsulta.setEditable(false);
@@ -98,11 +114,15 @@ public class RegistroConsulta extends JDialog {
 				lblNewLabel_1.setHorizontalAlignment(SwingConstants.RIGHT);
 			}
 			{
-				JSpinner spnFecha = new JSpinner();
+				spnFecha = new JSpinner();
 				spnFecha.setBounds(314, 14, 182, 20);
 				panel_2.add(spnFecha);
+				Date fechaActual = new Date();
+				spnFecha.setModel(new SpinnerDateModel(fechaActual, null, null, Calendar.DAY_OF_YEAR));
+				JSpinner.DateEditor de_spnFecha = new JSpinner.DateEditor(spnFecha, "dd/MM/yyyy");
+				spnFecha.setEditor(de_spnFecha);
 				spnFecha.setEnabled(false);
-				spnFecha.setModel(new SpinnerDateModel(new Date(1732161600000L), null, null, Calendar.DAY_OF_YEAR));
+
 			}
 			{
 				JPanel panel_3 = new JPanel();
@@ -111,23 +131,23 @@ public class RegistroConsulta extends JDialog {
 				panel.add(panel_3);
 				panel_3.setLayout(null);
 				{
-					textField = new JTextField();
-					textField.setBounds(10, 26, 151, 20);
-					panel_3.add(textField);
-					textField.setEditable(false);
-					textField.setColumns(10);
+					txtPaciente = new JTextField();
+					txtPaciente.setBounds(10, 26, 151, 20);
+					panel_3.add(txtPaciente);
+					txtPaciente.setEditable(false);
+					txtPaciente.setColumns(10);
 				}
 				
-				JButton btnNewButton = new JButton("Ampliar datos");
-				btnNewButton.addActionListener(new ActionListener() {
+				btnAmpliarDatos = new JButton("Ampliar datos");
+				btnAmpliarDatos.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						DetallePaciente dp = new DetallePaciente();
+						DetallePaciente dp = new DetallePaciente(paciente);
 						dp.setModal(true);
 						dp.setVisible(true);
 					}
 				});
-				btnNewButton.setBounds(171, 25, 124, 23);
-				panel_3.add(btnNewButton);
+				btnAmpliarDatos.setBounds(171, 25, 124, 23);
+				panel_3.add(btnAmpliarDatos);
 			}
 			
 			JPanel panel_3 = new JPanel();
@@ -141,10 +161,10 @@ public class RegistroConsulta extends JDialog {
 			lblNewLabel_3.setBounds(10, 33, 70, 14);
 			panel_3.add(lblNewLabel_3);
 			
-			textField_2 = new JTextField();
-			textField_2.setBounds(90, 30, 408, 20);
-			panel_3.add(textField_2);
-			textField_2.setColumns(10);
+			txtDiagnostico = new JTextField();
+			txtDiagnostico.setBounds(90, 30, 408, 20);
+			panel_3.add(txtDiagnostico);
+			txtDiagnostico.setColumns(10);
 			
 			JLabel lblNewLabel_4 = new JLabel("Indicaci\u00F3n:");
 			lblNewLabel_4.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -159,12 +179,12 @@ public class RegistroConsulta extends JDialog {
 			JScrollPane scrollPane = new JScrollPane();
 			panel_4.add(scrollPane, BorderLayout.CENTER);
 			
-			JTextArea textArea = new JTextArea();
-			scrollPane.setViewportView(textArea);
+			txtAIndicacion = new JTextArea();
+			scrollPane.setViewportView(txtAIndicacion);
 			
-			JCheckBox chckbxNewCheckBox = new JCheckBox("\u00BFEs relevante?");
-			chckbxNewCheckBox.setBounds(90, 181, 137, 23);
-			panel_3.add(chckbxNewCheckBox);
+			chckbxImportante = new JCheckBox("\u00BFEs relevante?");
+			chckbxImportante.setBounds(90, 181, 137, 23);
+			panel_3.add(chckbxImportante);
 		}
 		{
 			JPanel buttonPane = new JPanel();
@@ -173,6 +193,17 @@ public class RegistroConsulta extends JDialog {
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
 				JButton btnRegistrar = new JButton("Registrar");
+				btnRegistrar.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						Consulta consulta = new Consulta(txtCodConsulta.getText(), medico, paciente, txtDiagnostico.getText(), txtAIndicacion.getText(), chckbxImportante.isSelected());
+						ClinicaMedica.getInstance().insertarConsulta(consulta);
+						if(chckbxImportante.isSelected()) {
+							ClinicaMedica.getInstance().insertarConsultaEnHistorial(consulta, paciente);
+						}
+						JOptionPane.showMessageDialog(null, "Operacion Satisfactoria", "Informacion", JOptionPane.INFORMATION_MESSAGE);
+						dispose();
+					}
+				});
 				btnRegistrar.setActionCommand("OK");
 				buttonPane.add(btnRegistrar);
 				getRootPane().setDefaultButton(btnRegistrar);
@@ -187,6 +218,27 @@ public class RegistroConsulta extends JDialog {
 				btnCancelar.setActionCommand("Cancel");
 				buttonPane.add(btnCancelar);
 			}
+		}
+		loadConsulta();
+	}
+	private void loadConsulta(){
+		if(updated != null) {
+			txtCodConsulta.setText(updated.getIdConsulta());
+			spnFecha.setValue(updated.getFecha());
+			txtMedico.setText(updated.getMedico().getNombre()+" "+updated.getMedico().getApellido());
+			txtPaciente.setText(updated.getPaciente().getNombre()+" "+updated.getPaciente().getApellido());
+			btnAmpliarDatos.setEnabled(false);
+			txtDiagnostico.setText(updated.getDiagnostico());
+			txtDiagnostico.setEditable(false);
+			txtAIndicacion.setText(updated.getIndicacion());
+			txtAIndicacion.setEditable(false);
+			if(updated.isImportante()) {
+				chckbxImportante.setSelected(true);
+			}
+			else {
+				chckbxImportante.setSelected(false);
+			}
+			
 		}
 	}
 }

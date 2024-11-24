@@ -63,9 +63,7 @@ public class ListadoPacientes extends JDialog {
 				JButton btnDetalles = new JButton("Ver detalle");
 				btnDetalles.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						DetallePaciente dp = new DetallePaciente();
-						dp.setModal(true);
-						dp.setVisible(true);
+						
 					}
 				});
 				btnDetalles.setEnabled(false);

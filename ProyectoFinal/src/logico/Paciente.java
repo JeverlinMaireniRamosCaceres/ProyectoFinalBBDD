@@ -13,7 +13,7 @@ public class Paciente extends Persona {
 	public Paciente(String idPersona, String cedula, String nombre, String apellido, String telefono, String direccion,
 			Date fechaNacimiento, int edad, String sexo, float estatura, float peso) {
 		super(idPersona, cedula, nombre, apellido, telefono, direccion, fechaNacimiento, edad, sexo);
-		this.miHistorial = miHistorial;
+		this.miHistorial = new HistoriaClinica();
 		this.estatura = estatura;
 		this.peso = peso;
 		misVacunas = new ArrayList<>();

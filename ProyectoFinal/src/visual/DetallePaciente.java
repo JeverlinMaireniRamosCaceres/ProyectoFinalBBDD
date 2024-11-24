@@ -8,6 +8,9 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
+
+import logico.Paciente;
+
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import javax.swing.JTextField;
@@ -16,25 +19,33 @@ import javax.swing.JComboBox;
 import javax.swing.UIManager;
 import java.awt.Color;
 import java.awt.event.ActionListener;
+import java.util.Date;
 import java.awt.event.ActionEvent;
+import javax.swing.SpinnerDateModel;
+import java.util.Calendar;
 
 public class DetallePaciente extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
-	private JTextField textField;
-	private JTextField textField_1;
-	private JTextField textField_2;
-	private JTextField textField_3;
-	private JTextField textField_4;
-	private JTextField textField_5;
-	private JTextField textField_6;
+	private JTextField txtCodigo;
+	private JTextField txtCedula;
+	private JTextField txtNombre;
+	private JTextField txtApellido;
+	private JTextField txtDireccion;
+	private JTextField txtTelefono;
+	Paciente selected = null;
+	private JSpinner spnFechaNacim;
+	private JSpinner spnEstatura;
+	private JSpinner spnPeso;
+	private JComboBox cbxSexo;
+	private JSpinner spnEdad;
 
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
 		try {
-			DetallePaciente dialog = new DetallePaciente();
+			DetallePaciente dialog = new DetallePaciente(null);
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
@@ -45,7 +56,8 @@ public class DetallePaciente extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	public DetallePaciente() {
+	public DetallePaciente(Paciente aux) {
+		selected = aux;
 		setTitle("Detalle del paciente");
 		setBounds(100, 100, 613, 402);
 		getContentPane().setLayout(new BorderLayout());
@@ -69,61 +81,61 @@ public class DetallePaciente extends JDialog {
 				label.setBounds(31, 34, 56, 14);
 				panel_1.add(label);
 				
-				textField = new JTextField();
-				textField.setEditable(false);
-				textField.setColumns(10);
-				textField.setBounds(96, 30, 131, 20);
-				panel_1.add(textField);
+				txtCodigo = new JTextField();
+				txtCodigo.setEditable(false);
+				txtCodigo.setColumns(10);
+				txtCodigo.setBounds(96, 30, 131, 20);
+				panel_1.add(txtCodigo);
 				
 				JLabel label_1 = new JLabel("C\u00E9dula:");
 				label_1.setHorizontalAlignment(SwingConstants.RIGHT);
 				label_1.setBounds(237, 33, 56, 14);
 				panel_1.add(label_1);
 				
-				textField_1 = new JTextField();
-				textField_1.setEditable(false);
-				textField_1.setColumns(10);
-				textField_1.setBounds(303, 30, 243, 20);
-				panel_1.add(textField_1);
+				txtCedula = new JTextField();
+				txtCedula.setEditable(false);
+				txtCedula.setColumns(10);
+				txtCedula.setBounds(303, 30, 243, 20);
+				panel_1.add(txtCedula);
 				
 				JLabel label_2 = new JLabel("Nombre:");
 				label_2.setHorizontalAlignment(SwingConstants.RIGHT);
 				label_2.setBounds(31, 71, 56, 14);
 				panel_1.add(label_2);
 				
-				textField_2 = new JTextField();
-				textField_2.setEditable(false);
-				textField_2.setColumns(10);
-				textField_2.setBounds(95, 68, 175, 20);
-				panel_1.add(textField_2);
+				txtNombre = new JTextField();
+				txtNombre.setEditable(false);
+				txtNombre.setColumns(10);
+				txtNombre.setBounds(95, 68, 175, 20);
+				panel_1.add(txtNombre);
 				
 				JLabel label_3 = new JLabel("Apellido:");
 				label_3.setHorizontalAlignment(SwingConstants.RIGHT);
 				label_3.setBounds(303, 71, 56, 14);
 				panel_1.add(label_3);
 				
-				textField_3 = new JTextField();
-				textField_3.setEditable(false);
-				textField_3.setColumns(10);
-				textField_3.setBounds(371, 68, 175, 20);
-				panel_1.add(textField_3);
+				txtApellido = new JTextField();
+				txtApellido.setEditable(false);
+				txtApellido.setColumns(10);
+				txtApellido.setBounds(371, 68, 175, 20);
+				panel_1.add(txtApellido);
 				
-				textField_4 = new JTextField();
-				textField_4.setEditable(false);
-				textField_4.setColumns(10);
-				textField_4.setBounds(325, 105, 221, 20);
-				panel_1.add(textField_4);
+				txtDireccion = new JTextField();
+				txtDireccion.setEditable(false);
+				txtDireccion.setColumns(10);
+				txtDireccion.setBounds(325, 105, 221, 20);
+				panel_1.add(txtDireccion);
 				
 				JLabel label_4 = new JLabel("Direcci\u00F3n:");
 				label_4.setHorizontalAlignment(SwingConstants.RIGHT);
 				label_4.setBounds(250, 108, 65, 14);
 				panel_1.add(label_4);
 				
-				textField_5 = new JTextField();
-				textField_5.setEditable(false);
-				textField_5.setColumns(10);
-				textField_5.setBounds(96, 105, 144, 20);
-				panel_1.add(textField_5);
+				txtTelefono = new JTextField();
+				txtTelefono.setEditable(false);
+				txtTelefono.setColumns(10);
+				txtTelefono.setBounds(96, 105, 144, 20);
+				panel_1.add(txtTelefono);
 				
 				JLabel label_5 = new JLabel("Tel\u00E9fono:");
 				label_5.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -135,21 +147,16 @@ public class DetallePaciente extends JDialog {
 				label_6.setBounds(22, 145, 109, 14);
 				panel_1.add(label_6);
 				
-				JSpinner spinner = new JSpinner();
-				spinner.setEnabled(false);
-				spinner.setBounds(141, 142, 129, 20);
-				panel_1.add(spinner);
+				spnFechaNacim = new JSpinner();
+				spnFechaNacim.setModel(new SpinnerDateModel(new Date(1732420800000L), null, null, Calendar.DAY_OF_YEAR));
+				spnFechaNacim.setEnabled(false);
+				spnFechaNacim.setBounds(141, 142, 129, 20);
+				panel_1.add(spnFechaNacim);
 				
-				textField_6 = new JTextField();
-				textField_6.setEditable(false);
-				textField_6.setColumns(10);
-				textField_6.setBounds(336, 142, 56, 20);
-				panel_1.add(textField_6);
-				
-				JComboBox comboBox = new JComboBox();
-				comboBox.setEnabled(false);
-				comboBox.setBounds(456, 142, 90, 20);
-				panel_1.add(comboBox);
+				cbxSexo = new JComboBox();
+				cbxSexo.setEnabled(false);
+				cbxSexo.setBounds(456, 142, 90, 20);
+				panel_1.add(cbxSexo);
 				
 				JLabel label_7 = new JLabel("Sexo:");
 				label_7.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -166,20 +173,25 @@ public class DetallePaciente extends JDialog {
 				label_9.setBounds(31, 182, 56, 14);
 				panel_1.add(label_9);
 				
-				JSpinner spinner_1 = new JSpinner();
-				spinner_1.setEnabled(false);
-				spinner_1.setBounds(96, 179, 175, 20);
-				panel_1.add(spinner_1);
+				spnEstatura = new JSpinner();
+				spnEstatura.setEnabled(false);
+				spnEstatura.setBounds(96, 179, 175, 20);
+				panel_1.add(spnEstatura);
 				
 				JLabel label_10 = new JLabel("Peso:");
 				label_10.setHorizontalAlignment(SwingConstants.RIGHT);
 				label_10.setBounds(303, 182, 46, 14);
 				panel_1.add(label_10);
 				
-				JSpinner spinner_2 = new JSpinner();
-				spinner_2.setEnabled(false);
-				spinner_2.setBounds(359, 179, 175, 20);
-				panel_1.add(spinner_2);
+				spnPeso = new JSpinner();
+				spnPeso.setEnabled(false);
+				spnPeso.setBounds(359, 179, 175, 20);
+				panel_1.add(spnPeso);
+				
+				spnEdad = new JSpinner();
+				spnEdad.setEnabled(false);
+				spnEdad.setBounds(335, 142, 65, 20);
+				panel_1.add(spnEdad);
 			}
 			
 			JPanel panel_1 = new JPanel();
@@ -208,7 +220,7 @@ public class DetallePaciente extends JDialog {
 			JButton btnAbrirHMedico = new JButton("Abrir");
 			btnAbrirHMedico.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					HistorialMedico hm = new HistorialMedico();
+					HistorialMedico hm = new HistorialMedico(selected);
 					hm.setModal(true);
 					hm.setVisible(true);
 				}
@@ -226,6 +238,22 @@ public class DetallePaciente extends JDialog {
 				btnCancelar.setActionCommand("Cancel");
 				buttonPane.add(btnCancelar);
 			}
+		}
+		loadPaciente();
+	}
+	private void loadPaciente() {
+		if(selected != null) {
+			txtCodigo.setText(selected.getIdPersona());
+			txtCedula.setText(selected.getCedula());
+			txtNombre.setText(selected.getNombre());
+			txtApellido.setText(selected.getApellido());
+			txtTelefono.setText(selected.getTelefono());
+			txtDireccion.setText(selected.getDireccion());
+			spnFechaNacim.setValue(selected.getFechaNacimiento());
+			spnEdad.setValue(selected.getEdad());
+			cbxSexo.setSelectedItem(selected.getSexo());
+			spnEstatura.setValue(selected.getEstatura());
+			spnPeso.setValue(selected.getPeso());
 		}
 	}
 }

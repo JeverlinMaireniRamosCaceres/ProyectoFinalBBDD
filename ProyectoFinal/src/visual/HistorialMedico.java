@@ -10,20 +10,35 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.border.TitledBorder;
+import javax.swing.table.DefaultTableModel;
+
+import logico.ClinicaMedica;
+import logico.Consulta;
+import logico.Paciente;
+
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class HistorialMedico extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
-	private JTable table;
+	private static DefaultTableModel modelo;
+	private static JTable table;
+	private static Object[] row;
+	private int index = -1;
+	private Paciente selected = null;
+	private Consulta sel;
+	private JButton btnDetalle;
 
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
 		try {
-			HistorialMedico dialog = new HistorialMedico();
+			HistorialMedico dialog = new HistorialMedico(null);
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
@@ -34,8 +49,9 @@ public class HistorialMedico extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	public HistorialMedico() {
-		setTitle("Historial m\u00E9dico");
+	public HistorialMedico(Paciente aux) {
+		selected = aux;
+		setTitle("Historial m\u00E9dico "+selected.getNombre());
 		setBounds(100, 100, 596, 376);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -51,6 +67,21 @@ public class HistorialMedico extends JDialog {
 				panel.add(scrollPane, BorderLayout.CENTER);
 				{
 					table = new JTable();
+					table.addMouseListener(new MouseAdapter() {
+						@Override
+						public void mouseClicked(MouseEvent e) {
+							index = table.getSelectedRow();
+							if(index >= 0) {
+								btnDetalle.setEnabled(true);
+								String codigo = table.getValueAt(index, 0).toString();
+								sel = ClinicaMedica.getInstance().buscarConsultaById(codigo);
+							}
+						}
+					});
+					modelo = new DefaultTableModel();
+					String[] identificadores = {"Código", "Fecha", "Diagnóstico", "Médico"};
+					modelo.setColumnIdentifiers(identificadores);
+					table.setModel(modelo);
 					scrollPane.setViewportView(table);
 				}
 			}
@@ -61,10 +92,10 @@ public class HistorialMedico extends JDialog {
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
-				JButton btnDetalle = new JButton("Ver detalle");
+				btnDetalle = new JButton("Ver detalle");
 				btnDetalle.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						RegistroConsulta rc = new RegistroConsulta();
+						RegistroConsulta rc = new RegistroConsulta(sel);
 						rc.setModal(true);
 						rc.setVisible(true);
 					}
@@ -85,6 +116,18 @@ public class HistorialMedico extends JDialog {
 				buttonPane.add(btnCancelar);
 			}
 		}
+		loadHistorial();
 	}
-
+	private void loadHistorial(){
+		modelo.setRowCount(0);
+		ArrayList<Consulta> consultas = selected.getMiHistorial().getLasConsultas();
+		row = new Object[table.getColumnCount()];
+		for(Consulta consulta:consultas) {
+			row[0] = consulta.getIdConsulta();
+			row[1] = consulta.getFecha();
+			row[2] = consulta.getDiagnostico();
+			row[3] = consulta.getMedico().getNombre()+" "+consulta.getMedico().getApellido();
+			modelo.addRow(row);
+		}
+	}
 }

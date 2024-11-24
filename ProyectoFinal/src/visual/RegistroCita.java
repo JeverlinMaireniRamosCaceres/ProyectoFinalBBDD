@@ -8,7 +8,13 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
+
+import logico.Cita;
+import logico.ClinicaMedica;
+import logico.Medico;
+
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 import javax.swing.JTextField;
 import javax.swing.JSpinner;
@@ -27,6 +33,9 @@ public class RegistroCita extends JDialog {
 	private JTextField txtMedico;
 	private JTextField txtEspecialidad;
 	private JTextField txtMotivo;
+	private Medico medico = null;
+	private JSpinner spnFecha;
+	private JSpinner spnHora;
 
 	/**
 	 * Launch the application.
@@ -70,6 +79,7 @@ public class RegistroCita extends JDialog {
 			}
 			
 			txtCodigo = new JTextField();
+			txtCodigo.setText("C-"+ClinicaMedica.getInstance().codCita);
 			txtCodigo.setEditable(false);
 			txtCodigo.setBounds(69, 24, 342, 20);
 			panel_1.add(txtCodigo);
@@ -90,20 +100,27 @@ public class RegistroCita extends JDialog {
 			panel_1.add(lblNewLabel_3);
 			lblNewLabel_3.setHorizontalAlignment(SwingConstants.RIGHT);
 			
-			JSpinner spnFecha = new JSpinner();
+			spnFecha = new JSpinner();
 			spnFecha.setBounds(69, 83, 139, 20);
 			panel_1.add(spnFecha);
-			spnFecha.setModel(new SpinnerDateModel(new Date(1732161600000L), null, null, Calendar.DAY_OF_YEAR));
+			spnFecha.setModel(new SpinnerDateModel(new Date(), null, null, Calendar.DAY_OF_YEAR));
+			JSpinner.DateEditor dateEditor = new JSpinner.DateEditor(spnFecha, "dd/MM/yyyy");
+			spnFecha.setEditor(dateEditor);
+
+
 			
 			JLabel lblNewLabel_5 = new JLabel("Hora:");
 			lblNewLabel_5.setHorizontalAlignment(SwingConstants.RIGHT);
 			lblNewLabel_5.setBounds(219, 86, 46, 14);
 			panel_1.add(lblNewLabel_5);
 			
-			JSpinner spinner = new JSpinner();
-			spinner.setModel(new SpinnerDateModel(new Date(1732161600000L), null, null, Calendar.HOUR));
-			spinner.setBounds(275, 83, 136, 20);
-			panel_1.add(spinner);
+			spnHora = new JSpinner();
+			spnHora.setBounds(275, 83, 136, 20);
+			panel_1.add(spnHora);
+			spnHora.setModel(new SpinnerDateModel(new Date(), null, null, Calendar.HOUR_OF_DAY));
+			JSpinner.DateEditor timeEditor = new JSpinner.DateEditor(spnHora, "hh:mm a");
+			spnHora.setEditor(timeEditor);
+
 			
 			JLabel lblNewLabel_6 = new JLabel("Motivo:");
 			lblNewLabel_6.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -149,6 +166,11 @@ public class RegistroCita extends JDialog {
 					SeleccionarMedico sm = new SeleccionarMedico();
 					sm.setModal(true);
 					sm.setVisible(true);
+					medico = sm.getSelectedMedico();
+					if(medico != null) {
+						txtMedico.setText(medico.getNombre()+" "+medico.getApellido());
+						txtEspecialidad.setText(medico.getEspecialidad());
+					}
 				}
 			});
 			btnSeleccionar.setBounds(20, 26, 390, 23);
@@ -161,6 +183,14 @@ public class RegistroCita extends JDialog {
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
 				JButton btnRegistrar = new JButton("Registrar");
+				btnRegistrar.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						Cita cita = new Cita(txtCodigo.getText(), txtNombre.getText(), medico, spnFecha.getValue().toString(), spnHora.getValue().toString(), txtMotivo.getText());
+						ClinicaMedica.getInstance().insertarCita(cita);
+						JOptionPane.showMessageDialog(null, "Operacion Satisfactoria", "Informacion", JOptionPane.INFORMATION_MESSAGE);
+						clean();
+					}
+				});
 				btnRegistrar.setActionCommand("OK");
 				buttonPane.add(btnRegistrar);
 				getRootPane().setDefaultButton(btnRegistrar);
@@ -177,4 +207,15 @@ public class RegistroCita extends JDialog {
 			}
 		}
 	}
+	private void clean() {
+	    txtCodigo.setText("C-" + ClinicaMedica.getInstance().codCita);
+	    txtNombre.setText("");
+	    spnFecha.setValue(new Date());
+	    spnHora.setValue(new Date());
+	    txtMotivo.setText("");
+	    txtMedico.setText("");
+	    txtEspecialidad.setText("");
+	    medico = null;
+	}
+
 }

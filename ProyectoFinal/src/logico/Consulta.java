@@ -4,33 +4,31 @@ import java.util.Date;
 
 public class Consulta {
 	
-	private int idConsulta;
+	private String idConsulta;
 	private Date fecha;
 	private Medico medico;
 	private Paciente paciente;
-	private String motivo;
 	private String diagnostico;
 	private String indicacion;
 	private boolean importante;
 	
-	public Consulta(int idConsulta, Date fecha, Medico medico, Paciente paciente, String motivo, String diagnostico,
+	public Consulta(String idConsulta, Medico medico, Paciente paciente, String diagnostico,
 			String indicacion, boolean importante) {
 		super();
 		this.idConsulta = idConsulta;
-		this.fecha = fecha;
+		this.fecha = new Date();
 		this.medico = medico;
 		this.paciente = paciente;
-		this.motivo = motivo;
 		this.diagnostico = diagnostico;
 		this.indicacion = indicacion;
 		this.importante = importante;
 	}
 
-	public int getIdConsulta() {
+	public String getIdConsulta() {
 		return idConsulta;
 	}
 
-	public void setIdConsulta(int idConsulta) {
+	public void setIdConsulta(String idConsulta) {
 		this.idConsulta = idConsulta;
 	}
 
@@ -38,9 +36,6 @@ public class Consulta {
 		return fecha;
 	}
 
-	public void setFecha(Date fecha) {
-		this.fecha = fecha;
-	}
 
 	public Medico getMedico() {
 		return medico;
@@ -56,14 +51,6 @@ public class Consulta {
 
 	public void setPaciente(Paciente paciente) {
 		this.paciente = paciente;
-	}
-
-	public String getMotivo() {
-		return motivo;
-	}
-
-	public void setMotivo(String motivo) {
-		this.motivo = motivo;
 	}
 
 	public String getDiagnostico() {
@@ -89,9 +76,4 @@ public class Consulta {
 	public void setImportante(boolean importante) {
 		this.importante = importante;
 	}
-	
-	
-	
-	
-	
 }

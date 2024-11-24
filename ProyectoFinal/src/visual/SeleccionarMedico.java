@@ -10,11 +10,26 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.border.TitledBorder;
+import javax.swing.table.DefaultTableModel;
+
+import logico.ClinicaMedica;
+import logico.Medico;
+
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class SeleccionarMedico extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
-	private JTable table;
+	private static DefaultTableModel modelo;
+	private static Object[] row;
+	private static JTable table;
+	private int index = -1;
+	private Medico selected;
+	private JButton btnSeleccionar;
 
 	/**
 	 * Launch the application.
@@ -49,6 +64,21 @@ public class SeleccionarMedico extends JDialog {
 				panel.add(scrollPane, BorderLayout.CENTER);
 				{
 					table = new JTable();
+					table.addMouseListener(new MouseAdapter() {
+						@Override
+						public void mouseClicked(MouseEvent e) {
+							index = table.getSelectedRow();
+							if(index >= 0) {
+								btnSeleccionar.setEnabled(true);
+								String codigo = table.getValueAt(index, 0).toString();
+								selected = ClinicaMedica.getInstance().buscarMedicoById(codigo);
+							}
+						}
+					});
+					modelo = new DefaultTableModel();
+					String[] identificadores = {"Código", "Nombre", "Apellido", "Especialidad"};
+					modelo.setColumnIdentifiers(identificadores);
+					table.setModel(modelo);
 					scrollPane.setViewportView(table);
 				}
 			}
@@ -59,7 +89,14 @@ public class SeleccionarMedico extends JDialog {
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
-				JButton btnSeleccionar = new JButton("Seleccionar");
+				btnSeleccionar = new JButton("Seleccionar");
+				btnSeleccionar.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						if(selected != null) {
+							dispose();
+						}
+					}
+				});
 				btnSeleccionar.setEnabled(false);
 				btnSeleccionar.setActionCommand("OK");
 				buttonPane.add(btnSeleccionar);
@@ -67,10 +104,31 @@ public class SeleccionarMedico extends JDialog {
 			}
 			{
 				JButton btnCancelar = new JButton("Cancelar");
+				btnCancelar.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						dispose();
+					}
+				});
 				btnCancelar.setActionCommand("Cancel");
 				buttonPane.add(btnCancelar);
 			}
 		}
+	}
+	private void loadMedicos() {
+		modelo.setRowCount(0);
+		ArrayList<Medico> selected = ClinicaMedica.getInstance().getLosMedicos();
+		row = new Object[table.getColumnCount()];
+		for(Medico medico:selected) {
+			row[0] = medico.getIdPersona();
+			row[1] = medico.getNombre();
+			row[2] = medico.getApellido();
+			row[3] = medico.getEspecialidad();
+			modelo.addRow(row);
+		}
+	}
+	
+	public Medico getSelectedMedico() {
+		return selected;
 	}
 
 }
