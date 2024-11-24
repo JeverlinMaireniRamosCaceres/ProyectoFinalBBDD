@@ -7,8 +7,8 @@ public class Medico extends Persona {
 	protected String especialidad;
 	protected int exequatur;
 	
-	public Medico(int idPersona, String cedula, String nombre, String apellido, String telefono, String direccion,
-			Date fechaNacimiento, int edad, char sexo, String especialidad, int exequatur) {
+	public Medico(String idPersona, String cedula, String nombre, String apellido, String telefono, String direccion,
+			Date fechaNacimiento, int edad, String sexo, String especialidad, int exequatur) {
 		super(idPersona, cedula, nombre, apellido, telefono, direccion, fechaNacimiento, edad, sexo);
 		this.especialidad = especialidad;
 		this.exequatur = exequatur;

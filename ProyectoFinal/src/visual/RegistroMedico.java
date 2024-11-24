@@ -2,24 +2,31 @@ package visual;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
-
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import javax.swing.border.TitledBorder;
-import javax.swing.JLabel;
-import javax.swing.SwingConstants;
-import javax.swing.JTextField;
-import javax.swing.JSpinner;
-import javax.swing.JComboBox;
-import javax.swing.SpinnerDateModel;
-import java.util.Date;
+import java.awt.event.ActionListener;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
+
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JSpinner;
+import javax.swing.JTextField;
+import javax.swing.SpinnerDateModel;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.SwingConstants;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.TitledBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+
+import logico.ClinicaMedica;
+import logico.Medico;
 
 public class RegistroMedico extends JDialog {
 
@@ -31,6 +38,10 @@ public class RegistroMedico extends JDialog {
 	private JTextField txtTelefono;
 	private JTextField txtDireccion;
 	private JTextField txtEdad;
+	private JSpinner spnExequatur;
+	private JComboBox cbxEspecialidad;
+	private JComboBox cbxSexo;
+	private JSpinner spnFechaNacim;
 
 	/**
 	 * Launch the application.
@@ -71,6 +82,7 @@ public class RegistroMedico extends JDialog {
 			txtCodigo.setColumns(10);
 			txtCodigo.setBounds(84, 11, 131, 20);
 			panel.add(txtCodigo);
+			txtCodigo.setText("M-"+ClinicaMedica.getInstance().codMedico);
 			
 			JLabel label_1 = new JLabel("C\u00E9dula:");
 			label_1.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -127,7 +139,32 @@ public class RegistroMedico extends JDialog {
 			label_6.setBounds(9, 125, 109, 14);
 			panel.add(label_6);
 			
-			JSpinner spnFechaNacim = new JSpinner();
+			spnFechaNacim = new JSpinner();
+			spnFechaNacim.addChangeListener(new ChangeListener() {
+				@Override
+				public void stateChanged(ChangeEvent e) {
+					// valor en el jspinner
+					Date fechaNacimiento = (Date) spnFechaNacim.getValue();
+
+					// obtener fecha actual
+					Calendar fechaActual = Calendar.getInstance();
+
+					// calendario con la fecha de nacimiento
+					Calendar nacimiento = Calendar.getInstance();
+					nacimiento.setTime(fechaNacimiento);
+
+					// calcular edad
+					int edad = fechaActual.get(Calendar.YEAR) - nacimiento.get(Calendar.YEAR);
+
+					// ajustar si no ha cumplido anos
+					if (fechaActual.get(Calendar.DAY_OF_YEAR) < nacimiento.get(Calendar.DAY_OF_YEAR)) {
+					    edad--;
+					}
+
+					// actualizar el txtEdad
+					txtEdad.setText(String.valueOf(edad));
+				}
+			});
 			spnFechaNacim.setModel(new SpinnerDateModel(new Date(1732248000000L), null, null, Calendar.DAY_OF_YEAR));
 			spnFechaNacim.setBounds(128, 123, 129, 20);
 			panel.add(spnFechaNacim);
@@ -148,7 +185,7 @@ public class RegistroMedico extends JDialog {
 			label_8.setBounds(377, 126, 36, 14);
 			panel.add(label_8);
 			
-			JComboBox cbxSexo = new JComboBox();
+			cbxSexo = new JComboBox();
 			cbxSexo.setModel(new DefaultComboBoxModel(new String[] {"<Seleccione>", "Masculino", "Femenino"}));
 			cbxSexo.setBounds(423, 123, 108, 20);
 			panel.add(cbxSexo);
@@ -158,20 +195,20 @@ public class RegistroMedico extends JDialog {
 			lblNewLabel.setBounds(10, 162, 87, 14);
 			panel.add(lblNewLabel);
 			
-			JComboBox comboBox_1 = new JComboBox();
-			comboBox_1.setModel(new DefaultComboBoxModel(new String[] {"<Seleccione>"}));
-			comboBox_1.setBounds(107, 159, 164, 20);
-			panel.add(comboBox_1);
+			cbxEspecialidad = new JComboBox();
+			cbxEspecialidad.setModel(new DefaultComboBoxModel(new String[] {"<Seleccione>", "Medicina General", "Pediatr\u00EDa", "Ginecolog\u00EDa y Obstetricia", "Cardiolog\u00EDa", "Dermatolog\u00EDa", "Oftalmolog\u00EDa", "Otorrinolaringolog\u00EDa", "Endocrinolog\u00EDa", "Ortopedia y Traumatolog\u00EDa", "Psiquiatr\u00EDa", "Urolog\u00EDa", "Neumolog\u00EDa"}));
+			cbxEspecialidad.setBounds(107, 159, 164, 20);
+			panel.add(cbxEspecialidad);
 			
 			JLabel lblNewLabel_1 = new JLabel("Exequatur:");
 			lblNewLabel_1.setHorizontalAlignment(SwingConstants.RIGHT);
 			lblNewLabel_1.setBounds(281, 162, 65, 14);
 			panel.add(lblNewLabel_1);
 			
-			JSpinner spinner_1 = new JSpinner();
-			spinner_1.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
-			spinner_1.setBounds(357, 159, 175, 20);
-			panel.add(spinner_1);
+			spnExequatur = new JSpinner();
+			spnExequatur.setModel(new SpinnerNumberModel(new Integer(0), new Integer(0), null, new Integer(1)));
+			spnExequatur.setBounds(357, 159, 175, 20);
+			panel.add(spnExequatur);
 		}
 		{
 			JPanel buttonPane = new JPanel();
@@ -180,6 +217,43 @@ public class RegistroMedico extends JDialog {
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
 				JButton btnRegistrar = new JButton("Registrar");
+				btnRegistrar.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						String codigo = txtCodigo.getText();
+						String cedula = txtCedula.getText();
+						String nombre = txtNombre.getText();
+						String apellido = txtApellido.getText();
+						String telefono = txtTelefono.getText();
+						String direccion = txtDireccion.getText();
+						int edad = new Integer(txtEdad.getText());
+						String sexo = cbxSexo.getSelectedItem().toString();
+						String especialidad = cbxEspecialidad.getSelectedItem().toString();
+						int exequatur = new Integer(spnExequatur.getValue().toString());
+					    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+					    Date fechaNacimiento = (Date)(spnFechaNacim.getValue());
+						
+						Medico medico = new Medico(codigo,cedula,nombre,apellido,telefono,direccion,fechaNacimiento,edad,sexo,especialidad,exequatur);
+						ClinicaMedica.getInstance().insertarMedico(medico);
+						JOptionPane.showMessageDialog(null,"Operacion exitosa","Informacion",JOptionPane.INFORMATION_MESSAGE);
+						clean();
+					}
+
+					private void clean() {
+						txtCodigo.setText("M-"+ClinicaMedica.getInstance().codMedico);
+						txtCedula.setText("");
+						txtNombre.setText("");
+						txtApellido.setText("");
+						txtTelefono.setText("");
+						txtDireccion.setText("");
+						txtEdad.setText("");
+						cbxSexo.setSelectedIndex(0);
+						cbxEspecialidad.setSelectedIndex(0);
+						spnFechaNacim.setValue(new Date());
+						spnExequatur.setValue(0);
+						
+					}
+				});
 				btnRegistrar.setActionCommand("OK");
 				buttonPane.add(btnRegistrar);
 				getRootPane().setDefaultButton(btnRegistrar);
@@ -187,6 +261,7 @@ public class RegistroMedico extends JDialog {
 			{
 				JButton btnCancelar = new JButton("Cancelar");
 				btnCancelar.addActionListener(new ActionListener() {
+					@Override
 					public void actionPerformed(ActionEvent e) {
 						dispose();
 					}

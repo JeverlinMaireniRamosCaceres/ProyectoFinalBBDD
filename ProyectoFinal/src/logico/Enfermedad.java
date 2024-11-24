@@ -2,12 +2,12 @@ package logico;
 
 public class Enfermedad {
 	
-	private int idEnfermedad;
+	private String idEnfermedad;
 	private String nombre;
 	private String sintomas;
 	private String tipo;
 	
-	public Enfermedad(int idEnfermedad, String nombre, String sintomas, String tipo) {
+	public Enfermedad(String idEnfermedad, String nombre, String sintomas, String tipo) {
 		super();
 		this.idEnfermedad = idEnfermedad;
 		this.nombre = nombre;
@@ -15,10 +15,10 @@ public class Enfermedad {
 		this.tipo = tipo;
 	}
 	
-	public int getIdEnfermedad() {
+	public String getIdEnfermedad() {
 		return idEnfermedad;
 	}
-	public void setIdEnfermedad(int idEnfermedad) {
+	public void setIdEnfermedad(String idEnfermedad) {
 		this.idEnfermedad = idEnfermedad;
 	}
 	public String getNombre() {

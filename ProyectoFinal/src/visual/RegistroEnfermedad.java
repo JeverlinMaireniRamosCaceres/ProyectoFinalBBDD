@@ -2,27 +2,33 @@ package visual;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.JLabel;
-import javax.swing.SwingConstants;
-import javax.swing.JTextField;
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import javax.swing.DefaultComboBoxModel;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
+
+import logico.ClinicaMedica;
+import logico.Enfermedad;
 
 public class RegistroEnfermedad extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
 	private JTextField txtCodigo;
 	private JTextField txtNombre;
+	private JComboBox cbxTipo;
+	private JTextArea txtASintomas;
 
 	/**
 	 * Launch the application.
@@ -64,6 +70,8 @@ public class RegistroEnfermedad extends JDialog {
 				txtCodigo.setBounds(76, 19, 362, 20);
 				panel.add(txtCodigo);
 				txtCodigo.setColumns(10);
+				txtCodigo.setText("E-"+ClinicaMedica.getInstance().codEnfermedad);
+
 			}
 			{
 				JLabel lblNewLabel_1 = new JLabel("Nombre:");
@@ -84,8 +92,8 @@ public class RegistroEnfermedad extends JDialog {
 				panel.add(lblNewLabel_2);
 			}
 			{
-				JComboBox cbxTipo = new JComboBox();
-				cbxTipo.setModel(new DefaultComboBoxModel(new String[] {"<Seleccione>"}));
+				cbxTipo = new JComboBox();
+				cbxTipo.setModel(new DefaultComboBoxModel(new String[] {"<Seleccione>", "Infecciosa", "Cr\u00F3nica", "Gen\u00E9tica", "Autoinmune", "Cardiovascular", "Respiratoria", "Metab\u00F3lica", "Neurol\u00F3gica", "Psiqui\u00E1trica", "Endocrina", "Gastrointestinal", "Renal"}));
 				cbxTipo.setBounds(294, 60, 144, 20);
 				panel.add(cbxTipo);
 			}
@@ -103,7 +111,7 @@ public class RegistroEnfermedad extends JDialog {
 			JScrollPane scrollPane = new JScrollPane();
 			panel_1.add(scrollPane, BorderLayout.CENTER);
 			
-			JTextArea txtASintomas = new JTextArea();
+			txtASintomas = new JTextArea();
 			scrollPane.setViewportView(txtASintomas);
 		}
 		{
@@ -113,6 +121,29 @@ public class RegistroEnfermedad extends JDialog {
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
 				JButton btnRegistrar = new JButton("Registrar");
+				btnRegistrar.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						String codigo = txtCodigo.getText();
+						String nombre = txtNombre.getText();
+						String tipo = cbxTipo.getSelectedItem().toString();
+						String sintomas = txtASintomas.getText();
+						
+						Enfermedad enfermedad = new Enfermedad(codigo,nombre,tipo,sintomas);
+						ClinicaMedica.getInstance().insertarEnfermedad(enfermedad);
+						JOptionPane.showMessageDialog(null,"Operacion exitosa","Informacion",JOptionPane.INFORMATION_MESSAGE);
+						clean();
+						
+					}
+
+					private void clean() {
+						txtCodigo.setText("");
+						txtNombre.setText("");
+						cbxTipo.setSelectedIndex(0);
+						txtASintomas.setText("");
+						
+					}
+				});
 				btnRegistrar.setActionCommand("OK");
 				buttonPane.add(btnRegistrar);
 				getRootPane().setDefaultButton(btnRegistrar);
@@ -120,6 +151,7 @@ public class RegistroEnfermedad extends JDialog {
 			{
 				JButton btnCancelar = new JButton("Cancelar");
 				btnCancelar.addActionListener(new ActionListener() {
+					@Override
 					public void actionPerformed(ActionEvent e) {
 						dispose();
 					}

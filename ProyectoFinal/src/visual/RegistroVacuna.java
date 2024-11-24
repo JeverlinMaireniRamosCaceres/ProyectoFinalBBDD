@@ -2,29 +2,38 @@ package visual;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JSpinner;
+import javax.swing.JTextField;
+import javax.swing.SpinnerDateModel;
+import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
-import javax.swing.JLabel;
-import javax.swing.SwingConstants;
-import javax.swing.JTextField;
-import javax.swing.JSpinner;
-import javax.swing.SpinnerDateModel;
-import java.util.Date;
-import java.util.Calendar;
-import javax.swing.JComboBox;
-import javax.swing.DefaultComboBoxModel;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
+
+import logico.ClinicaMedica;
+import logico.Vacuna;
 
 public class RegistroVacuna extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
 	private JTextField txtCodigo;
-	private JTextField textField;
+	private JTextField txtNombre;
+	private JComboBox cbxTipo;
+	private JSpinner spnFechaVen;
+	private JComboBox cbxFabricante;
+	private JSpinner spnCantidad;
 
 	/**
 	 * Launch the application.
@@ -43,8 +52,9 @@ public class RegistroVacuna extends JDialog {
 	 * Create the dialog.
 	 */
 	public RegistroVacuna() {
+		setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
 		setTitle("Registrar Vacuna");
-		setBounds(100, 100, 507, 207);
+		setBounds(100, 100, 507, 236);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
@@ -66,46 +76,55 @@ public class RegistroVacuna extends JDialog {
 			panel.add(txtCodigo);
 			txtCodigo.setColumns(10);
 			
-			JLabel lblNewLabel_1 = new JLabel("Fecha de aplicaci\u00F3n:");
+			JLabel lblNewLabel_1 = new JLabel("Fecha de vencimiento:");
 			lblNewLabel_1.setHorizontalAlignment(SwingConstants.RIGHT);
-			lblNewLabel_1.setBounds(209, 22, 121, 14);
+			lblNewLabel_1.setBounds(186, 22, 148, 14);
 			panel.add(lblNewLabel_1);
 			
-			JSpinner spnFechaApl = new JSpinner();
-			spnFechaApl.setModel(new SpinnerDateModel(new Date(1732161600000L), null, null, Calendar.DAY_OF_YEAR));
-			spnFechaApl.setEnabled(false);
-			spnFechaApl.setBounds(344, 19, 128, 20);
-			panel.add(spnFechaApl);
+			spnFechaVen = new JSpinner();
+			spnFechaVen.setModel(new SpinnerDateModel(new Date(1732161600000L), null, null, Calendar.DAY_OF_YEAR));
+			spnFechaVen.setBounds(344, 19, 128, 20);
+			panel.add(spnFechaVen);
 			
 			JLabel lblNewLabel_2 = new JLabel("Nombre:");
 			lblNewLabel_2.setHorizontalAlignment(SwingConstants.RIGHT);
 			lblNewLabel_2.setBounds(4, 53, 56, 14);
 			panel.add(lblNewLabel_2);
 			
-			textField = new JTextField();
-			textField.setBounds(74, 50, 203, 20);
-			panel.add(textField);
-			textField.setColumns(10);
+			txtNombre = new JTextField();
+			txtNombre.setBounds(74, 50, 203, 20);
+			panel.add(txtNombre);
+			txtNombre.setColumns(10);
+			txtCodigo.setText("V-"+ClinicaMedica.getInstance().codVacuna);
 			
 			JLabel lblNewLabel_3 = new JLabel("Tipo:");
 			lblNewLabel_3.setHorizontalAlignment(SwingConstants.RIGHT);
 			lblNewLabel_3.setBounds(291, 53, 46, 14);
 			panel.add(lblNewLabel_3);
 			
-			JComboBox comboBox = new JComboBox();
-			comboBox.setModel(new DefaultComboBoxModel(new String[] {"<Seleccione>"}));
-			comboBox.setBounds(351, 50, 121, 20);
-			panel.add(comboBox);
+			cbxTipo = new JComboBox();
+			cbxTipo.setModel(new DefaultComboBoxModel(new String[] {"<Seleccione>", "Tuberculosis", "Hepatitis B", "Polio", "Neumococo", "Sarampi\u00F3n", "Papera", "Varicela", "T\u00E9tano", "Difteria", "Fiebre amarilla", "COVID-19"}));
+			cbxTipo.setBounds(351, 50, 121, 20);
+			panel.add(cbxTipo);
 			
 			JLabel lblNewLabel_4 = new JLabel("Fabricante:");
 			lblNewLabel_4.setHorizontalAlignment(SwingConstants.RIGHT);
-			lblNewLabel_4.setBounds(11, 84, 69, 14);
+			lblNewLabel_4.setBounds(-4, 121, 69, 14);
 			panel.add(lblNewLabel_4);
 			
-			JComboBox comboBox_1 = new JComboBox();
-			comboBox_1.setModel(new DefaultComboBoxModel(new String[] {"<Seleccione>"}));
-			comboBox_1.setBounds(91, 81, 380, 20);
-			panel.add(comboBox_1);
+			cbxFabricante = new JComboBox();
+			cbxFabricante.setModel(new DefaultComboBoxModel(new String[] {"<Seleccione>", "Pfizer-BioNTech", "Moderna", "AstraZeneca", "Johnson & Johnson ", "Sinovac Biotech", "Sinopharm", "GSK ", "Sanofi Pasteur", "Merck & Co.", "Serum Institute of India"}));
+			cbxFabricante.setBounds(74, 118, 380, 20);
+			panel.add(cbxFabricante);
+			
+			JLabel lblNewLabel_5 = new JLabel("Cantidad:");
+			lblNewLabel_5.setHorizontalAlignment(SwingConstants.RIGHT);
+			lblNewLabel_5.setBounds(-14, 90, 80, 14);
+			panel.add(lblNewLabel_5);
+			
+			spnCantidad = new JSpinner();
+			spnCantidad.setBounds(74, 87, 80, 20);
+			panel.add(spnCantidad);
 		}
 		{
 			JPanel buttonPane = new JPanel();
@@ -114,6 +133,33 @@ public class RegistroVacuna extends JDialog {
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
 				JButton btnRegistrar = new JButton("Registrar");
+				btnRegistrar.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						String codigo = txtCodigo.getText();
+						String nombre = txtNombre.getText();
+					    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+					    Date fechaVen = (Date)(spnFechaVen.getValue());
+					    String tipo = cbxTipo.getSelectedItem().toString();
+					    String fabricante = cbxFabricante.getSelectedItem().toString();
+					    int cantidad = new Integer(spnCantidad.getValue().toString());
+						
+						Vacuna vacuna = new Vacuna(codigo,fechaVen,nombre,tipo,fabricante,cantidad);
+						ClinicaMedica.getInstance().insertarVacuna(vacuna);
+						JOptionPane.showMessageDialog(null,"Operacion exitosa","Informacion",JOptionPane.INFORMATION_MESSAGE);
+						clean();
+					}
+
+					private void clean() {
+						txtCodigo.setText("V-"+ClinicaMedica.getInstance().codVacuna);
+						txtNombre.setText("");
+						cbxTipo.setSelectedIndex(0);
+						spnCantidad.setValue(0);
+						cbxFabricante.setSelectedIndex(0);
+						spnFechaVen.setValue(new Date());
+						
+					}
+				});
 				btnRegistrar.setActionCommand("OK");
 				buttonPane.add(btnRegistrar);
 				getRootPane().setDefaultButton(btnRegistrar);
@@ -121,6 +167,7 @@ public class RegistroVacuna extends JDialog {
 			{
 				JButton btnCancelar = new JButton("Cancelar");
 				btnCancelar.addActionListener(new ActionListener() {
+					@Override
 					public void actionPerformed(ActionEvent e) {
 						dispose();
 					}

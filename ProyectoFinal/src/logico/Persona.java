@@ -4,7 +4,7 @@ import java.util.Date;
 
 public abstract class Persona {
 
-	protected int idPersona;
+	protected String idPersona;
 	protected String cedula;
 	protected String nombre;
 	protected String apellido;
@@ -12,10 +12,10 @@ public abstract class Persona {
 	protected String direccion;
 	protected Date fechaNacimiento;
 	protected int edad;
-	protected char sexo;
+	protected String sexo;
 		
-	public Persona(int idPersona, String cedula, String nombre, String apellido, String telefono, String direccion,
-			Date fechaNacimiento, int edad, char sexo) {
+	public Persona(String idPersona, String cedula, String nombre, String apellido, String telefono, String direccion,
+			Date fechaNacimiento, int edad, String sexo) {
 		super();
 		this.idPersona = idPersona;
 		this.cedula = cedula;
@@ -28,10 +28,10 @@ public abstract class Persona {
 		this.sexo = sexo;
 	}
 	
-	public int getIdPersona() {
+	public String getIdPersona() {
 		return idPersona;
 	}
-	public void setIdPersona(int idPersona) {
+	public void setIdPersona(String idPersona) {
 		this.idPersona = idPersona;
 	}
 	public String getCedula() {
@@ -76,10 +76,10 @@ public abstract class Persona {
 	public void setEdad(int edad) {
 		this.edad = edad;
 	}
-	public char getSexo() {
+	public String getSexo() {
 		return sexo;
 	}
-	public void setSexo(char sexo) {
+	public void setSexo(String sexo) {
 		this.sexo = sexo;
 	}
 	
