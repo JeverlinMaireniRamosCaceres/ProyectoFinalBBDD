@@ -203,7 +203,7 @@ public class DetallePaciente extends JDialog {
 			JButton btnAbrirHVacunas = new JButton("Abrir");
 			btnAbrirHVacunas.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					ListadoVacunas lv = new ListadoVacunas();
+					ListadoVacunas lv = new ListadoVacunas(selected);
 					lv.setModal(true);
 					lv.setVisible(true);
 				}

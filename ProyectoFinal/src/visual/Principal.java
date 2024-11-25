@@ -139,6 +139,22 @@ public class Principal extends JFrame {
 			}
 		});
 		mnNewMenu_3.add(mntmNewMenuItem_7);
+		
+		JMenu mnNewMenu_4 = new JMenu("Consultas");
+		menuBar.add(mnNewMenu_4);
+		
+		JMenuItem mntmNewMenuItem_9 = new JMenuItem("Listado");
+		mnNewMenu_4.add(mntmNewMenuItem_9);
+		
+		JMenuItem mntmNewMenuItem_8 = new JMenuItem("Registro");
+		mntmNewMenuItem_8.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				RegistroConsulta rc = new RegistroConsulta(null);
+				rc.setModal(true);
+				rc.setVisible(true);
+			}
+		});
+		mnNewMenu_4.add(mntmNewMenuItem_8);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
