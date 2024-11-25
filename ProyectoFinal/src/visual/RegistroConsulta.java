@@ -44,6 +44,7 @@ public class RegistroConsulta extends JDialog {
 	private Consulta updated = null;
 	private JSpinner spnFecha;
 	private JButton btnAmpliarDatos;
+	private JButton btnRegistrar;
 
 	/**
 	 * Launch the application.
@@ -63,7 +64,12 @@ public class RegistroConsulta extends JDialog {
 	 */
 	public RegistroConsulta(Consulta aux) {
 		updated = aux;
-		setTitle("Consulta");
+		if(updated == null) {
+			setTitle("Registro de consulta");
+		}
+		else {
+			setTitle("Detalle de consulta");
+		}
 		setBounds(100, 100, 554, 440);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -192,7 +198,8 @@ public class RegistroConsulta extends JDialog {
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
-				JButton btnRegistrar = new JButton("Registrar");
+				btnRegistrar = new JButton("Registrar");
+				
 				btnRegistrar.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						Consulta consulta = new Consulta(txtCodConsulta.getText(), medico, paciente, txtDiagnostico.getText(), txtAIndicacion.getText(), chckbxImportante.isSelected());
@@ -238,7 +245,7 @@ public class RegistroConsulta extends JDialog {
 			else {
 				chckbxImportante.setSelected(false);
 			}
-			
+			btnRegistrar.setEnabled(false);
 		}
 	}
 }
