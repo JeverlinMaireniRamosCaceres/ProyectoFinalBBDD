@@ -1,7 +1,7 @@
 package visual;
-
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
+
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
@@ -9,106 +9,63 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
-import javax.swing.table.DefaultTableModel;
-
-import logico.ClinicaMedica;
-import logico.Enfermedad;
 
 public class ListadoEnfermedades extends JDialog {
-
-    private final JPanel contentPanel = new JPanel();
-    private JTable table;
-    private DefaultTableModel tableModel;
-
-    /**
-     * Launch the application.
-     */
-    public static void main(String[] args) {
-        try {
-            ListadoEnfermedades dialog = new ListadoEnfermedades();
-            dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-            dialog.setVisible(true);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Create the dialog.
-     */
-    public ListadoEnfermedades() {
-        setTitle("Listado de enfermedades");
-        setBounds(100, 100, 611, 375);
-        getContentPane().setLayout(new BorderLayout());
-        contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
-        getContentPane().add(contentPanel, BorderLayout.CENTER);
-        contentPanel.setLayout(new BorderLayout(0, 0));
-
-        // Panel principal
-        JPanel panel = new JPanel();
-        panel.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-        contentPanel.add(panel, BorderLayout.CENTER);
-        panel.setLayout(new BorderLayout(0, 0));
-
-        // ScrollPane y tabla
-        JScrollPane scrollPane = new JScrollPane();
-        panel.add(scrollPane, BorderLayout.CENTER);
-        table = new JTable();
-        tableModel = new DefaultTableModel(new Object[]{"ID", "Nombre", "Síntomas", "Tipo"}, 0);
-        table.setModel(tableModel);
-        scrollPane.setViewportView(table);
-
-        // Panel de botones
-        JPanel buttonPane = new JPanel();
-        buttonPane.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-        buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
-        getContentPane().add(buttonPane, BorderLayout.SOUTH);
-
-        JButton btnModificar = new JButton("Modificar");
-        btnModificar.setEnabled(false);
-        buttonPane.add(btnModificar);
-
-        JButton btnCancelar = new JButton("Cancelar");
-        btnCancelar.addActionListener(e -> dispose());
-        buttonPane.add(btnCancelar);
-
-        // Agregar el ActionListener para habilitar el botón de Modificar cuando se seleccione una fila
-        table.getSelectionModel().addListSelectionListener(e -> {
-            if (!e.getValueIsAdjusting() && table.getSelectedRow() != -1) {
-                btnModificar.setEnabled(true);
-            } else {
-                btnModificar.setEnabled(false);
-            }
-        });
-
-        // Acción al hacer clic en "Modificar"
-        btnModificar.addActionListener(e -> {
-            int selectedRow = table.getSelectedRow();
-            if (selectedRow != -1) {
-                String idEnfermedad = (String) table.getValueAt(selectedRow, 0);
-                Enfermedad enfermedad = ClinicaMedica.getInstance().buscarEnfermedadPorId(idEnfermedad);
-                if (enfermedad != null) {
-                    // Abre el formulario de modificación y carga los datos de la enfermedad
-                    RegistroEnfermedad registroDialog = new RegistroEnfermedad(enfermedad);
-                    registroDialog.setVisible(true);
-                    dispose();  // Cierra la ventana actual
-                }
-            }
-        });
-
-        // Cargando enfermedades
-        cargarEnfermedades();
-    }
-
-    private void cargarEnfermedades() {
-        tableModel.setRowCount(0); // Limpiando la tabla
-        for (Enfermedad enfermedad : ClinicaMedica.getInstance().getLasEnfermedades()) {
-            tableModel.addRow(new Object[]{
-                enfermedad.getIdEnfermedad(),
-                enfermedad.getNombre(),
-                enfermedad.getSintomas(),
-                enfermedad.getTipo()
-            });
-        }
-    }
+	private final JPanel contentPanel = new JPanel();
+	private JTable table;
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		try {
+			ListadoEnfermedades dialog = new ListadoEnfermedades();
+			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+			dialog.setVisible(true);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	/**
+	 * Create the dialog.
+	 */
+	public ListadoEnfermedades() {
+		setTitle("Listado de enfermedades");
+		setBounds(100, 100, 611, 375);
+		getContentPane().setLayout(new BorderLayout());
+		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
+		getContentPane().add(contentPanel, BorderLayout.CENTER);
+		contentPanel.setLayout(new BorderLayout(0, 0));
+		{
+			JPanel panel = new JPanel();
+			panel.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+			contentPanel.add(panel, BorderLayout.CENTER);
+			panel.setLayout(new BorderLayout(0, 0));
+			{
+				JScrollPane scrollPane = new JScrollPane();
+				panel.add(scrollPane, BorderLayout.CENTER);
+				{
+					table = new JTable();
+					scrollPane.setViewportView(table);
+				}
+			}
+		}
+		{
+			JPanel buttonPane = new JPanel();
+			buttonPane.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
+			getContentPane().add(buttonPane, BorderLayout.SOUTH);
+			{
+				JButton btnModificar = new JButton("Modificar");
+				btnModificar.setEnabled(false);
+				btnModificar.setActionCommand("OK");
+				buttonPane.add(btnModificar);
+				getRootPane().setDefaultButton(btnModificar);
+			}
+			{
+				JButton btnCancelar = new JButton("Cancelar");
+				btnCancelar.setActionCommand("Cancel");
+				buttonPane.add(btnCancelar);
+			}
+		}
+	}
 }

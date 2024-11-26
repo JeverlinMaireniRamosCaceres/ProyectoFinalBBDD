@@ -1,28 +1,27 @@
 package visual;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Calendar;
+import java.util.Date;
 
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JDialog;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JSpinner;
+import javax.swing.JTextField;
+import javax.swing.SpinnerDateModel;
+import javax.swing.SwingConstants;
+import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 
 import logico.Paciente;
-
-import javax.swing.JLabel;
-import javax.swing.SwingConstants;
-import javax.swing.JTextField;
-import javax.swing.JSpinner;
-import javax.swing.JComboBox;
-import javax.swing.UIManager;
-import java.awt.Color;
-import java.awt.event.ActionListener;
-import java.util.Date;
-import java.awt.event.ActionEvent;
-import javax.swing.SpinnerDateModel;
-import java.util.Calendar;
 
 public class DetallePaciente extends JDialog {
 
@@ -202,8 +201,9 @@ public class DetallePaciente extends JDialog {
 			
 			JButton btnAbrirHVacunas = new JButton("Abrir");
 			btnAbrirHVacunas.addActionListener(new ActionListener() {
+				@Override
 				public void actionPerformed(ActionEvent e) {
-					ListadoVacunas lv = new ListadoVacunas(selected);
+					ListadoVacunas lv = new ListadoVacunas();
 					lv.setModal(true);
 					lv.setVisible(true);
 				}
@@ -219,6 +219,7 @@ public class DetallePaciente extends JDialog {
 			
 			JButton btnAbrirHMedico = new JButton("Abrir");
 			btnAbrirHMedico.addActionListener(new ActionListener() {
+				@Override
 				public void actionPerformed(ActionEvent e) {
 					HistorialMedico hm = new HistorialMedico(selected);
 					hm.setModal(true);
