@@ -72,6 +72,30 @@ public class ListadoEnfermedades extends JDialog {
         btnCancelar.addActionListener(e -> dispose());
         buttonPane.add(btnCancelar);
 
+        // Agregar el ActionListener para habilitar el botón de Modificar cuando se seleccione una fila
+        table.getSelectionModel().addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting() && table.getSelectedRow() != -1) {
+                btnModificar.setEnabled(true);
+            } else {
+                btnModificar.setEnabled(false);
+            }
+        });
+
+        // Acción al hacer clic en "Modificar"
+        btnModificar.addActionListener(e -> {
+            int selectedRow = table.getSelectedRow();
+            if (selectedRow != -1) {
+                String idEnfermedad = (String) table.getValueAt(selectedRow, 0);
+                Enfermedad enfermedad = ClinicaMedica.getInstance().buscarEnfermedadPorId(idEnfermedad);
+                if (enfermedad != null) {
+                    // Abre el formulario de modificación y carga los datos de la enfermedad
+                    RegistroEnfermedad registroDialog = new RegistroEnfermedad(enfermedad);
+                    registroDialog.setVisible(true);
+                    dispose();  // Cierra la ventana actual
+                }
+            }
+        });
+
         // Cargando enfermedades
         cargarEnfermedades();
     }

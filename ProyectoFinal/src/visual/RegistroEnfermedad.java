@@ -24,141 +24,118 @@ import logico.Enfermedad;
 
 public class RegistroEnfermedad extends JDialog {
 
-	private final JPanel contentPanel = new JPanel();
-	private JTextField txtCodigo;
-	private JTextField txtNombre;
-	private JComboBox cbxTipo;
-	private JTextArea txtASintomas;
+    private final JPanel contentPanel = new JPanel();
+    private JTextField txtCodigo;
+    private JTextField txtNombre;
+    private JComboBox cbxTipo;
+    private JTextArea txtASintomas;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		try {
-			RegistroEnfermedad dialog = new RegistroEnfermedad();
-			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-			dialog.setVisible(true);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+    // Constructor para registrar una nueva enfermedad
+    public RegistroEnfermedad() {
+        setTitle("Registro de Enfermedad");
+        setBounds(100, 100, 474, 292);
+        getContentPane().setLayout(new BorderLayout());
+        contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
+        getContentPane().add(contentPanel, BorderLayout.CENTER);
+        contentPanel.setLayout(null);
+        initializeComponents();
+    }
 
-	/**
-	 * Create the dialog.
-	 */
-	public RegistroEnfermedad() {
-		setTitle("Registro de Enfermedad");
-		setBounds(100, 100, 474, 292);
-		getContentPane().setLayout(new BorderLayout());
-		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
-		getContentPane().add(contentPanel, BorderLayout.CENTER);
-		contentPanel.setLayout(new BorderLayout(0, 0));
-		{
-			JPanel panel = new JPanel();
-			panel.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-			contentPanel.add(panel, BorderLayout.CENTER);
-			panel.setLayout(null);
-			{
-				JLabel lblNewLabel = new JLabel("C\u00F3digo:");
-				lblNewLabel.setHorizontalAlignment(SwingConstants.RIGHT);
-				lblNewLabel.setBounds(10, 22, 56, 14);
-				panel.add(lblNewLabel);
-			}
-			{
-				txtCodigo = new JTextField();
-				txtCodigo.setEditable(false);
-				txtCodigo.setBounds(76, 19, 362, 20);
-				panel.add(txtCodigo);
-				txtCodigo.setColumns(10);
-				txtCodigo.setText("E-"+ClinicaMedica.getInstance().codEnfermedad);
+    // Constructor para modificar una enfermedad existente
+    public RegistroEnfermedad(Enfermedad enfermedad) {
+        this(); // Llama al constructor por defecto
+        // Si venimos a modificar, cargamos los datos de la enfermedad
+        txtCodigo.setText(enfermedad.getIdEnfermedad());
+        txtNombre.setText(enfermedad.getNombre());
+        cbxTipo.setSelectedItem(enfermedad.getTipo());
+        txtASintomas.setText(enfermedad.getSintomas());
+    }
 
-			}
-			{
-				JLabel lblNewLabel_1 = new JLabel("Nombre:");
-				lblNewLabel_1.setHorizontalAlignment(SwingConstants.RIGHT);
-				lblNewLabel_1.setBounds(10, 63, 56, 14);
-				panel.add(lblNewLabel_1);
-			}
-			{
-				txtNombre = new JTextField();
-				txtNombre.setBounds(76, 60, 144, 20);
-				panel.add(txtNombre);
-				txtNombre.setColumns(10);
-			}
-			{
-				JLabel lblNewLabel_2 = new JLabel("Tipo:");
-				lblNewLabel_2.setHorizontalAlignment(SwingConstants.RIGHT);
-				lblNewLabel_2.setBounds(242, 63, 46, 14);
-				panel.add(lblNewLabel_2);
-			}
-			{
-				cbxTipo = new JComboBox();
-				cbxTipo.setModel(new DefaultComboBoxModel(new String[] {"<Seleccione>", "Infecciosa", "Cr\u00F3nica", "Gen\u00E9tica", "Autoinmune", "Cardiovascular", "Respiratoria", "Metab\u00F3lica", "Neurol\u00F3gica", "Psiqui\u00E1trica", "Endocrina", "Gastrointestinal", "Renal"}));
-				cbxTipo.setBounds(294, 60, 144, 20);
-				panel.add(cbxTipo);
-			}
-			
-			JLabel lblNewLabel_3 = new JLabel("S\u00EDntomas:");
-			lblNewLabel_3.setHorizontalAlignment(SwingConstants.RIGHT);
-			lblNewLabel_3.setBounds(10, 99, 59, 14);
-			panel.add(lblNewLabel_3);
-			
-			JPanel panel_1 = new JPanel();
-			panel_1.setBounds(76, 99, 362, 94);
-			panel.add(panel_1);
-			panel_1.setLayout(new BorderLayout(0, 0));
-			
-			JScrollPane scrollPane = new JScrollPane();
-			panel_1.add(scrollPane, BorderLayout.CENTER);
-			
-			txtASintomas = new JTextArea();
-			scrollPane.setViewportView(txtASintomas);
-		}
-		{
-			JPanel buttonPane = new JPanel();
-			buttonPane.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
-			getContentPane().add(buttonPane, BorderLayout.SOUTH);
-			{
-				JButton btnRegistrar = new JButton("Registrar");
-				btnRegistrar.addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						String codigo = txtCodigo.getText();
-						String nombre = txtNombre.getText();
-						String tipo = cbxTipo.getSelectedItem().toString();
-						String sintomas = txtASintomas.getText();
-						
-						Enfermedad enfermedad = new Enfermedad(codigo,nombre,tipo,sintomas);
-						ClinicaMedica.getInstance().insertarEnfermedad(enfermedad);
-						JOptionPane.showMessageDialog(null,"Operacion exitosa","Informacion",JOptionPane.INFORMATION_MESSAGE);
-						clean();
-						
-					}
+    private void initializeComponents() {
+        JPanel panel = new JPanel();
+        panel.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+        contentPanel.add(panel, BorderLayout.CENTER);
+        panel.setLayout(null);
 
-					private void clean() {
-						txtCodigo.setText("");
-						txtNombre.setText("");
-						cbxTipo.setSelectedIndex(0);
-						txtASintomas.setText("");
-						
-					}
-				});
-				btnRegistrar.setActionCommand("OK");
-				buttonPane.add(btnRegistrar);
-				getRootPane().setDefaultButton(btnRegistrar);
-			}
-			{
-				JButton btnCancelar = new JButton("Cancelar");
-				btnCancelar.addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						dispose();
-					}
-				});
-				btnCancelar.setActionCommand("Cancel");
-				buttonPane.add(btnCancelar);
-			}
-		}
-	}
+        // Añadir los componentes del formulario (texto, combobox, etc.)
+        JLabel lblNewLabel = new JLabel("Código:");
+        lblNewLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+        lblNewLabel.setBounds(10, 22, 56, 14);
+        panel.add(lblNewLabel);
+
+        txtCodigo = new JTextField();
+        txtCodigo.setEditable(false);
+        txtCodigo.setBounds(76, 19, 362, 20);
+        panel.add(txtCodigo);
+        txtCodigo.setColumns(10);
+
+        JLabel lblNewLabel_1 = new JLabel("Nombre:");
+        lblNewLabel_1.setHorizontalAlignment(SwingConstants.RIGHT);
+        lblNewLabel_1.setBounds(10, 63, 56, 14);
+        panel.add(lblNewLabel_1);
+
+        txtNombre = new JTextField();
+        txtNombre.setBounds(76, 60, 144, 20);
+        panel.add(txtNombre);
+        txtNombre.setColumns(10);
+
+        JLabel lblNewLabel_2 = new JLabel("Tipo:");
+        lblNewLabel_2.setHorizontalAlignment(SwingConstants.RIGHT);
+        lblNewLabel_2.setBounds(242, 63, 46, 14);
+        panel.add(lblNewLabel_2);
+
+        cbxTipo = new JComboBox();
+        cbxTipo.setModel(new DefaultComboBoxModel(new String[]{"<Seleccione>", "Infecciosa", "Crónica", "Genética", "Autoinmune", "Cardiovascular", "Respiratoria", "Metabólica", "Neurológica", "Psiquiátrica", "Endocrina", "Gastrointestinal", "Renal"}));
+        cbxTipo.setBounds(294, 60, 144, 20);
+        panel.add(cbxTipo);
+
+        JLabel lblNewLabel_3 = new JLabel("Síntomas:");
+        lblNewLabel_3.setHorizontalAlignment(SwingConstants.RIGHT);
+        lblNewLabel_3.setBounds(10, 99, 59, 14);
+        panel.add(lblNewLabel_3);
+
+        JPanel panel_1 = new JPanel();
+        panel_1.setBounds(76, 99, 362, 94);
+        panel.add(panel_1);
+        panel_1.setLayout(new BorderLayout(0, 0));
+
+        JScrollPane scrollPane = new JScrollPane();
+        panel_1.add(scrollPane, BorderLayout.CENTER);
+
+        txtASintomas = new JTextArea();
+        scrollPane.setViewportView(txtASintomas);
+
+        // Botones de acción
+        JPanel buttonPane = new JPanel();
+        buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        getContentPane().add(buttonPane, BorderLayout.SOUTH);
+
+        JButton okButton = new JButton("Guardar");
+        okButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                // Crear o modificar enfermedad
+                String codigo = txtCodigo.getText();
+                String nombre = txtNombre.getText();
+                String sintomas = txtASintomas.getText();
+                String tipo = cbxTipo.getSelectedItem().toString();
+
+                if (codigo.isEmpty() || nombre.isEmpty() || sintomas.isEmpty() || tipo.equals("<Seleccione>")) {
+                    JOptionPane.showMessageDialog(RegistroEnfermedad.this, "Por favor, complete todos los campos.");
+                } else {
+                    Enfermedad enfermedad = new Enfermedad(codigo, nombre, sintomas, tipo);
+                    if (txtCodigo.isEditable()) {  // Crear nueva enfermedad
+                        ClinicaMedica.getInstance().insertarEnfermedad(enfermedad);
+                    } else {  // Modificar existente
+                        ClinicaMedica.getInstance().actualizarEnfermedad(enfermedad);
+                    }
+                    dispose(); // Cierra el diálogo
+                }
+            }
+        });
+        buttonPane.add(okButton);
+
+        JButton cancelButton = new JButton("Cancelar");
+        cancelButton.addActionListener(e -> dispose());
+        buttonPane.add(cancelButton);
+    }
 }
