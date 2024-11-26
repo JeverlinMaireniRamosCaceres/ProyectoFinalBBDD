@@ -291,7 +291,6 @@ public class RegistroPaciente extends JDialog {
 			                pacienteSeleccionado.setPeso(peso);
 			                pacienteSeleccionado.setFechaNacimiento(fechaNacimiento);
 			                
-			                // Guarda o actualiza el paciente en tu lista o base de datos
 			                ClinicaMedica.getInstance().actualizarPaciente(pacienteSeleccionado);
 			                JOptionPane.showMessageDialog(null, "Paciente actualizado con éxito", "Información", JOptionPane.INFORMATION_MESSAGE);
 			            }
