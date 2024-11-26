@@ -187,4 +187,40 @@ public class ClinicaMedica {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	public Enfermedad buscarEnfermedadPorId(String idEnfermedad) {
+        for (Enfermedad enfermedad : lasEnfermedades) {
+            if (enfermedad.getIdEnfermedad().equals(idEnfermedad)) {
+                return enfermedad; // Retorna la enfermedad encontrada
+            }
+        }
+        return null; // Retorna null si no se encuentra la enfermedad
+    }
+	
+	public void actualizarEnfermedad(Enfermedad enfermedadActualizada) {
+	    // Busca el índice de la enfermedad en la lista
+	    for (int i = 0; i < lasEnfermedades.size(); i++) {
+	        Enfermedad enfermedad = lasEnfermedades.get(i);
+	        if (enfermedad.getIdEnfermedad().equals(enfermedadActualizada.getIdEnfermedad())) {
+	            // Si la enfermedad existe, la reemplaza con los nuevos datos
+	            lasEnfermedades.set(i, enfermedadActualizada);
+	            return;
+	        }
+	    }
+	    System.out.println("Enfermedad no encontrada para actualizar.");
+	}
+	
+	public void actualizarPaciente(Paciente pacienteActualizado) {
+        // Busca el índice del paciente en la lista
+        for (int i = 0; i < losPacientes.size(); i++) {
+            Paciente paciente = losPacientes.get(i);
+            if (paciente.getIdPersona().equals(pacienteActualizado.getIdPersona())) {
+                // Si el paciente existe, lo reemplaza con los nuevos datos
+                losPacientes.set(i, pacienteActualizado);
+                return; 
+            }
+        }
+        System.out.println("Paciente no encontrado para actualizar.");
+    }
+
 }
