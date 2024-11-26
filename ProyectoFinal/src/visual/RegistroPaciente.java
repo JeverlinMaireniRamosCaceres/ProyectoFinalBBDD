@@ -42,8 +42,7 @@ public class RegistroPaciente extends JDialog {
 	private JSpinner spnEstatura;
 	private JSpinner spnPeso;
 	private JSpinner spnFecha;
-	
-	private Paciente pacienteSeleccionado;
+	private Paciente selected;
 
 	/**
 	 * Launch the application.
@@ -63,28 +62,22 @@ public class RegistroPaciente extends JDialog {
 	 */
 	
 	public RegistroPaciente(Paciente paciente) {
-		setTitle("Registro de paciente");
+		selected = paciente;
+		if(selected == null) {
+			setTitle("Registro de paciente");
+		}
+		else {
+			setTitle("Modificar paciente");
+		}
+		
 		setBounds(100, 100, 560, 297);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(new BorderLayout(0, 0));
 		
-		this.pacienteSeleccionado = paciente; 
 		
-		if (paciente != null) {
-            txtCodigo.setText(paciente.getIdPersona()); // Asume que 'getIdPersona()' es el código
-            txtCedula.setText(paciente.getCedula());
-            txtNombre.setText(paciente.getNombre());
-            txtApellido.setText(paciente.getApellido());
-            txtTelefono.setText(paciente.getTelefono());
-            txtDireccion.setText(paciente.getDireccion());
-            txtEdad.setText(String.valueOf(paciente.getEdad()));
-            cbxSexo.setSelectedItem(paciente.getSexo());
-            spnEstatura.setValue(paciente.getEstatura());
-            spnPeso.setValue(paciente.getPeso());
-            spnFecha.setValue(paciente.getFechaNacimiento());
-        }
+		
 		{
 			JPanel panel = new JPanel();
 			panel.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
@@ -260,61 +253,48 @@ public class RegistroPaciente extends JDialog {
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
 				JButton btnRegistrar = new JButton("Registrar");
+				if(selected != null) {
+					btnRegistrar.setText("Modificar");
+				}
 				btnRegistrar.addActionListener(new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent e) {
 						
-						String codigo = txtCodigo.getText();
-						String cedula = txtCedula.getText();
-						String nombre = txtNombre.getText();
-						String apellido = txtApellido.getText();
-						String telefono = txtTelefono.getText();
-						String direccion = txtDireccion.getText(); 
-						int edad = new Integer(txtEdad.getText());
-						String sexo = cbxSexo.getSelectedItem().toString();
-						float estatura = new Float(spnEstatura.getValue().toString());
-						float peso = new Float(spnPeso.getValue().toString());
-						
-					    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-					    Date fechaNacimiento = (Date)(spnFecha.getValue());
-					    
-					    // Si estamos editando, actualiza el paciente
-			            if (pacienteSeleccionado != null) {
-			                pacienteSeleccionado.setCedula(cedula);
-			                pacienteSeleccionado.setNombre(nombre);
-			                pacienteSeleccionado.setApellido(apellido);
-			                pacienteSeleccionado.setTelefono(telefono);
-			                pacienteSeleccionado.setDireccion(direccion);
-			                pacienteSeleccionado.setEdad(edad);
-			                pacienteSeleccionado.setSexo(sexo);
-			                pacienteSeleccionado.setEstatura(estatura);
-			                pacienteSeleccionado.setPeso(peso);
-			                pacienteSeleccionado.setFechaNacimiento(fechaNacimiento);
-			                
-			                ClinicaMedica.getInstance().actualizarPaciente(pacienteSeleccionado);
-			                JOptionPane.showMessageDialog(null, "Paciente actualizado con éxito", "Información", JOptionPane.INFORMATION_MESSAGE);
-			            }
-						
-						Paciente paciente = new Paciente(codigo,cedula,nombre,apellido,telefono,direccion,fechaNacimiento,edad,sexo,estatura,peso);
-						ClinicaMedica.getInstance().insertarPaciente(paciente);
-						JOptionPane.showMessageDialog(null,"Operacion exitosa","Informacion",JOptionPane.INFORMATION_MESSAGE);
-						clean();
-						
-					}
-
-					private void clean() {
-						txtCodigo.setText("P-"+ClinicaMedica.getInstance().codPaciente);
-						txtCedula.setText("");
-						txtNombre.setText("");
-						txtApellido.setText("");
-						txtTelefono.setText("");
-						txtDireccion.setText("");
-						txtEdad.setText("");
-						cbxSexo.setSelectedIndex(0);
-						spnEstatura.setValue(0);
-						spnPeso.setValue(0);
-						spnFecha.setValue(new Date());
-					}
+						if(selected == null) {
+							Paciente paciente = new Paciente(
+								    txtCodigo.getText(),
+								    txtCedula.getText(),
+								    txtNombre.getText(),
+								    txtApellido.getText(),
+								    txtTelefono.getText(),
+								    txtDireccion.getText(),
+								    (Date) spnFecha.getValue(),
+								    Integer.parseInt(txtEdad.getText()),
+								    (String) cbxSexo.getSelectedItem(),
+								    Float.parseFloat(spnEstatura.getValue().toString()),
+								    Float.parseFloat(spnPeso.getValue().toString())
+								    
+								);
+							ClinicaMedica.getInstance().insertarPaciente(paciente);
+							JOptionPane.showMessageDialog(null,"Operacion exitosa","Informacion",JOptionPane.INFORMATION_MESSAGE);
+							clean();
+						}
+						else {
+							selected.setCedula(txtCedula.getText());
+							selected.setNombre(txtNombre.getText());
+							selected.setApellido(txtApellido.getText());
+							selected.setTelefono(txtTelefono.getText());
+							selected.setDireccion(txtDireccion.getText());
+							selected.setEdad(Integer.parseInt(txtEdad.getText()));
+							selected.setSexo((String) cbxSexo.getSelectedItem());
+							selected.setEstatura(Float.parseFloat(spnEstatura.getValue().toString()));
+							selected.setPeso(Float.parseFloat(spnPeso.getValue().toString()));
+							ClinicaMedica.getInstance().updatePaciente(selected);
+							ListadoPacientes.loadPacientes();
+							JOptionPane.showMessageDialog(null,"Operacion exitosa","Informacion",JOptionPane.INFORMATION_MESSAGE);
+							dispose();
+						}						
+					}					
 				});
 				btnRegistrar.setActionCommand("OK");
 				buttonPane.add(btnRegistrar);
@@ -332,6 +312,34 @@ public class RegistroPaciente extends JDialog {
 				buttonPane.add(btnCancelar);
 			}
 		}
+		loadPaciente();
 	}
-
+	private void loadPaciente() {
+		if (selected != null) {
+            txtCodigo.setText(selected.getIdPersona());
+            txtCedula.setText(selected.getCedula());
+            txtNombre.setText(selected.getNombre());
+            txtApellido.setText(selected.getApellido());
+            txtTelefono.setText(selected.getTelefono());
+            txtDireccion.setText(selected.getDireccion());
+            txtEdad.setText(String.valueOf(selected.getEdad()));
+            cbxSexo.setSelectedItem(selected.getSexo());
+            spnEstatura.setValue(selected.getEstatura());
+            spnPeso.setValue(selected.getPeso());
+            spnFecha.setValue(selected.getFechaNacimiento());
+        }
+	}
+	private void clean() {
+		txtCodigo.setText("P-"+ClinicaMedica.getInstance().codPaciente);
+		txtCedula.setText("");
+		txtNombre.setText("");
+		txtApellido.setText("");
+		txtTelefono.setText("");
+		txtDireccion.setText("");
+		txtEdad.setText("");
+		cbxSexo.setSelectedIndex(0);
+		spnEstatura.setValue(0);
+		spnPeso.setValue(0);
+		spnFecha.setValue(new Date());
+	}
 }

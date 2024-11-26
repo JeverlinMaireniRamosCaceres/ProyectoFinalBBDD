@@ -54,7 +54,7 @@ public class Principal extends JFrame {
 		JMenuItem mntmNewMenuItem = new JMenuItem("Listado");
 		mntmNewMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ListadoPacientes lp = new ListadoPacientes(null);
+				ListadoPacientes lp = new ListadoPacientes();
 				lp.setModal(true);
 				lp.setVisible(true);
 			}

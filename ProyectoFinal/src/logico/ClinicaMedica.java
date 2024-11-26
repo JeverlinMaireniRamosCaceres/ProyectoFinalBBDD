@@ -223,4 +223,38 @@ public class ClinicaMedica {
         System.out.println("Paciente no encontrado para actualizar.");
     }
 
+	public Paciente buscarPacienteByCedula(String codigo) {
+		Paciente paciente = null;
+		boolean encontrado = false;
+		int i = 0;
+		while(!encontrado && i < losPacientes.size()) {
+			if(losPacientes.get(i).getCedula().equalsIgnoreCase(codigo)) {
+				paciente = losPacientes.get(i);
+				encontrado = true;
+			}
+		}
+		return paciente;
+	}
+	
+	public int buscarPacienteByCedulaGetIndex(String cedula) {
+		int paciente = -1;
+		boolean encontrado = false;
+		int i = 0;
+		while(!encontrado && i < losPacientes.size()) {
+			if(losPacientes.get(i).getCedula().equalsIgnoreCase(cedula)) {
+				paciente = i;
+				encontrado = true;
+			}
+			i++;
+		}
+		return paciente;
+	}
+
+	public void updatePaciente(Paciente selected) {
+		int index = buscarPacienteByCedulaGetIndex(selected.getCedula());
+		if(index != 1) {
+			losPacientes.set(index, selected);
+		}
+	}
+
 }
