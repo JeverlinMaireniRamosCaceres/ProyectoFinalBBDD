@@ -117,7 +117,7 @@ public class Principal extends JFrame {
 		mntmNewMenuItem_5.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				RegistroCita rc = new RegistroCita();
+				RegistroCita rc = new RegistroCita(null);
 				rc.setModal(true);
 				rc.setVisible(true);
 			}

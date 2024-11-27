@@ -286,5 +286,39 @@ public class ClinicaMedica {
 			losMedicos.set(index, selected);
 		}
 	}
+	
+	public Cita buscarCitaByIdCita(String idCita) {
+	    Cita cita = null;
+	    boolean encontrado = false;
+	    int i = 0;
+	    while (!encontrado && i < lasCitas.size()) { 
+	        if (lasCitas.get(i).getIdCita().equalsIgnoreCase(idCita)) { 
+	            cita = lasCitas.get(i); 
+	            encontrado = true; 
+	        }
+	        i++; 
+	    }
+	    return cita; 
+	}
+
+	public int buscarCitaByIdCitaGetIndex(String idCita) {
+	    int index = -1;
+	    boolean encontrado = false;
+	    int i = 0;
+	    while (!encontrado && i < lasCitas.size()) {
+	        if (lasCitas.get(i).getIdCita().equalsIgnoreCase(idCita)) {
+	            index = i; 
+	            encontrado = true; 
+	        }
+	        i++;
+	    }
+	    return index; 
+	}
+	
+	public void eliminarCita(Cita cita) {
+	    if (lasCitas.contains(cita)) {
+	        lasCitas.remove(cita); 
+	    } 
+	}
 
 }

@@ -36,13 +36,14 @@ public class RegistroCita extends JDialog {
 	private Medico medico = null;
 	private JSpinner spnFecha;
 	private JSpinner spnHora;
+	private Cita selected;
 
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
 		try {
-			RegistroCita dialog = new RegistroCita();
+			RegistroCita dialog = new RegistroCita(null);
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
@@ -53,7 +54,15 @@ public class RegistroCita extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	public RegistroCita() {
+	public RegistroCita(Cita cita) {
+		
+		selected = cita; 
+		if(selected == null) {
+			setTitle("Registro de m\u00E9dico");
+		} else {
+			setTitle("Modificar m\u00E9dico");
+		}
+		
 		setTitle("Registrar Cita");
 		setBounds(100, 100, 466, 352);
 		getContentPane().setLayout(new BorderLayout());
@@ -183,12 +192,26 @@ public class RegistroCita extends JDialog {
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
 				JButton btnRegistrar = new JButton("Registrar");
+				if(selected != null) {
+					btnRegistrar.setText("Modificar");
+				}
 				btnRegistrar.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						Cita cita = new Cita(txtCodigo.getText(), txtNombre.getText(), medico, spnFecha.getValue().toString(), spnHora.getValue().toString(), txtMotivo.getText());
-						ClinicaMedica.getInstance().insertarCita(cita);
-						JOptionPane.showMessageDialog(null, "Operacion Satisfactoria", "Informacion", JOptionPane.INFORMATION_MESSAGE);
-						clean();
+						
+						if (selected == null) {
+							Cita cita = new Cita(txtCodigo.getText(), txtNombre.getText(), medico, spnFecha.getValue().toString(), spnHora.getValue().toString(), txtMotivo.getText());
+							ClinicaMedica.getInstance().insertarCita(cita);
+							JOptionPane.showMessageDialog(null, "Operacion Satisfactoria", "Informacion", JOptionPane.INFORMATION_MESSAGE);
+							clean();
+						}
+						else {
+							selected.setIdCita(txtCodigo.getText());
+							selected.setNombrePersona(txtNombre.getText());
+							selected.setMedico(medico);
+							selected.setFecha(spnFecha.getValue().toString());
+							selected.setHora(spnHora.getValue().toString());
+							selected.setMotivo(txtMotivo.getText());
+						}
 					}
 				});
 				btnRegistrar.setActionCommand("OK");
