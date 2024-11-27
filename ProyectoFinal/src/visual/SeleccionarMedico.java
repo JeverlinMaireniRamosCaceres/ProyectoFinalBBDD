@@ -113,6 +113,7 @@ public class SeleccionarMedico extends JDialog {
 				buttonPane.add(btnCancelar);
 			}
 		}
+		loadMedicos();
 	}
 	private void loadMedicos() {
 		modelo.setRowCount(0);

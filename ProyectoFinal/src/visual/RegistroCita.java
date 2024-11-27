@@ -23,6 +23,7 @@ import java.util.Date;
 import java.util.Calendar;
 import javax.swing.JCheckBox;
 import java.awt.event.ActionListener;
+import java.text.SimpleDateFormat;
 import java.awt.event.ActionEvent;
 
 public class RegistroCita extends JDialog {
@@ -185,10 +186,24 @@ public class RegistroCita extends JDialog {
 				JButton btnRegistrar = new JButton("Registrar");
 				btnRegistrar.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						Cita cita = new Cita(txtCodigo.getText(), txtNombre.getText(), medico, spnFecha.getValue().toString(), spnHora.getValue().toString(), txtMotivo.getText());
-						ClinicaMedica.getInstance().insertarCita(cita);
-						JOptionPane.showMessageDialog(null, "Operacion Satisfactoria", "Informacion", JOptionPane.INFORMATION_MESSAGE);
-						clean();
+						SimpleDateFormat dateFormatter = new SimpleDateFormat("dd/MM/yyyy");
+				        SimpleDateFormat timeFormatter = new SimpleDateFormat("hh:mm a");
+				        String fechaCita = dateFormatter.format((Date) spnFecha.getValue());
+				        String horaCita = timeFormatter.format((Date) spnHora.getValue());
+
+				        if (ClinicaMedica.getInstance().existeCita(fechaCita, horaCita, medico)) {
+				            JOptionPane.showMessageDialog(null, "No se pudo agendar cita, horario no disponible", "Información", JOptionPane.ERROR_MESSAGE);
+				        } else if(camposVacios()) {
+				            JOptionPane.showMessageDialog(null, "Todos los campos son obligatorios", "Información", JOptionPane.ERROR_MESSAGE);
+				        }
+				        else {
+				            Cita cita = new Cita(txtCodigo.getText(), txtNombre.getText(), medico, fechaCita, 
+					                horaCita, txtMotivo.getText());
+					            ClinicaMedica.getInstance().insertarCita(cita);
+					            JOptionPane.showMessageDialog(null, "Operación Satisfactoria", "Información", JOptionPane.INFORMATION_MESSAGE);
+					            clean();
+
+				        }
 					}
 				});
 				btnRegistrar.setActionCommand("OK");
@@ -218,4 +233,11 @@ public class RegistroCita extends JDialog {
 	    medico = null;
 	}
 
+	private boolean camposVacios() {
+		boolean estanVacios = false;
+		if(txtNombre.getText().isEmpty() || txtMotivo.getText().isEmpty() || medico == null) {
+			estanVacios = true;
+		}
+		return estanVacios;
+	}
 }

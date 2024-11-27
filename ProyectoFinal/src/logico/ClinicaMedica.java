@@ -184,8 +184,16 @@ public class ClinicaMedica {
 	}
 
 	public Consulta buscarConsultaById(String codigo) {
-		// TODO Auto-generated method stub
-		return null;
+		Consulta consulta = null;
+		boolean encontrado = false;
+		int i = 0;
+		while(!encontrado && i < lasConsultas.size()) {
+			if(lasConsultas.get(i).getIdConsulta().equalsIgnoreCase(codigo)) {
+				consulta = lasConsultas.get(i);
+				encontrado = true;
+			}
+		}
+		return consulta;
 	}
 	
 	public Enfermedad buscarEnfermedadPorId(String idEnfermedad) {
@@ -285,6 +293,18 @@ public class ClinicaMedica {
 		if(index != 1) {
 			losMedicos.set(index, selected);
 		}
+	}
+
+	public boolean existeCita(String fecha, String hora, Medico medico) {
+		boolean existe = false;
+		int i = 0;
+		while(!existe && i<lasCitas.size()) {
+			if(lasCitas.get(i).getFecha().equalsIgnoreCase(fecha) && lasCitas.get(i).getHora().equalsIgnoreCase(hora) && lasCitas.get(i).getMedico().equals(medico)) {
+				existe = true;
+			}
+			i++;
+		}
+		return existe;
 	}
 
 }
