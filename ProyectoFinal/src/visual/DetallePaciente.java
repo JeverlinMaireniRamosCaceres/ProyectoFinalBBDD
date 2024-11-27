@@ -221,9 +221,11 @@ public class DetallePaciente extends JDialog {
 			btnAbrirHMedico.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					HistorialMedico hm = new HistorialMedico(selected);
-					hm.setModal(true);
-					hm.setVisible(true);
+					if(selected != null) {
+						HistorialMedico hm = new HistorialMedico(selected);
+						hm.setModal(true);
+						hm.setVisible(true);
+					}
 				}
 			});
 			btnAbrirHMedico.setBounds(10, 23, 256, 23);

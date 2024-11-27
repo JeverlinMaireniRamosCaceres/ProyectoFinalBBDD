@@ -4,7 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.text.SimpleDateFormat;
+import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -12,6 +12,7 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
+import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -104,7 +105,14 @@ public class RegistroPaciente extends JDialog {
 				panel.add(lblNewLabel_1);
 			}
 			{
-				txtCedula = new JTextField();
+				//txtCedula = new JTextField();
+				try {
+					txtCedula = new JFormattedTextField(new javax.swing.text.MaskFormatter("###-#######-#"));
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				txtCedula.setColumns(10); 
 				txtCedula.setBounds(281, 19, 243, 20);
 				panel.add(txtCedula);
 				txtCedula.setColumns(10);
@@ -140,7 +148,18 @@ public class RegistroPaciente extends JDialog {
 				panel.add(lblNewLabel_4);
 			}
 			{
-				txtTelefono = new JTextField();
+				//txtTelefono = new JTextField();
+				try {
+					txtTelefono = new JFormattedTextField(new javax.swing.text.MaskFormatter("###-###-####"));
+				} catch (ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		        txtTelefono.setColumns(10); 
+				txtTelefono.setColumns(10);
+				txtTelefono.setBounds(84, 86, 144, 20);
+				panel.add(txtTelefono);
+				
 				txtTelefono.setBounds(74, 94, 144, 20);
 				panel.add(txtTelefono);
 				txtTelefono.setColumns(10);
@@ -260,6 +279,12 @@ public class RegistroPaciente extends JDialog {
 					@Override
 					public void actionPerformed(ActionEvent e) {
 						
+				        if (camposVacios()) {
+				            JOptionPane.showMessageDialog(null, "Por favor, complete todos los campos obligatorios.", 
+				                                          "Campos vacíos", JOptionPane.WARNING_MESSAGE);
+				            return; 
+				        }
+						
 						if(selected == null) {
 							Paciente paciente = new Paciente(
 								    txtCodigo.getText(),
@@ -342,4 +367,27 @@ public class RegistroPaciente extends JDialog {
 		spnPeso.setValue(0);
 		spnFecha.setValue(new Date());
 	}
+	
+	private boolean camposVacios() {
+	    boolean estanVacios = false;
+
+	    if (txtNombre.getText().isEmpty() || 
+	        txtApellido.getText().isEmpty() || 
+	        txtCedula.getText().isEmpty() || 
+	        txtTelefono.getText().isEmpty() || 
+	        txtDireccion.getText().isEmpty()) {
+	        estanVacios = true;
+	    }
+
+	    if (cbxSexo.getSelectedIndex() == 0) { // "<Seleccione>" es el índice 0
+	        estanVacios = true;
+	    }
+
+	    if ((Float) spnEstatura.getValue() <= 0 || (Float) spnPeso.getValue() <= 0) {
+	        estanVacios = true;
+	    }
+
+	    return estanVacios;
+	}
+
 }

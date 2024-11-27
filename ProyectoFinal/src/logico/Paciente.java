@@ -9,6 +9,7 @@ public class Paciente extends Persona {
 	protected float estatura;
 	protected float peso;
 	protected ArrayList<Vacuna>misVacunas;
+	protected ArrayList<Enfermedad>misEnfermedades;
 	
 	public Paciente(String idPersona, String cedula, String nombre, String apellido, String telefono, String direccion,
 			Date fechaNacimiento, int edad, String sexo, float estatura, float peso) {
@@ -17,7 +18,16 @@ public class Paciente extends Persona {
 		this.estatura = estatura;
 		this.peso = peso;
 		misVacunas = new ArrayList<>();
+		misEnfermedades = new ArrayList<>();
 		
+	}
+
+	public ArrayList<Enfermedad> getMisEnfermedades() {
+		return misEnfermedades;
+	}
+
+	public void setMisEnfermedades(ArrayList<Enfermedad> misEnfermedades) {
+		this.misEnfermedades = misEnfermedades;
 	}
 
 	public ArrayList<Vacuna> getMisVacunas() {

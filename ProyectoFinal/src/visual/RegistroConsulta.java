@@ -39,12 +39,25 @@ public class RegistroConsulta extends JDialog {
 	private JTextField txtDiagnostico;
 	private JTextArea txtAIndicacion;
 	private JCheckBox chckbxImportante;
-	private Medico medico = null;
+	private Medico medico = new Medico(
+            "M001",                    // idPersona
+            "123456789",               // cedula
+            "Juan",                    // nombre
+            "Pérez",                   // apellido
+            "555-1234",                // telefono
+            "Calle Falsa 123",         // direccion
+            new Date(1985, 5, 15), // fechaNacimiento (15 de junio de 1985)
+            39,                        // edad
+            "Masculino",               // sexo
+            "Cardiología",             // especialidad
+            12345                      // exequatur
+        );;
 	private Paciente paciente = null;
-	private Consulta updated = null;
+	private Consulta updated;
 	private JSpinner spnFecha;
 	private JButton btnAmpliarDatos;
 	private JButton btnRegistrar;
+	private JButton btnSeleccionarPaciente;
 
 	/**
 	 * Launch the application.
@@ -70,7 +83,7 @@ public class RegistroConsulta extends JDialog {
 		else {
 			setTitle("Detalle de consulta");
 		}
-		setBounds(100, 100, 554, 440);
+		setBounds(100, 100, 554, 470);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
@@ -83,12 +96,12 @@ public class RegistroConsulta extends JDialog {
 			
 			JPanel panel_1 = new JPanel();
 			panel_1.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "M\u00E9dico:", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
-			panel_1.setBounds(10, 68, 183, 57);
+			panel_1.setBounds(10, 68, 183, 81);
 			panel.add(panel_1);
 			panel_1.setLayout(null);
 			{
 				txtMedico = new JTextField();
-				txtMedico.setBounds(10, 26, 163, 20);
+				txtMedico.setBounds(10, 33, 163, 25);
 				panel_1.add(txtMedico);
 				txtMedico.setEditable(false);
 				txtMedico.setColumns(10);
@@ -133,18 +146,19 @@ public class RegistroConsulta extends JDialog {
 			{
 				JPanel panel_3 = new JPanel();
 				panel_3.setBorder(new TitledBorder(null, "Paciente:", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-				panel_3.setBounds(213, 68, 305, 57);
+				panel_3.setBounds(213, 68, 305, 81);
 				panel.add(panel_3);
 				panel_3.setLayout(null);
 				{
 					txtPaciente = new JTextField();
-					txtPaciente.setBounds(10, 26, 151, 20);
+					txtPaciente.setBounds(10, 48, 151, 20);
 					panel_3.add(txtPaciente);
 					txtPaciente.setEditable(false);
 					txtPaciente.setColumns(10);
 				}
 				
 				btnAmpliarDatos = new JButton("Ampliar datos");
+				btnAmpliarDatos.setEnabled(false);
 				btnAmpliarDatos.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						DetallePaciente dp = new DetallePaciente(paciente);
@@ -152,13 +166,28 @@ public class RegistroConsulta extends JDialog {
 						dp.setVisible(true);
 					}
 				});
-				btnAmpliarDatos.setBounds(171, 25, 124, 23);
+				btnAmpliarDatos.setBounds(171, 47, 124, 23);
 				panel_3.add(btnAmpliarDatos);
+				
+				btnSeleccionarPaciente = new JButton("Seleccionar");
+				btnSeleccionarPaciente.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						SeleccionarPaciente sp = new SeleccionarPaciente();
+						sp.setModal(true);
+						sp.setVisible(true);
+						paciente = sp.getSelectedPaciente();
+						if(paciente != null) {
+							txtPaciente.setText(paciente.getNombre()+" "+paciente.getApellido());
+						}
+					}
+				});
+				btnSeleccionarPaciente.setBounds(10, 23, 285, 20);
+				panel_3.add(btnSeleccionarPaciente);
 			}
 			
 			JPanel panel_3 = new JPanel();
 			panel_3.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Datos generales de la consulta:", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
-			panel_3.setBounds(10, 136, 508, 212);
+			panel_3.setBounds(10, 160, 508, 212);
 			panel.add(panel_3);
 			panel_3.setLayout(null);
 			
@@ -202,13 +231,17 @@ public class RegistroConsulta extends JDialog {
 				
 				btnRegistrar.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						Consulta consulta = new Consulta(txtCodConsulta.getText(), medico, paciente, txtDiagnostico.getText(), txtAIndicacion.getText(), chckbxImportante.isSelected());
-						ClinicaMedica.getInstance().insertarConsulta(consulta);
-						if(chckbxImportante.isSelected()) {
-							ClinicaMedica.getInstance().insertarConsultaEnHistorial(consulta, paciente);
+						if(camposVacios()) {
+				            JOptionPane.showMessageDialog(null, "Todos los campos son obligatorios", "Información", JOptionPane.ERROR_MESSAGE);
+						}else {
+							Consulta consulta = new Consulta(txtCodConsulta.getText(), medico, paciente, txtDiagnostico.getText(), txtAIndicacion.getText(), chckbxImportante.isSelected());
+							ClinicaMedica.getInstance().insertarConsulta(consulta);
+							if(chckbxImportante.isSelected()) {
+								paciente.getMiHistorial().getLasConsultas().add(consulta);
+							}
+							JOptionPane.showMessageDialog(null, "Operacion Satisfactoria", "Informacion", JOptionPane.INFORMATION_MESSAGE);
+							dispose();
 						}
-						JOptionPane.showMessageDialog(null, "Operacion Satisfactoria", "Informacion", JOptionPane.INFORMATION_MESSAGE);
-						dispose();
 					}
 				});
 				btnRegistrar.setActionCommand("OK");
@@ -235,17 +268,28 @@ public class RegistroConsulta extends JDialog {
 			txtMedico.setText(updated.getMedico().getNombre()+" "+updated.getMedico().getApellido());
 			txtPaciente.setText(updated.getPaciente().getNombre()+" "+updated.getPaciente().getApellido());
 			btnAmpliarDatos.setEnabled(false);
+			btnSeleccionarPaciente.setEnabled(false);
 			txtDiagnostico.setText(updated.getDiagnostico());
 			txtDiagnostico.setEditable(false);
 			txtAIndicacion.setText(updated.getIndicacion());
 			txtAIndicacion.setEditable(false);
+			txtAIndicacion.setEnabled(false);
 			if(updated.isImportante()) {
 				chckbxImportante.setSelected(true);
 			}
 			else {
 				chckbxImportante.setSelected(false);
 			}
+			chckbxImportante.setEnabled(false);
 			btnRegistrar.setEnabled(false);
 		}
+	}
+	
+	private boolean camposVacios() {
+		boolean estanVacios = false;
+		if(/*medico == null || */paciente == null || txtDiagnostico.getText().isEmpty() || txtAIndicacion.getText().isEmpty()) {
+			estanVacios = true;
+		}
+		return estanVacios;
 	}
 }
