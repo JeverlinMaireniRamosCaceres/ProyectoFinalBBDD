@@ -191,18 +191,16 @@ public class ClinicaMedica {
 	public Enfermedad buscarEnfermedadPorId(String idEnfermedad) {
         for (Enfermedad enfermedad : lasEnfermedades) {
             if (enfermedad.getIdEnfermedad().equals(idEnfermedad)) {
-                return enfermedad; // Retorna la enfermedad encontrada
+                return enfermedad; 
             }
         }
-        return null; // Retorna null si no se encuentra la enfermedad
+        return null; 
     }
 	
 	public void actualizarEnfermedad(Enfermedad enfermedadActualizada) {
-	    // Busca el índice de la enfermedad en la lista
 	    for (int i = 0; i < lasEnfermedades.size(); i++) {
 	        Enfermedad enfermedad = lasEnfermedades.get(i);
 	        if (enfermedad.getIdEnfermedad().equals(enfermedadActualizada.getIdEnfermedad())) {
-	            // Si la enfermedad existe, la reemplaza con los nuevos datos
 	            lasEnfermedades.set(i, enfermedadActualizada);
 	            return;
 	        }
@@ -211,11 +209,9 @@ public class ClinicaMedica {
 	}
 	
 	public void actualizarPaciente(Paciente pacienteActualizado) {
-        // Busca el índice del paciente en la lista
         for (int i = 0; i < losPacientes.size(); i++) {
             Paciente paciente = losPacientes.get(i);
             if (paciente.getIdPersona().equals(pacienteActualizado.getIdPersona())) {
-                // Si el paciente existe, lo reemplaza con los nuevos datos
                 losPacientes.set(i, pacienteActualizado);
                 return; 
             }
@@ -254,6 +250,40 @@ public class ClinicaMedica {
 		int index = buscarPacienteByCedulaGetIndex(selected.getCedula());
 		if(index != 1) {
 			losPacientes.set(index, selected);
+		}
+	}
+
+	public Medico buscarMedicoByCedula(String codigo) {
+		Medico medico = null;
+		boolean encontrado = false;
+		int i = 0;
+		while(!encontrado && i < losMedicos.size()) {
+			if(losMedicos.get(i).getCedula().equalsIgnoreCase(codigo)) {
+				medico = losMedicos.get(i);
+				encontrado = true;
+			}
+		}
+		return medico;
+	}
+	
+	public int buscarMedicoByCedulaGetIndex(String cedula) {
+		int medico = -1;
+		boolean encontrado = false;
+		int i = 0;
+		while(!encontrado && i < losMedicos.size()) {
+			if(losMedicos.get(i).getCedula().equalsIgnoreCase(cedula)) {
+				medico = i;
+				encontrado = true;
+			}
+			i++;
+		}
+		return medico;
+	}
+
+	public void updateMedico(Medico selected) {
+		int index = buscarMedicoByCedulaGetIndex(selected.getCedula());
+		if(index != 1) {
+			losMedicos.set(index, selected);
 		}
 	}
 

@@ -3,16 +3,16 @@ package visual;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.EventQueue;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
-import javax.swing.JMenuBar;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 public class Principal extends JFrame {
 
@@ -25,6 +25,7 @@ public class Principal extends JFrame {
 	 */
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
+			@Override
 			public void run() {
 				try {
 					Principal frame = new Principal();
@@ -53,6 +54,7 @@ public class Principal extends JFrame {
 		
 		JMenuItem mntmNewMenuItem = new JMenuItem("Listado");
 		mntmNewMenuItem.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				ListadoPacientes lp = new ListadoPacientes();
 				lp.setModal(true);
@@ -63,6 +65,7 @@ public class Principal extends JFrame {
 		
 		JMenuItem mntmNewMenuItem_1 = new JMenuItem("Registrar");
 		mntmNewMenuItem_1.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				RegistroPaciente rp = new RegistroPaciente(null);
 				rp.setModal(true);
@@ -76,6 +79,7 @@ public class Principal extends JFrame {
 		
 		JMenuItem mntmNewMenuItem_2 = new JMenuItem("Listado");
 		mntmNewMenuItem_2.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				ListadoMedicos lm = new ListadoMedicos();
 				lm.setModal(true);
@@ -86,8 +90,9 @@ public class Principal extends JFrame {
 		
 		JMenuItem mntmNewMenuItem_3 = new JMenuItem("Registrar");
 		mntmNewMenuItem_3.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
-				RegistroMedico rm = new RegistroMedico();
+				RegistroMedico rm = new RegistroMedico(null);
 				rm.setModal(true);
 				rm.setVisible(true);
 			}
@@ -99,6 +104,7 @@ public class Principal extends JFrame {
 		
 		JMenuItem mntmNewMenuItem_4 = new JMenuItem("Listado");
 		mntmNewMenuItem_4.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				ListadoCitas lc = new ListadoCitas();
 				lc.setModal(true);
@@ -109,6 +115,7 @@ public class Principal extends JFrame {
 		
 		JMenuItem mntmNewMenuItem_5 = new JMenuItem("Registrar");
 		mntmNewMenuItem_5.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				RegistroCita rc = new RegistroCita();
 				rc.setModal(true);
@@ -122,6 +129,7 @@ public class Principal extends JFrame {
 		
 		JMenuItem mntmNewMenuItem_6 = new JMenuItem("Listado");
 		mntmNewMenuItem_6.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				ListadoEnfermedades le = new ListadoEnfermedades();
 				le.setModal(true);
@@ -132,8 +140,9 @@ public class Principal extends JFrame {
 		
 		JMenuItem mntmNewMenuItem_7 = new JMenuItem("Registrar");
 		mntmNewMenuItem_7.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
-				RegistroEnfermedad re = new RegistroEnfermedad();
+				RegistroEnfermedad re = new RegistroEnfermedad(null);
 				re.setModal(true);
 				re.setVisible(true);
 			}
@@ -148,6 +157,7 @@ public class Principal extends JFrame {
 		
 		JMenuItem mntmNewMenuItem_8 = new JMenuItem("Registro");
 		mntmNewMenuItem_8.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				RegistroConsulta rc = new RegistroConsulta(null);
 				rc.setModal(true);
