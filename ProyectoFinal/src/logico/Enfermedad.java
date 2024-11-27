@@ -6,6 +6,7 @@ public class Enfermedad {
 	private String nombre;
 	private String sintomas;
 	private String tipo;
+	private boolean curada;
 	
 	public Enfermedad(String idEnfermedad, String nombre, String sintomas, String tipo) {
 		super();
@@ -15,6 +16,17 @@ public class Enfermedad {
 		this.tipo = tipo;
 	}
 	
+	
+	public boolean isCurada() {
+		return curada;
+	}
+
+	public void setCurada(boolean curada) {
+		this.curada = curada;
+	}
+
+
+
 	public String getIdEnfermedad() {
 		return idEnfermedad;
 	}

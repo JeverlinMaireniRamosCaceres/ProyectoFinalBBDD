@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -12,6 +13,7 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
+import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -128,7 +130,13 @@ public class RegistroMedico extends JDialog {
 			label_4.setBounds(17, 88, 57, 14);
 			panel.add(label_4);
 			
-			txtTelefono = new JTextField();
+			try {
+				txtTelefono = new JFormattedTextField(new javax.swing.text.MaskFormatter("###-###-####"));
+			} catch (ParseException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+	        txtTelefono.setColumns(10); 
 			txtTelefono.setColumns(10);
 			txtTelefono.setBounds(84, 86, 144, 20);
 			panel.add(txtTelefono);
@@ -232,7 +240,13 @@ public class RegistroMedico extends JDialog {
 				btnRegistrar.addActionListener(new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent e) {
-						
+				       
+				        if (camposVacios()) {
+				            JOptionPane.showMessageDialog(null, "Por favor, complete todos los campos obligatorios.", 
+				                                          "Campos vacíos", JOptionPane.WARNING_MESSAGE);
+				            return; 
+				        }
+				        
 						if(selected == null) {
 							String codigo = txtCodigo.getText();
 							String cedula = txtCedula.getText();
@@ -317,6 +331,16 @@ public class RegistroMedico extends JDialog {
 			spnExequatur.setValue(selected.getExequatur());
 			
 		}
-		
+	}
+	
+	private boolean camposVacios() {
+	    return txtNombre.getText().isEmpty() || 
+	           txtCedula.getText().isEmpty() || 
+	           txtApellido.getText().isEmpty() || 
+	           txtTelefono.getText().isEmpty() || 
+	           txtDireccion.getText().isEmpty() || 
+	           txtEdad.getText().isEmpty() || 
+	           cbxSexo.getSelectedIndex() == 0 || 
+	           cbxEspecialidad.getSelectedIndex() == 0;
 	}
 }
