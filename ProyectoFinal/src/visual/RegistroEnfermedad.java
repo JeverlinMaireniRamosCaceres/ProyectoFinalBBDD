@@ -50,9 +50,9 @@ public class RegistroEnfermedad extends JDialog {
 	public RegistroEnfermedad(Enfermedad enfermedad) {
 		selected = enfermedad;
 		if(selected == null) {
-			setTitle("Registro de paciente");
+			setTitle("Registro de enfermedad");
 		} else {
-			setTitle("Modificar paciente");	
+			setTitle("Modificar enfermedad");	
 		}
 		
 		setBounds(100, 100, 474, 292);
