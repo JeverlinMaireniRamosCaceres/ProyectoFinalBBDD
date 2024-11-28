@@ -1,6 +1,7 @@
 package logico;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 public class ClinicaMedica {
 	
@@ -134,6 +135,14 @@ public class ClinicaMedica {
 
 	public void setLasCitas(ArrayList<Cita> lasCitas) {
 		this.lasCitas = lasCitas;
+	}
+
+	public ArrayList<Vacuna> getLasVacunas() {
+		return lasVacunas;
+	}
+
+	public void setLasVacunas(ArrayList<Vacuna> lasVacunas) {
+		this.lasVacunas = lasVacunas;
 	}
 
 	public void insertarPaciente(Paciente paciente) {
@@ -309,7 +318,7 @@ public class ClinicaMedica {
 	    return cita; 
 	}
 
-	public int buscarCitaByIdCitaGetIndex(String idCita) {
+	public int buscarCitaByIdGetIndex(String idCita) {
 	    int index = -1;
 	    boolean encontrado = false;
 	    int i = 0;
@@ -328,12 +337,19 @@ public class ClinicaMedica {
 	        lasCitas.remove(cita); 
 	    } 
 	}
+	
+	public void updateCita(Cita cita) {
+		int index = buscarCitaByIdGetIndex(cita.getIdCita());
+		if(index != -1) {
+			lasCitas.set(index, cita);
+		}
+	}
 
-	public boolean existeCita(String fecha, String hora, Medico medico) {
+	public boolean existeCita(Date fecha, Date hora, Medico medico) {
 		boolean existe = false;
 		int i = 0;
 		while(!existe && i<lasCitas.size()) {
-			if(lasCitas.get(i).getFecha().equalsIgnoreCase(fecha) && lasCitas.get(i).getHora().equalsIgnoreCase(hora) && lasCitas.get(i).getMedico().equals(medico)) {
+			if(lasCitas.get(i).getFecha().equals(fecha) && lasCitas.get(i).getHora().equals(hora) && lasCitas.get(i).getMedico().equals(medico)) {
 				existe = true;
 			}
 			i++;
@@ -341,4 +357,17 @@ public class ClinicaMedica {
 		return existe;
 	}
 
+	public Vacuna buscarVacunaByCodigo(String codigo) {
+		Vacuna vacuna = null;
+	    boolean encontrado = false;
+	    int i = 0;
+	    while (!encontrado && i < lasVacunas.size()) { 
+	        if (lasVacunas.get(i).getIdVacuna().equalsIgnoreCase(codigo)) { 
+	        	vacuna = lasVacunas.get(i); 
+	            encontrado = true; 
+	        }
+	        i++; 
+	    }
+	    return vacuna; 
+	}
 }

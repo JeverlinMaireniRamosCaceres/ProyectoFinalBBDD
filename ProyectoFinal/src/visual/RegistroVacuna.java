@@ -82,7 +82,9 @@ public class RegistroVacuna extends JDialog {
 			panel.add(lblNewLabel_1);
 			
 			spnFechaVen = new JSpinner();
-			spnFechaVen.setModel(new SpinnerDateModel(new Date(1732161600000L), null, null, Calendar.DAY_OF_YEAR));
+			spnFechaVen.setModel(new SpinnerDateModel(new Date(), null, null, Calendar.DAY_OF_YEAR));
+			JSpinner.DateEditor dateEditor = new JSpinner.DateEditor(spnFechaVen, "dd/MM/yy");
+			spnFechaVen.setEditor(dateEditor);
 			spnFechaVen.setBounds(344, 19, 128, 20);
 			panel.add(spnFechaVen);
 			

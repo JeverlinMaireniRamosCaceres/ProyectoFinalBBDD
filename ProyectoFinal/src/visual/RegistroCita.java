@@ -34,7 +34,7 @@ public class RegistroCita extends JDialog {
 	private JTextField txtMedico;
 	private JTextField txtEspecialidad;
 	private JTextField txtMotivo;
-	private Medico medico = null;
+	private Medico medico;
 	private JSpinner spnFecha;
 	private JSpinner spnHora;
 	private Cita selected;
@@ -200,39 +200,40 @@ public class RegistroCita extends JDialog {
 					public void actionPerformed(ActionEvent e) {
 						
 						if (selected == null) {
-							Cita cita = new Cita(txtCodigo.getText(), txtNombre.getText(), medico, spnFecha.getValue().toString(), spnHora.getValue().toString(), txtMotivo.getText());
-							ClinicaMedica.getInstance().insertarCita(cita);
-							JOptionPane.showMessageDialog(null, "Operacion Satisfactoria", "Informacion", JOptionPane.INFORMATION_MESSAGE);
-							clean();
+
+							if (camposVacios()) {
+							    JOptionPane.showMessageDialog(null, "Todos los campos son obligatorios", "Información", JOptionPane.ERROR_MESSAGE);
+							} else if (ClinicaMedica.getInstance().existeCita((Date) spnFecha.getValue(), (Date) spnHora.getValue(), medico)) {
+							    JOptionPane.showMessageDialog(null, "No se pudo agendar cita, horario no disponible", "Información", JOptionPane.ERROR_MESSAGE);
+							} else {
+							    Cita cita = new Cita(
+							        txtCodigo.getText(),
+							        txtNombre.getText(),
+							        medico,
+							        (Date) spnFecha.getValue(),
+							        (Date) spnHora.getValue(),
+							        txtMotivo.getText()
+							    );
+
+							    ClinicaMedica.getInstance().insertarCita(cita);
+
+							    // Confirmar la operación y limpiar campos
+							    JOptionPane.showMessageDialog(null, "Operación Satisfactoria", "Información", JOptionPane.INFORMATION_MESSAGE);
+							    clean();
+							}
 						}
 						else {
 							selected.setIdCita(txtCodigo.getText());
 							selected.setNombrePersona(txtNombre.getText());
 							selected.setMedico(medico);
-							selected.setFecha(spnFecha.getValue().toString());
-							selected.setHora(spnHora.getValue().toString());
+							selected.setFecha((Date) spnFecha.getValue()); 
+							selected.setHora((Date) spnHora.getValue());
 							selected.setMotivo(txtMotivo.getText());
+							ClinicaMedica.getInstance().updateCita(selected);
+							ListadoCitas.loadCitas();
+							JOptionPane.showMessageDialog(null, "Operación exitosa", "Información", JOptionPane.INFORMATION_MESSAGE);
+							dispose();
 						}
-						
-						SimpleDateFormat dateFormatter = new SimpleDateFormat("dd/MM/yyyy");
-				        SimpleDateFormat timeFormatter = new SimpleDateFormat("hh:mm a");
-				        String fechaCita = dateFormatter.format((Date) spnFecha.getValue());
-				        String horaCita = timeFormatter.format((Date) spnHora.getValue());
-
-				        if (ClinicaMedica.getInstance().existeCita(fechaCita, horaCita, medico)) {
-				            JOptionPane.showMessageDialog(null, "No se pudo agendar cita, horario no disponible", "Información", JOptionPane.ERROR_MESSAGE);
-				        } else if(camposVacios()) {
-				            JOptionPane.showMessageDialog(null, "Todos los campos son obligatorios", "Información", JOptionPane.ERROR_MESSAGE);
-				        }
-				        else {
-				            Cita cita = new Cita(txtCodigo.getText(), txtNombre.getText(), medico, fechaCita, 
-					                horaCita, txtMotivo.getText());
-					            ClinicaMedica.getInstance().insertarCita(cita);
-					            JOptionPane.showMessageDialog(null, "Operación Satisfactoria", "Información", JOptionPane.INFORMATION_MESSAGE);
-					            clean();
-
-				        }
-
 					}
 				});
 				btnRegistrar.setActionCommand("OK");
@@ -250,6 +251,7 @@ public class RegistroCita extends JDialog {
 				buttonPane.add(btnCancelar);
 			}
 		}
+		loadCita();
 	}
 	private void clean() {
 	    txtCodigo.setText("C-" + ClinicaMedica.getInstance().codCita);
@@ -268,5 +270,17 @@ public class RegistroCita extends JDialog {
 			estanVacios = true;
 		}
 		return estanVacios;
+	}
+	private void loadCita() {
+		if(selected != null) {
+			txtCodigo.setText(selected.getIdCita());
+			txtNombre.setText(selected.getNombrePersona());
+			txtMedico.setText(selected.getMedico().getNombre()+" "+selected.getMedico().getApellido());
+			txtEspecialidad.setText(selected.getMedico().getEspecialidad());
+			txtMotivo.setText(selected.getMotivo());
+			medico = selected.getMedico();
+			spnFecha.setValue(selected.getFecha());
+			spnHora.setValue(selected.getHora());
+		}
 	}
 }

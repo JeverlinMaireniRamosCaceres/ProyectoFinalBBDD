@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -27,9 +28,10 @@ public class ListadoCitas extends JDialog {
 	private static DefaultTableModel modelo;
 	private int index = -1;
 	private JButton btnDetalle;
-	private JButton btnModificar;
 	private Cita selected;
 	private static Object[] row;
+	private JButton btnModificar;
+	private JButton btnEliminar;
 	/**
 	 * Launch the application.
 	 */
@@ -67,7 +69,7 @@ public class ListadoCitas extends JDialog {
 						public void mouseClicked(MouseEvent e) {
 							index = table.getSelectedRow();
 							if(index >= 0) {
-								btnDetalle.setEnabled(true);
+								btnEliminar.setEnabled(true);
 								btnModificar.setEnabled(true);
 								String codigo = table.getValueAt(index, 0).toString();
 								selected = ClinicaMedica.getInstance().buscarCitaByIdCita(codigo);
@@ -90,7 +92,7 @@ public class ListadoCitas extends JDialog {
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
-				JButton btnModificar = new JButton("Modificar");
+				btnModificar = new JButton("Modificar");
 				btnModificar.addActionListener(new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent e) {
@@ -105,7 +107,7 @@ public class ListadoCitas extends JDialog {
 				buttonPane.add(btnModificar);
 			}
 			{
-				JButton btnEliminar = new JButton("Eliminar");
+				btnEliminar = new JButton("Eliminar");
 			    btnEliminar.addActionListener(new ActionListener() {
 			        @Override
 			        public void actionPerformed(ActionEvent e) {
@@ -143,17 +145,22 @@ public class ListadoCitas extends JDialog {
 		}
 	}
 	public static void loadCitas() {
-		modelo.setRowCount(0);
-		ArrayList<Cita> ci = ClinicaMedica.getInstance().getLasCitas();
-		row = new Object[table.getColumnCount()];
-		for(Cita cita : ci) {
-			row[0] = cita.getIdCita();
-			row[1] = cita.getNombrePersona();
-			row[2] = cita.getMedico().getApellido();
-			row[3] = cita.getFecha();
-			row[4] = cita.getHora();
-			row[5] = cita.getHora();
-			modelo.addRow(row);
-		}
+	    modelo.setRowCount(0);
+	    ArrayList<Cita> ci = ClinicaMedica.getInstance().getLasCitas();
+	    row = new Object[table.getColumnCount()];
+
+	    SimpleDateFormat dateFormatter = new SimpleDateFormat("dd/MM/yyyy");
+	    SimpleDateFormat timeFormatter = new SimpleDateFormat("hh:mm a");
+
+	    for (Cita cita : ci) {
+	        row[0] = cita.getIdCita();
+	        row[1] = cita.getNombrePersona();
+	        row[2] = cita.getMedico().getNombre() + " " + cita.getMedico().getApellido();
+	        row[3] = dateFormatter.format(cita.getFecha());
+	        row[4] = timeFormatter.format(cita.getHora());
+	        row[5] = cita.getMotivo();
+	        modelo.addRow(row); // Agregar la fila al modelo
+	    }
 	}
+
 }

@@ -165,6 +165,34 @@ public class Principal extends JFrame {
 			}
 		});
 		mnNewMenu_4.add(mntmNewMenuItem_8);
+		
+		JMenu mnNewMenu_5 = new JMenu("Vacunas");
+		menuBar.add(mnNewMenu_5);
+		
+		JMenuItem mntmNewMenuItem_10 = new JMenuItem("Listado");
+		mnNewMenu_5.add(mntmNewMenuItem_10);
+		
+		JMenuItem mntmNewMenuItem_11 = new JMenuItem("Registrar");
+		mntmNewMenuItem_11.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				RegistroVacuna rv = new RegistroVacuna();
+				rv.setModal(true);
+				rv.setVisible(true);
+				
+			}
+		});
+		mnNewMenu_5.add(mntmNewMenuItem_11);
+		
+		JMenuItem mntmNewMenuItem_12 = new JMenuItem("Vacunar");
+		mntmNewMenuItem_12.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Vacunar v =  new Vacunar();
+				v.setModal(true);
+				v.setVisible(true);
+				
+			}
+		});
+		mnNewMenu_5.add(mntmNewMenuItem_12);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
