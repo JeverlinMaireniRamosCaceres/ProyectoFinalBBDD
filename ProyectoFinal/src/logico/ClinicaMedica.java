@@ -9,7 +9,7 @@ public class ClinicaMedica {
 	private ArrayList<Medico> losMedicos;
 	private ArrayList<Consulta> lasConsultas;
 	private ArrayList<Enfermedad> lasEnfermedades;
-	private ArrayList<Vacuna> lasVacunas;
+	private static ArrayList<Vacuna> lasVacunas;
 	private ArrayList<Cita> lasCitas;
 	public static int codVacuna;
 	public static int codPaciente;
@@ -137,7 +137,7 @@ public class ClinicaMedica {
 		this.lasCitas = lasCitas;
 	}
 
-	public ArrayList<Vacuna> getLasVacunas() {
+	public static ArrayList<Vacuna> getLasVacunas() {
 		return lasVacunas;
 	}
 
@@ -389,7 +389,7 @@ public class ClinicaMedica {
 	    return vacuna; 
 	}
 	
-	public ArrayList<Vacuna> getVacunasGenerales() {
+	public static ArrayList<Vacuna> getVacunasGenerales() {
         return lasVacunas;
     }
 	

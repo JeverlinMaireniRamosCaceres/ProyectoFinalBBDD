@@ -197,6 +197,7 @@ public class RegistroCita extends JDialog {
 					btnRegistrar.setText("Modificar");
 				}
 				btnRegistrar.addActionListener(new ActionListener() {
+					@Override
 					public void actionPerformed(ActionEvent e) {
 						
 						if (selected == null) {

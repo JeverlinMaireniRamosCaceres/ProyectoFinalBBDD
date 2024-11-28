@@ -34,13 +34,14 @@ public class RegistroVacuna extends JDialog {
 	private JSpinner spnFechaVen;
 	private JComboBox cbxFabricante;
 	private JSpinner spnCantidad;
+	private Vacuna selected;
 
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
 		try {
-			RegistroVacuna dialog = new RegistroVacuna();
+			RegistroVacuna dialog = new RegistroVacuna(null);
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
@@ -51,7 +52,15 @@ public class RegistroVacuna extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	public RegistroVacuna() {
+	public RegistroVacuna(Vacuna vacuna) {
+		
+		selected = vacuna; 
+		if(selected == null) {
+			setTitle("Registro de vacuna");
+		} else {
+			setTitle("Modificar vacuna");
+		}
+		
 		setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
 		setTitle("Registrar Vacuna");
 		setBounds(100, 100, 507, 236);
@@ -135,6 +144,9 @@ public class RegistroVacuna extends JDialog {
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
 				JButton btnRegistrar = new JButton("Registrar");
+				if(selected != null) {
+					btnRegistrar.setText("Modificar");
+				}
 				btnRegistrar.addActionListener(new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent e) {
@@ -177,6 +189,17 @@ public class RegistroVacuna extends JDialog {
 				btnCancelar.setActionCommand("Cancel");
 				buttonPane.add(btnCancelar);
 			}
+		}
+		loadVacuna();
+	}
+	private void loadVacuna() {
+		if (selected != null) {
+			txtCodigo.setText(selected.getIdVacuna());
+			txtNombre.setText(selected.getNombreVacuna());
+			cbxTipo.setSelectedItem(selected.getTipo());
+			spnCantidad.setValue(selected.getCantidad());
+			cbxFabricante.setSelectedItem(selected.getFabricante());
+			spnFechaVen.setValue(selected.getFecha());
 		}
 	}
 }

@@ -175,7 +175,7 @@ public class Principal extends JFrame {
 		JMenuItem mntmNewMenuItem_11 = new JMenuItem("Registrar");
 		mntmNewMenuItem_11.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				RegistroVacuna rv = new RegistroVacuna();
+				RegistroVacuna rv = new RegistroVacuna(null);
 				rv.setModal(true);
 				rv.setVisible(true);
 				
