@@ -256,6 +256,13 @@ public class RegistroMedico extends JDialog {
 						if(selected == null) {
 							String codigo = txtCodigo.getText();
 							String cedula = txtCedula.getText();
+							
+					        if (ClinicaMedica.getInstance().cedulaMedicoExiste(cedula)) {
+					            JOptionPane.showMessageDialog(null, "La cédula ya está registrada.", 
+					                                          "Error", JOptionPane.ERROR_MESSAGE);
+					            return;
+					        }
+							
 							String nombre = txtNombre.getText();
 							String apellido = txtApellido.getText();
 							String telefono = txtTelefono.getText();

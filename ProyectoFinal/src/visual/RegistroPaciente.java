@@ -300,6 +300,12 @@ public class RegistroPaciente extends JDialog {
 								    Float.parseFloat(spnPeso.getValue().toString())
 								    
 								);
+					        if (ClinicaMedica.getInstance().cedulaPacienteExiste(txtCedula.getText())) {
+					            JOptionPane.showMessageDialog(null, "La cédula ya está registrada.", 
+					                                          "Error", JOptionPane.ERROR_MESSAGE);
+					            return;
+					        }
+
 							ClinicaMedica.getInstance().insertarPaciente(paciente);
 							JOptionPane.showMessageDialog(null,"Operacion exitosa","Informacion",JOptionPane.INFORMATION_MESSAGE);
 							clean();

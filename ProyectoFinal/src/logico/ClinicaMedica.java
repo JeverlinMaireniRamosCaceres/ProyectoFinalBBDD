@@ -263,6 +263,15 @@ public class ClinicaMedica {
 		return paciente;
 	}
 
+	public boolean cedulaPacienteExiste(String cedula) {
+        for (Paciente paciente : losPacientes) {
+            if (paciente.getCedula().equals(cedula)) {
+                return true; 
+            }
+        }
+        return false; 
+    }
+	
 	public void updatePaciente(Paciente selected) {
 		int index = buscarPacienteByCedulaGetIndex(selected.getCedula());
 		if(index != 1) {
@@ -296,7 +305,16 @@ public class ClinicaMedica {
 		}
 		return medico;
 	}
-
+	
+	public boolean cedulaMedicoExiste(String cedula) {
+        for (Medico medico : losMedicos) {
+            if (medico.getCedula().equals(cedula)) {
+                return true; 
+            }
+        }
+        return false; 
+    }
+	
 	public void updateMedico(Medico selected) {
 		int index = buscarMedicoByCedulaGetIndex(selected.getCedula());
 		if(index != 1) {
