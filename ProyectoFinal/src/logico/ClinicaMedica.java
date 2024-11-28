@@ -370,4 +370,28 @@ public class ClinicaMedica {
 	    }
 	    return vacuna; 
 	}
+	
+	public ArrayList<Vacuna> getVacunasGenerales() {
+        return lasVacunas;
+    }
+	
+	public boolean updateVacuna(String idVacuna, Vacuna nuevaVacuna) {
+	    for (int i = 0; i < lasVacunas.size(); i++) {
+	        if (lasVacunas.get(i).getIdVacuna().equalsIgnoreCase(idVacuna)) {
+	            lasVacunas.set(i, nuevaVacuna);
+	            return true; 
+	        }
+	    }
+	    return false;
+	}
+	
+	public boolean eliminarVacuna(String idVacuna) {
+	    for (int i = 0; i < lasVacunas.size(); i++) {
+	        if (lasVacunas.get(i).getIdVacuna().equalsIgnoreCase(idVacuna)) {
+	            lasVacunas.remove(i);
+	            return true;
+	        }
+	    }
+	    return false; 
+	}
 }
