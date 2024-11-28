@@ -1,11 +1,26 @@
 package visual;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Calendar;
+import java.util.Date;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSpinner;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.SpinnerDateModel;
+import javax.swing.SwingConstants;
+import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 
@@ -13,22 +28,6 @@ import logico.ClinicaMedica;
 import logico.Consulta;
 import logico.Medico;
 import logico.Paciente;
-
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.SwingConstants;
-import javax.swing.JTextField;
-import javax.swing.JSpinner;
-import javax.swing.SpinnerDateModel;
-import java.util.Date;
-import java.util.Calendar;
-import javax.swing.UIManager;
-import java.awt.Color;
-import javax.swing.JTextArea;
-import javax.swing.JScrollPane;
-import javax.swing.JCheckBox;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 public class RegistroConsulta extends JDialog {
 
@@ -160,6 +159,7 @@ public class RegistroConsulta extends JDialog {
 				btnAmpliarDatos = new JButton("Ampliar datos");
 				btnAmpliarDatos.setEnabled(false);
 				btnAmpliarDatos.addActionListener(new ActionListener() {
+					@Override
 					public void actionPerformed(ActionEvent e) {
 						DetallePaciente dp = new DetallePaciente(paciente);
 						dp.setModal(true);
@@ -171,6 +171,7 @@ public class RegistroConsulta extends JDialog {
 				
 				btnSeleccionarPaciente = new JButton("Seleccionar");
 				btnSeleccionarPaciente.addActionListener(new ActionListener() {
+					@Override
 					public void actionPerformed(ActionEvent e) {
 						SeleccionarPaciente sp = new SeleccionarPaciente();
 						sp.setModal(true);
@@ -178,6 +179,7 @@ public class RegistroConsulta extends JDialog {
 						paciente = sp.getSelectedPaciente();
 						if(paciente != null) {
 							txtPaciente.setText(paciente.getNombre()+" "+paciente.getApellido());
+							btnAmpliarDatos.setEnabled(true);
 						}
 					}
 				});
@@ -215,7 +217,7 @@ public class RegistroConsulta extends JDialog {
 			panel_4.add(scrollPane, BorderLayout.CENTER);
 			
 			txtAIndicacion = new JTextArea();
-			scrollPane.setViewportView(txtAIndicacion);
+			scrollPane.setViewportView(txtAIndicacion); 
 			
 			chckbxImportante = new JCheckBox("\u00BFEs relevante?");
 			chckbxImportante.setBounds(90, 181, 137, 23);
@@ -230,6 +232,7 @@ public class RegistroConsulta extends JDialog {
 				btnRegistrar = new JButton("Registrar");
 				
 				btnRegistrar.addActionListener(new ActionListener() {
+					@Override
 					public void actionPerformed(ActionEvent e) {
 						if(camposVacios()) {
 				            JOptionPane.showMessageDialog(null, "Todos los campos son obligatorios", "Información", JOptionPane.ERROR_MESSAGE);
@@ -251,6 +254,7 @@ public class RegistroConsulta extends JDialog {
 			{
 				JButton btnCancelar = new JButton("Cancelar");
 				btnCancelar.addActionListener(new ActionListener() {
+					@Override
 					public void actionPerformed(ActionEvent e) {
 						dispose();
 					}

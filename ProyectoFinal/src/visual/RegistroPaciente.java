@@ -314,6 +314,7 @@ public class RegistroPaciente extends JDialog {
 							selected.setSexo((String) cbxSexo.getSelectedItem());
 							selected.setEstatura(Float.parseFloat(spnEstatura.getValue().toString()));
 							selected.setPeso(Float.parseFloat(spnPeso.getValue().toString()));
+							selected.setFechaNacimiento((Date) spnFecha.getValue());
 							ClinicaMedica.getInstance().updatePaciente(selected);
 							ListadoPacientes.loadPacientes();
 							JOptionPane.showMessageDialog(null,"Operacion exitosa","Informacion",JOptionPane.INFORMATION_MESSAGE);

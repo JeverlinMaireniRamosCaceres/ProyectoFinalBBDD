@@ -100,7 +100,13 @@ public class RegistroMedico extends JDialog {
 			label_1.setBounds(224, 14, 56, 14);
 			panel.add(label_1);
 			
-			txtCedula = new JTextField();
+			//txtCedula = new JTextField();
+			try {
+				txtCedula = new JFormattedTextField(new javax.swing.text.MaskFormatter("###-#######-#"));
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			txtCedula.setColumns(10);
 			txtCedula.setBounds(289, 11, 243, 20);
 			panel.add(txtCedula);
@@ -275,6 +281,7 @@ public class RegistroMedico extends JDialog {
 							selected.setSexo((String) cbxSexo.getSelectedItem());
 							selected.setEspecialidad((String) cbxEspecialidad.getSelectedItem());
 							selected.setExequatur(Integer.parseInt(spnExequatur.getValue().toString()));
+							selected.setFechaNacimiento((Date) spnFechaNacim.getValue());
 							ClinicaMedica.getInstance().updateMedico(selected);
 							ListadoMedicos.loadMedicos();
 							JOptionPane.showMessageDialog(null,"Operacion exitosa","Informacion",JOptionPane.INFORMATION_MESSAGE);
@@ -329,6 +336,8 @@ public class RegistroMedico extends JDialog {
 			cbxSexo.setSelectedItem(selected.getSexo());
 			cbxEspecialidad.setSelectedItem(selected.getEspecialidad());
 			spnExequatur.setValue(selected.getExequatur());
+            spnFechaNacim.setValue(selected.getFechaNacimiento());
+
 			
 		}
 	}

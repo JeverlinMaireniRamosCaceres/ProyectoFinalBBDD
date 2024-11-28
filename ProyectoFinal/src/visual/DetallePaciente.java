@@ -9,7 +9,6 @@ import java.util.Calendar;
 import java.util.Date;
 
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -36,8 +35,8 @@ public class DetallePaciente extends JDialog {
 	private JSpinner spnFechaNacim;
 	private JSpinner spnEstatura;
 	private JSpinner spnPeso;
-	private JComboBox cbxSexo;
 	private JSpinner spnEdad;
+	private JTextField txtSexo;
 
 	/**
 	 * Launch the application.
@@ -152,11 +151,6 @@ public class DetallePaciente extends JDialog {
 				spnFechaNacim.setBounds(141, 142, 129, 20);
 				panel_1.add(spnFechaNacim);
 				
-				cbxSexo = new JComboBox();
-				cbxSexo.setEnabled(false);
-				cbxSexo.setBounds(456, 142, 90, 20);
-				panel_1.add(cbxSexo);
-				
 				JLabel label_7 = new JLabel("Sexo:");
 				label_7.setHorizontalAlignment(SwingConstants.RIGHT);
 				label_7.setBounds(400, 145, 46, 14);
@@ -191,6 +185,12 @@ public class DetallePaciente extends JDialog {
 				spnEdad.setEnabled(false);
 				spnEdad.setBounds(335, 142, 65, 20);
 				panel_1.add(spnEdad);
+				
+				txtSexo = new JTextField();
+				txtSexo.setEnabled(false);
+				txtSexo.setBounds(455, 142, 91, 20);
+				panel_1.add(txtSexo);
+				txtSexo.setColumns(10);
 			}
 			
 			JPanel panel_1 = new JPanel();
@@ -238,6 +238,12 @@ public class DetallePaciente extends JDialog {
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
 				JButton btnCancelar = new JButton("Cancelar");
+				btnCancelar.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						dispose();
+					}
+				});
 				btnCancelar.setActionCommand("Cancel");
 				buttonPane.add(btnCancelar);
 			}
@@ -254,7 +260,7 @@ public class DetallePaciente extends JDialog {
 			txtDireccion.setText(selected.getDireccion());
 			spnFechaNacim.setValue(selected.getFechaNacimiento());
 			spnEdad.setValue(selected.getEdad());
-			cbxSexo.setSelectedItem(selected.getSexo());
+			txtSexo.setText(selected.getSexo());
 			spnEstatura.setValue(selected.getEstatura());
 			spnPeso.setValue(selected.getPeso());
 		}

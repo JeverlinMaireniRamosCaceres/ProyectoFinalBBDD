@@ -158,7 +158,7 @@ public class RegistroEnfermedad extends JDialog {
 					}
 
 					private void clean() {
-						txtCodigo.setText("");
+						txtCodigo.setText("E-"+ClinicaMedica.getInstance().codEnfermedad);
 						txtNombre.setText("");
 						cbxTipo.setSelectedIndex(0);
 						txtASintomas.setText("");

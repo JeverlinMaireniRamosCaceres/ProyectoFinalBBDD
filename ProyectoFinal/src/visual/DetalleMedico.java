@@ -2,9 +2,11 @@ package visual;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.text.SimpleDateFormat;
 
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -24,12 +26,12 @@ public class DetalleMedico extends JDialog {
 	private JTextField txtApellido;
 	private JTextField txtTelefono;
 	private JTextField txtDireccion;
-	private JSpinner spnFecha;
-	private JComboBox cbxEspecialidad;
-	private JComboBox cbxSexo;
 	private JSpinner spnExequatur;
 	Medico selected = null;
 	private JSpinner spnEdad;
+	private JTextField txtSexo;
+	private JTextField txtFecha;
+	private JTextField txtEspecialidad;
 	
 
 	/**
@@ -49,6 +51,7 @@ public class DetalleMedico extends JDialog {
 	 * Create the dialog.
 	 */
 	public DetalleMedico(Medico aux) {
+		setTitle("Detalle Medico");
 		selected = aux;
 		setBounds(100, 100, 568, 300);
 		getContentPane().setLayout(new BorderLayout());
@@ -128,11 +131,6 @@ public class DetalleMedico extends JDialog {
 		label_6.setBounds(10, 142, 109, 14);
 		contentPanel.add(label_6);
 		
-		spnFecha = new JSpinner();
-		spnFecha.setEnabled(false);
-		spnFecha.setBounds(129, 140, 129, 20);
-		contentPanel.add(spnFecha);
-		
 		JLabel label_7 = new JLabel("Edad:");
 		label_7.setHorizontalAlignment(SwingConstants.RIGHT);
 		label_7.setBounds(267, 143, 36, 14);
@@ -143,20 +141,10 @@ public class DetalleMedico extends JDialog {
 		label_8.setBounds(378, 143, 36, 14);
 		contentPanel.add(label_8);
 		
-		cbxSexo = new JComboBox();
-		cbxSexo.setEnabled(false);
-		cbxSexo.setBounds(424, 140, 108, 20);
-		contentPanel.add(cbxSexo);
-		
 		JLabel label_9 = new JLabel("Especialidad:");
 		label_9.setHorizontalAlignment(SwingConstants.RIGHT);
 		label_9.setBounds(11, 179, 87, 14);
 		contentPanel.add(label_9);
-		
-		cbxEspecialidad = new JComboBox();
-		cbxEspecialidad.setEnabled(false);
-		cbxEspecialidad.setBounds(108, 176, 164, 20);
-		contentPanel.add(cbxEspecialidad);
 		
 		JLabel label_10 = new JLabel("Exequatur:");
 		label_10.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -172,12 +160,36 @@ public class DetalleMedico extends JDialog {
 		spnEdad.setEnabled(false);
 		spnEdad.setBounds(312, 139, 56, 20);
 		contentPanel.add(spnEdad);
+		
+		txtSexo = new JTextField();
+		txtSexo.setEnabled(false);
+		txtSexo.setBounds(424, 139, 99, 20);
+		contentPanel.add(txtSexo);
+		txtSexo.setColumns(10);
+		
+		txtFecha = new JTextField();
+		txtFecha.setEnabled(false);
+		txtFecha.setBounds(129, 139, 109, 20);
+		contentPanel.add(txtFecha);
+		txtFecha.setColumns(10);
+		
+		txtEspecialidad = new JTextField();
+		txtEspecialidad.setEnabled(false);
+		txtEspecialidad.setBounds(113, 176, 125, 20);
+		contentPanel.add(txtEspecialidad);
+		txtEspecialidad.setColumns(10);
 		{
 			JPanel buttonPane = new JPanel();
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
 				JButton cancelButton = new JButton("Cancelar");
+				cancelButton.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						dispose();
+					}
+				});
 				cancelButton.setActionCommand("Cancel");
 				buttonPane.add(cancelButton);
 			}
@@ -194,10 +206,11 @@ public class DetalleMedico extends JDialog {
 			txtApellido.setText(selected.getApellido());
 			txtTelefono.setText(selected.getTelefono());
 			txtDireccion.setText(selected.getDireccion());
-			//spnFecha.setValue(selected.getFechaNacimiento());
+			SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+			txtFecha.setText(dateFormat.format(selected.getFechaNacimiento()));
 			spnEdad.setValue(selected.getEdad());
-			cbxSexo.setSelectedItem(selected.getSexo());
-			cbxEspecialidad.setSelectedItem(selected.getEspecialidad());
+			txtSexo.setText(selected.getSexo());
+			txtEspecialidad.setText(selected.getEspecialidad());
 			spnExequatur.setValue(selected.getExequatur());
 		}
 		
