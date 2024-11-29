@@ -149,6 +149,16 @@ public class Principal extends JFrame {
 		});
 		mnNewMenu_3.add(mntmNewMenuItem_7);
 		
+		JMenuItem mntmNewMenuItem_13 = new JMenuItem("Control");
+		mntmNewMenuItem_13.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ControlEnfermedades cf = new ControlEnfermedades();
+				cf.setModal(true);
+				cf.setVisible(true);
+			}
+		});
+		mnNewMenu_3.add(mntmNewMenuItem_13);
+		
 		JMenu mnNewMenu_4 = new JMenu("Consultas");
 		menuBar.add(mnNewMenu_4);
 		

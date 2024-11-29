@@ -221,13 +221,17 @@ public class ClinicaMedica implements Serializable {
 		return consulta;
 	}
 	
-	public Enfermedad buscarEnfermedadPorId(String idEnfermedad) {
-        for (Enfermedad enfermedad : lasEnfermedades) {
-            if (enfermedad.getIdEnfermedad().equals(idEnfermedad)) {
-                return enfermedad; 
-            }
-        }
-        return null; 
+	public Enfermedad buscarEnfermedadByCodigo(String codigo) {
+		Enfermedad enfermedad = null;
+		boolean encontrado = false;
+		int i = 0;
+		while(!encontrado && i < lasEnfermedades.size()) {
+			if(lasEnfermedades.get(i).getIdEnfermedad().equalsIgnoreCase(codigo)) {
+				enfermedad = lasEnfermedades.get(i);
+				encontrado = true;
+			}
+		}
+		return enfermedad;
     }
 	
 	public void actualizarEnfermedad(Enfermedad enfermedadActualizada) {
@@ -427,5 +431,15 @@ public class ClinicaMedica implements Serializable {
 	        }
 	    }
 	    return false; 
+	}
+
+	public int getCantPacientesPoseenEnfermedad(Enfermedad enfermedad) {
+		int cant = 0;
+		for(Paciente paciente:losPacientes) {
+			if(paciente.getMisEnfermedades().contains(enfermedad)) {
+				cant++;
+			}
+		}
+		return cant;
 	}
 }
