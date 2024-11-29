@@ -5,6 +5,10 @@ import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -13,6 +17,8 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
+
+import logico.ClinicaMedica;
 
 public class Principal extends JFrame {
 
@@ -151,6 +157,7 @@ public class Principal extends JFrame {
 		
 		JMenuItem mntmNewMenuItem_13 = new JMenuItem("Control");
 		mntmNewMenuItem_13.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				ControlEnfermedades cf = new ControlEnfermedades();
 				cf.setModal(true);
@@ -184,6 +191,7 @@ public class Principal extends JFrame {
 		
 		JMenuItem mntmNewMenuItem_11 = new JMenuItem("Registrar");
 		mntmNewMenuItem_11.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				RegistroVacuna rv = new RegistroVacuna(null);
 				rv.setModal(true);
@@ -195,6 +203,7 @@ public class Principal extends JFrame {
 		
 		JMenuItem mntmNewMenuItem_12 = new JMenuItem("Vacunar");
 		mntmNewMenuItem_12.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				Vacunar v =  new Vacunar();
 				v.setModal(true);
@@ -203,6 +212,31 @@ public class Principal extends JFrame {
 			}
 		});
 		mnNewMenu_5.add(mntmNewMenuItem_12);
+		
+		JMenu mnNewMenu_6 = new JMenu("Cerrar sesi\u00F3n");
+		menuBar.add(mnNewMenu_6);
+		
+		JMenuItem mntmNewMenuItem_14 = new JMenuItem("Cerrar sesi\u00F3n");
+		mntmNewMenuItem_14.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				FileOutputStream clinica2;
+				ObjectOutputStream clinicalwrite;
+				try {
+				    clinica2 = new FileOutputStream("clinica.dat");
+				    clinicalwrite = new ObjectOutputStream(clinica2);
+				    clinicalwrite.writeObject(ClinicaMedica.getInstance());
+				} catch (FileNotFoundException e1) {
+				    // TODO Auto-generated catch block
+				    e1.printStackTrace();
+				} catch (IOException e1) {
+				    // TODO Auto-generated catch block
+				    e1.printStackTrace();
+				}
+				dispose();
+			}
+		});
+		mnNewMenu_6.add(mntmNewMenuItem_14);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);

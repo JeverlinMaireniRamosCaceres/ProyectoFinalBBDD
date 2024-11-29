@@ -18,6 +18,7 @@ public class ClinicaMedica implements Serializable {
 	private static ArrayList<Vacuna> lasVacunas;
 	private ArrayList<Cita> lasCitas;
 	private ArrayList<Usuario>losUsuarios;
+
 	
 	public ArrayList<Usuario> getLosUsuarios() {
 		return losUsuarios;
@@ -33,6 +34,8 @@ public class ClinicaMedica implements Serializable {
 	public static int codEnfermedad;
 	public static int codCita;
 	public static int codConsulta;
+	public static int codUsuario;
+	private static Usuario loginUsuario;
 	private static ClinicaMedica clinicaMedica = null;
 	
 	public ClinicaMedica() {
@@ -43,6 +46,7 @@ public class ClinicaMedica implements Serializable {
 		lasEnfermedades = new ArrayList<>();
 		lasVacunas = new ArrayList<>();
 		lasCitas = new ArrayList<>();
+		losUsuarios = new ArrayList<>();
 		codVacuna = 1;
 		codPaciente = 1;
 		codMedico = 1;
@@ -442,4 +446,22 @@ public class ClinicaMedica implements Serializable {
 		}
 		return cant;
 	}
+
+	public boolean confirmarLogin(String usuario, String contrasena) {
+		boolean login = false;
+		for(Usuario usua : losUsuarios) {
+			if(usua.getNombre().equalsIgnoreCase(usuario) && usua.getContrasena().equalsIgnoreCase(contrasena)) {
+				loginUsuario = usua;
+				login = true;
+			}
+		}
+		return login;
+	}
+
+	public void regUser(Usuario aux) {
+		losUsuarios.add(aux);
+		codUsuario++;		
+	}
+	
+	
 }
