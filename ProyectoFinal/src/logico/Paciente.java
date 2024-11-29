@@ -5,6 +5,11 @@ import java.util.Date;
 
 public class Paciente extends Persona {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
 	protected HistoriaClinica miHistorial;
 	protected float estatura;
 	protected float peso;

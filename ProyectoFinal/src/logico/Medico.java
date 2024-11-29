@@ -4,6 +4,11 @@ import java.util.Date;
 
 public class Medico extends Persona {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
 	protected String especialidad;
 	protected int exequatur;
 	
