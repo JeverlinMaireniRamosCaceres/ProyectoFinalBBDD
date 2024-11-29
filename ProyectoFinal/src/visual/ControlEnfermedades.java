@@ -123,7 +123,7 @@ public class ControlEnfermedades extends JDialog {
 		ArrayList<Enfermedad> enf = ClinicaMedica.getInstance().getLasEnfermedades();
 		row = new Object[table.getColumnCount()];
 		for(Enfermedad enfermedad : enf) {
-			row[0] = enfermedad.getIdEnfermedad();
+			row[0] = "E-"+enfermedad.getIdEnfermedad();
 			row[1] = enfermedad.getNombre();
 			row[2] = enfermedad.getTipo();
 			row[3] = ClinicaMedica.getInstance().getCantPacientesPoseenEnfermedad(enfermedad);

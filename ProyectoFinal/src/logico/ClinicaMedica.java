@@ -15,7 +15,7 @@ public class ClinicaMedica implements Serializable {
 	private ArrayList<Medico> losMedicos;
 	private ArrayList<Consulta> lasConsultas;
 	private ArrayList<Enfermedad> lasEnfermedades;
-	private static ArrayList<Vacuna> lasVacunas;
+	private ArrayList<Vacuna> lasVacunas;
 	private ArrayList<Cita> lasCitas;
 	private ArrayList<Usuario>losUsuarios;
 
@@ -157,7 +157,7 @@ public class ClinicaMedica implements Serializable {
 		this.lasCitas = lasCitas;
 	}
 
-	public static ArrayList<Vacuna> getLasVacunas() {
+	public ArrayList<Vacuna> getLasVacunas() {
 		return lasVacunas;
 	}
 
@@ -199,6 +199,7 @@ public class ClinicaMedica implements Serializable {
 				medico = losMedicos.get(i);
 				encontrado = true;
 			}
+			i++;
 		}
 		return medico;
 	}
@@ -221,6 +222,7 @@ public class ClinicaMedica implements Serializable {
 				consulta = lasConsultas.get(i);
 				encontrado = true;
 			}
+			i++;
 		}
 		return consulta;
 	}
@@ -234,6 +236,7 @@ public class ClinicaMedica implements Serializable {
 				enfermedad = lasEnfermedades.get(i);
 				encontrado = true;
 			}
+			i++;
 		}
 		return enfermedad;
     }
@@ -269,6 +272,7 @@ public class ClinicaMedica implements Serializable {
 				paciente = losPacientes.get(i);
 				encontrado = true;
 			}
+			i++;
 		}
 		return paciente;
 	}
@@ -312,6 +316,7 @@ public class ClinicaMedica implements Serializable {
 				medico = losMedicos.get(i);
 				encontrado = true;
 			}
+			i++;
 		}
 		return medico;
 	}
@@ -413,7 +418,7 @@ public class ClinicaMedica implements Serializable {
 	    return vacuna; 
 	}
 	
-	public static ArrayList<Vacuna> getVacunasGenerales() {
+	public ArrayList<Vacuna> getVacunasGenerales() {
         return lasVacunas;
     }
 	
