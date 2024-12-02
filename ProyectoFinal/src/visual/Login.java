@@ -59,6 +59,12 @@ public class Login extends JDialog {
 	                ClinicaMedica temp = null;
 					try {
 						temp = (ClinicaMedica)clinicaRead.readObject();
+						ClinicaMedica.setCodVacuna((Integer) clinicaRead.readObject());
+			            ClinicaMedica.setCodPaciente((Integer) clinicaRead.readObject());
+			            ClinicaMedica.setCodMedico((Integer) clinicaRead.readObject());
+			            ClinicaMedica.setCodEnfermedad((Integer) clinicaRead.readObject());
+			            ClinicaMedica.setCodCita((Integer) clinicaRead.readObject());
+			            ClinicaMedica.setCodConsulta((Integer) clinicaRead.readObject());
 					} catch (ClassNotFoundException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();

@@ -226,6 +226,12 @@ public class Principal extends JFrame {
 				    clinica2 = new FileOutputStream("clinica.dat");
 				    clinicalwrite = new ObjectOutputStream(clinica2);
 				    clinicalwrite.writeObject(ClinicaMedica.getInstance());
+				    clinicalwrite.writeObject(ClinicaMedica.getCodVacuna());
+				    clinicalwrite.writeObject(ClinicaMedica.getCodPaciente());
+				    clinicalwrite.writeObject(ClinicaMedica.getCodMedico());
+				    clinicalwrite.writeObject(ClinicaMedica.getCodEnfermedad());
+				    clinicalwrite.writeObject(ClinicaMedica.getCodCita());
+				    clinicalwrite.writeObject(ClinicaMedica.getCodConsulta());
 				} catch (FileNotFoundException e1) {
 				    // TODO Auto-generated catch block
 				    e1.printStackTrace();

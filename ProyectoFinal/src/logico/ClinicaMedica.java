@@ -3,6 +3,7 @@ package logico;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
+import java.io.*;
 
 public class ClinicaMedica implements Serializable {
 	
