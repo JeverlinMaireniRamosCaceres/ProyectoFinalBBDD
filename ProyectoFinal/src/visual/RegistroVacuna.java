@@ -150,18 +150,31 @@ public class RegistroVacuna extends JDialog {
 				btnRegistrar.addActionListener(new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent e) {
-						String codigo = txtCodigo.getText();
-						String nombre = txtNombre.getText();
-					    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-					    Date fechaVen = (Date)(spnFechaVen.getValue());
-					    String tipo = cbxTipo.getSelectedItem().toString();
-					    String fabricante = cbxFabricante.getSelectedItem().toString();
-					    int cantidad = new Integer(spnCantidad.getValue().toString());
 						
-						Vacuna vacuna = new Vacuna(codigo,fechaVen,nombre,tipo,fabricante,cantidad);
-						ClinicaMedica.getInstance().insertarVacuna(vacuna);
-						JOptionPane.showMessageDialog(null,"Operacion exitosa","Informacion",JOptionPane.INFORMATION_MESSAGE);
-						clean();
+						if (selected == null) {
+							String codigo = txtCodigo.getText();
+							String nombre = txtNombre.getText();
+						    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+						    Date fechaVen = (Date)(spnFechaVen.getValue());
+						    String tipo = cbxTipo.getSelectedItem().toString();
+						    String fabricante = cbxFabricante.getSelectedItem().toString();
+						    int cantidad = new Integer(spnCantidad.getValue().toString());
+							
+							Vacuna vacuna = new Vacuna(codigo,fechaVen,nombre,tipo,fabricante,cantidad);
+							ClinicaMedica.getInstance().insertarVacuna(vacuna);
+							JOptionPane.showMessageDialog(null,"Operacion exitosa","Informacion",JOptionPane.INFORMATION_MESSAGE);
+							clean();
+						}
+						else {
+							selected.setIdVacuna(txtCodigo.getText());
+							selected.setNombreVacuna(txtNombre.getText());
+							selected.setFecha((Date)spnFechaVen.getValue());
+							selected.setTipo(cbxTipo.getSelectedItem().toString());
+							selected.setFabricante(cbxFabricante.getSelectedItem().toString());
+							selected.setCantidad((int)spnCantidad.getValue());
+							ClinicaMedica.getInstance().updateVacuna(selected.getIdVacuna(), vacuna);
+							JOptionPane.showMessageDialog(null,"Operacion exitosa","Informacion",JOptionPane.INFORMATION_MESSAGE);
+						}
 					}
 
 					private void clean() {

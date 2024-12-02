@@ -468,6 +468,11 @@ public class ClinicaMedica implements Serializable {
 		losUsuarios.add(aux);
 		codUsuario++;		
 	}
+
+	public void modificarVacuna(Vacuna vacuna) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 	
 }

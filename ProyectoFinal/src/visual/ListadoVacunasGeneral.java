@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -30,6 +32,7 @@ public class ListadoVacunasGeneral extends JDialog {
 	private JButton btnAgregar;
 	private Vacuna selected;
 	private JButton btnModificar;
+	private int index = -1;
 	
 	/**
 	 * Launch the application.
@@ -63,6 +66,18 @@ public class ListadoVacunasGeneral extends JDialog {
 				panel.add(scrollPane, BorderLayout.CENTER);
 				{
 					table = new JTable();
+					table.addMouseListener(new MouseAdapter() {
+						@Override
+						public void mouseClicked(MouseEvent e) {
+							index = table.getSelectedRow();
+							if(index >= 0) {
+								btnModificar.setEnabled(true);
+								btnModificar.setEnabled(true);
+								String codigo = table.getValueAt(index, 0).toString();
+								selected = ClinicaMedica.getInstance().buscarVacunaByCodigo(codigo);
+							}
+						}
+					});
 					modelo = new DefaultTableModel();
 					String[] identificadores = {"Código", "Fecha Vencimiento", "Nombre", "Tipo", "Fabricante", "Cant."};
 					modelo.setColumnIdentifiers(identificadores);
@@ -108,6 +123,7 @@ public class ListadoVacunasGeneral extends JDialog {
 						RegistroVacuna rv = new RegistroVacuna(selected);
 						rv.setModal(true);
 						rv.setVisible(true);
+						loadVacunas();
 					}
 				});
 				btnModificar.setEnabled(false);
