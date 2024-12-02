@@ -187,6 +187,14 @@ public class Principal extends JFrame {
 		menuBar.add(mnNewMenu_5);
 		
 		JMenuItem mntmNewMenuItem_10 = new JMenuItem("Listado");
+		mntmNewMenuItem_10.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				ListadoVacunasGeneral lv = new ListadoVacunasGeneral();
+				lv.setModal(true);
+				lv.setVisible(true);
+			}
+		});
 		mnNewMenu_5.add(mntmNewMenuItem_10);
 		
 		JMenuItem mntmNewMenuItem_11 = new JMenuItem("Registrar");

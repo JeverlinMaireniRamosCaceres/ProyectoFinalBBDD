@@ -3,7 +3,6 @@ package logico;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
-import java.io.*;
 
 public class ClinicaMedica implements Serializable {
 	
@@ -469,10 +468,6 @@ public class ClinicaMedica implements Serializable {
 		codUsuario++;		
 	}
 
-	public void modificarVacuna(Vacuna vacuna) {
-		// TODO Auto-generated method stub
-		
-	}
 	
 	
 }
