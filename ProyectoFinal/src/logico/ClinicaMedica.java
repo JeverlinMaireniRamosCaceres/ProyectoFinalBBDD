@@ -468,6 +468,32 @@ public class ClinicaMedica implements Serializable {
 		codUsuario++;		
 	}
 
-	
-	
+	public Enfermedad buscarEnfermedadById(String codigo) {
+		Enfermedad enfermedad = null;
+		boolean encontrado = false;
+	    int i = 0;
+	    while (!encontrado && i < lasEnfermedades.size()) { 
+	        if (lasEnfermedades.get(i).getIdEnfermedad().equalsIgnoreCase(codigo)) { 
+	        	enfermedad = lasEnfermedades.get(i); 
+	            encontrado = true; 
+	        }
+	        i++; 
+	    }
+	    return enfermedad;
+	}
+
+	public Enfermedad buscarEnfermedadPacienteByCodigo(Paciente paciente, String codigo) {
+		ArrayList<Enfermedad> enfermedades = paciente.getMisEnfermedades();
+		Enfermedad enfermedad = null;
+		boolean encontrado = false;
+	    int i = 0;
+	    while (!encontrado && i < enfermedades.size()) { 
+	        if (enfermedades.get(i).getIdEnfermedad().equalsIgnoreCase(codigo)) { 
+	        	enfermedad = enfermedades.get(i); 
+	            encontrado = true; 
+	        }
+	        i++; 
+	    }
+	    return enfermedad;
+	}
 }

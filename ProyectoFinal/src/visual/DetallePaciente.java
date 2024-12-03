@@ -195,7 +195,7 @@ public class DetallePaciente extends JDialog {
 			
 			JPanel panel_1 = new JPanel();
 			panel_1.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Historial de vacunas", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
-			panel_1.setBounds(10, 247, 276, 57);
+			panel_1.setBounds(13, 247, 178, 57);
 			panel.add(panel_1);
 			panel_1.setLayout(null);
 			
@@ -208,12 +208,12 @@ public class DetallePaciente extends JDialog {
 					lv.setVisible(true);
 				}
 			});
-			btnAbrirHVacunas.setBounds(10, 23, 256, 23);
+			btnAbrirHVacunas.setBounds(10, 23, 158, 23);
 			panel_1.add(btnAbrirHVacunas);
 			
 			JPanel panel_2 = new JPanel();
 			panel_2.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Historial m\u00E9dico", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
-			panel_2.setBounds(301, 247, 276, 57);
+			panel_2.setBounds(204, 247, 178, 57);
 			panel.add(panel_2);
 			panel_2.setLayout(null);
 			
@@ -228,8 +228,27 @@ public class DetallePaciente extends JDialog {
 					}
 				}
 			});
-			btnAbrirHMedico.setBounds(10, 23, 256, 23);
+			btnAbrirHMedico.setBounds(10, 23, 158, 23);
 			panel_2.add(btnAbrirHMedico);
+			
+			JPanel panel_3 = new JPanel();
+			panel_3.setBorder(new TitledBorder(null, "Historial de enfermedades", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+			panel_3.setBounds(395, 247, 178, 57);
+			panel.add(panel_3);
+			panel_3.setLayout(null);
+			
+			JButton btnHistorialEnf = new JButton("Abrir");
+			btnHistorialEnf.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					if(selected != null) {
+						ListadoEnfermedadesPaciente lep = new ListadoEnfermedadesPaciente(selected);
+						lep.setModal(true);
+						lep.setVisible(true);
+					}
+				}
+			});
+			btnHistorialEnf.setBounds(10, 23, 158, 23);
+			panel_3.add(btnHistorialEnf);
 		}
 		{
 			JPanel buttonPane = new JPanel();

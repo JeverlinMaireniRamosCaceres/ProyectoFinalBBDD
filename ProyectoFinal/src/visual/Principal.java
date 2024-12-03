@@ -169,9 +169,6 @@ public class Principal extends JFrame {
 		JMenu mnNewMenu_4 = new JMenu("Consultas");
 		menuBar.add(mnNewMenu_4);
 		
-		JMenuItem mntmNewMenuItem_9 = new JMenuItem("Listado");
-		mnNewMenu_4.add(mntmNewMenuItem_9);
-		
 		JMenuItem mntmNewMenuItem_8 = new JMenuItem("Registro");
 		mntmNewMenuItem_8.addActionListener(new ActionListener() {
 			@Override
