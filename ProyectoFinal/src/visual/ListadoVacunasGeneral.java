@@ -1,6 +1,5 @@
 package visual;
 import java.awt.BorderLayout;
-
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -8,7 +7,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -21,7 +19,6 @@ import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 
 import logico.ClinicaMedica;
-import logico.Paciente;
 import logico.Vacuna;
 
 public class ListadoVacunasGeneral extends JDialog {
@@ -34,7 +31,7 @@ public class ListadoVacunasGeneral extends JDialog {
 	private JButton btnModificar;
 	private int index = -1;
 	
-	/**
+	/** 
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
@@ -66,11 +63,12 @@ public class ListadoVacunasGeneral extends JDialog {
 				panel.add(scrollPane, BorderLayout.CENTER);
 				{
 					table = new JTable();
+					
 					table.addMouseListener(new MouseAdapter() {
 						@Override
 						public void mouseClicked(MouseEvent e) {
 							index = table.getSelectedRow();
-							if(index >= 0) {
+							if(index >= 0 && !ClinicaMedica.getLoginUsuario().equals("Médico")) {
 								btnModificar.setEnabled(true);
 								btnModificar.setEnabled(true);
 								String codigo = table.getValueAt(index, 0).toString();
@@ -104,6 +102,7 @@ public class ListadoVacunasGeneral extends JDialog {
 				
 				btnAgregar = new JButton("Agregar");
 				btnAgregar.addActionListener(new ActionListener() {
+					@Override
 					public void actionPerformed(ActionEvent e) {
 						RegistroVacuna rv = new RegistroVacuna(null);
 						rv.setModal(true);
@@ -117,6 +116,8 @@ public class ListadoVacunasGeneral extends JDialog {
 				getRootPane().setDefaultButton(btnAgregar);
 				
 				btnModificar = new JButton("Modificar");
+				
+				
 				btnModificar.addActionListener(new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent e) {
@@ -125,6 +126,9 @@ public class ListadoVacunasGeneral extends JDialog {
 						rv.setVisible(true);
 						loadVacunas();
 					}
+					
+
+					
 				});
 				btnModificar.setEnabled(false);
 				btnModificar.setActionCommand("OK");

@@ -29,7 +29,6 @@ import logico.Consulta;
 import logico.Enfermedad;
 import logico.Medico;
 import logico.Paciente;
-import java.awt.Font;
 
 public class RegistroConsulta extends JDialog {
 
@@ -42,15 +41,15 @@ public class RegistroConsulta extends JDialog {
 	private JCheckBox chckbxImportante;
 	private Medico medico = null;
 	private Paciente paciente = null;
-	private Consulta updated;
+	private Consulta updated; 
 	private JSpinner spnFecha;
 	private JButton btnAmpliarDatos;
 	private JButton btnRegistrar;
 	private JButton btnSeleccionarPaciente;
-	private JButton btnSeleccionarMedico;
 	private JTextField txtEnfermedad;
 	private Enfermedad enfermedad;
 	private JButton btnSeleccionarEnfermedad;
+	
 	/**
 	 * Launch the application.
 	 */
@@ -68,6 +67,11 @@ public class RegistroConsulta extends JDialog {
 	 * Create the dialog.
 	 */
 	public RegistroConsulta(Consulta aux) {
+		
+		if(ClinicaMedica.getLoginUsuario().getRol().equals("Médico")) {
+			medico = ClinicaMedica.getLoginUsuario().getMedicoRelacionado();
+		}
+		
 		updated = aux;
 		if(updated == null) {
 			setTitle("Registro de consulta");
@@ -93,26 +97,15 @@ public class RegistroConsulta extends JDialog {
 			panel_1.setLayout(null);
 			{
 				txtMedico = new JTextField();
-				txtMedico.setBounds(10, 50, 163, 20);
+				txtMedico.setBounds(10, 36, 163, 20);
 				panel_1.add(txtMedico);
 				txtMedico.setEditable(false);
 				txtMedico.setColumns(10);
-			}
-			
-			btnSeleccionarMedico = new JButton("Seleccionar");
-			btnSeleccionarMedico.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					SeleccionarMedico sm = new SeleccionarMedico();
-					sm.setModal(true);
-					sm.setVisible(true);
-					medico = sm.getSelectedMedico();
-					if(medico != null) {
-						txtMedico.setText(medico.getNombre()+" "+medico.getApellido());
-					}
+				if(ClinicaMedica.getLoginUsuario().getRol().equals("Médico")) {
+					txtMedico.setText(medico.getNombre()+" "+medico.getApellido());
 				}
-			});
-			btnSeleccionarMedico.setBounds(10, 23, 163, 20);
-			panel_1.add(btnSeleccionarMedico);
+
+			}
 			
 			JPanel panel_2 = new JPanel();
 			panel_2.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
@@ -239,6 +232,7 @@ public class RegistroConsulta extends JDialog {
 			
 			btnSeleccionarEnfermedad = new JButton("Seleccionar");
 			btnSeleccionarEnfermedad.addActionListener(new ActionListener() {
+				@Override
 				public void actionPerformed(ActionEvent e) {
 					SeleccionarEnfermedad se = new SeleccionarEnfermedad();
 					se.setModal(true);

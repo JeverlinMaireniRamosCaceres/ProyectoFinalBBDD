@@ -29,7 +29,7 @@ public class ListadoMedicos extends JDialog {
 	private JButton btnModificar;
 	private Medico selected;
 	
-	/**
+	/** 
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {

@@ -43,7 +43,7 @@ public class Principal extends JFrame {
 		});
 	}
 
-	/**
+	/** 
 	 * Create the frame.
 	 */
 	public Principal() {
@@ -57,6 +57,8 @@ public class Principal extends JFrame {
 		
 		JMenu mnNewMenu = new JMenu("Pacientes");
 		menuBar.add(mnNewMenu);
+		
+
 		
 		JMenuItem mntmNewMenuItem = new JMenuItem("Listado");
 		mntmNewMenuItem.addActionListener(new ActionListener() {
@@ -80,8 +82,16 @@ public class Principal extends JFrame {
 		});
 		mnNewMenu.add(mntmNewMenuItem_1);
 		
+		if(ClinicaMedica.getLoginUsuario().getRol().equalsIgnoreCase("Administrativo")) {
+			mntmNewMenuItem_1.setEnabled(false);
+		}
+
 		JMenu mnNewMenu_1 = new JMenu("M\u00E9dicos");
 		menuBar.add(mnNewMenu_1);
+		
+		if(ClinicaMedica.getLoginUsuario().getRol().equalsIgnoreCase("Médico")) {
+			mnNewMenu_1.setEnabled(false);
+		}
 		
 		JMenuItem mntmNewMenuItem_2 = new JMenuItem("Listado");
 		mntmNewMenuItem_2.addActionListener(new ActionListener() {
@@ -133,6 +143,7 @@ public class Principal extends JFrame {
 		JMenu mnNewMenu_3 = new JMenu("Enfermedades");
 		menuBar.add(mnNewMenu_3);
 		
+		
 		JMenuItem mntmNewMenuItem_6 = new JMenuItem("Listado");
 		mntmNewMenuItem_6.addActionListener(new ActionListener() {
 			@Override
@@ -143,6 +154,7 @@ public class Principal extends JFrame {
 			}
 		});
 		mnNewMenu_3.add(mntmNewMenuItem_6);
+		
 		
 		JMenuItem mntmNewMenuItem_7 = new JMenuItem("Registrar");
 		mntmNewMenuItem_7.addActionListener(new ActionListener() {
@@ -166,8 +178,18 @@ public class Principal extends JFrame {
 		});
 		mnNewMenu_3.add(mntmNewMenuItem_13);
 		
+		if(ClinicaMedica.getLoginUsuario().getRol().equalsIgnoreCase("Médico")) {
+			mntmNewMenuItem_7.setEnabled(false);
+		
+		}
+		
 		JMenu mnNewMenu_4 = new JMenu("Consultas");
 		menuBar.add(mnNewMenu_4);
+		
+		if(ClinicaMedica.getLoginUsuario().getRol().equalsIgnoreCase("Administrativo")) {
+			mnNewMenu_4.setEnabled(false);
+		
+		}
 		
 		JMenuItem mntmNewMenuItem_8 = new JMenuItem("Registro");
 		mntmNewMenuItem_8.addActionListener(new ActionListener() {
@@ -218,8 +240,19 @@ public class Principal extends JFrame {
 		});
 		mnNewMenu_5.add(mntmNewMenuItem_12);
 		
+		if(ClinicaMedica.getLoginUsuario().getRol().equalsIgnoreCase("Administrativo")) {
+			mntmNewMenuItem_12.setEnabled(false);
+		} else if(ClinicaMedica.getLoginUsuario().getRol().equalsIgnoreCase("Médico")) {
+			mntmNewMenuItem_11.setEnabled(false);
+			mntmNewMenuItem_10.setEnabled(false);
+		}
+		
 		JMenu mnNewMenu_7 = new JMenu("Usuarios");
 		menuBar.add(mnNewMenu_7);
+		
+		if(ClinicaMedica.getLoginUsuario().getRol().equalsIgnoreCase("Administrativo") || ClinicaMedica.getLoginUsuario().getRol().equalsIgnoreCase("Médico") ) {
+			mnNewMenu_7.setEnabled(false);
+		}
 		
 		JMenuItem mntmNewMenuItem_15 = new JMenuItem("Listado");
 		mntmNewMenuItem_15.addActionListener(new ActionListener() {

@@ -7,10 +7,13 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
@@ -18,9 +21,6 @@ import javax.swing.table.DefaultTableModel;
 import logico.Cita;
 import logico.ClinicaMedica;
 import logico.Medico;
-
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
 
 public class ListadoCitas extends JDialog {
 	private final JPanel contentPanel = new JPanel();
@@ -33,7 +33,7 @@ public class ListadoCitas extends JDialog {
 	private JButton btnModificar;
 	private JButton btnEliminar;
 	/**
-	 * Launch the application.
+	 * Launch the application. 
 	 */
 	public static void main(String[] args) {
 		try {
@@ -138,29 +138,60 @@ public class ListadoCitas extends JDialog {
 			}
 			{
 				JButton btnCancelar = new JButton("Cancelar");
+				btnCancelar.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						dispose();
+					}
+				});
 				btnCancelar.setActionCommand("Cancel");
 				buttonPane.add(btnCancelar);
 			}
 			loadCitas();
 		}
 	}
+	
 	public static void loadCitas() {
-	    modelo.setRowCount(0);
+	    
+		modelo.setRowCount(0);
 	    ArrayList<Cita> ci = ClinicaMedica.getInstance().getLasCitas();
 	    row = new Object[table.getColumnCount()];
 
 	    SimpleDateFormat dateFormatter = new SimpleDateFormat("dd/MM/yyyy");
 	    SimpleDateFormat timeFormatter = new SimpleDateFormat("hh:mm a");
 
-	    for (Cita cita : ci) {
-	        row[0] = cita.getIdCita();
-	        row[1] = cita.getNombrePersona();
-	        row[2] = cita.getMedico().getNombre() + " " + cita.getMedico().getApellido();
-	        row[3] = dateFormatter.format(cita.getFecha());
-	        row[4] = timeFormatter.format(cita.getHora());
-	        row[5] = cita.getMotivo();
-	        modelo.addRow(row); // Agregar la fila al modelo
-	    }
+	    String fechaHoyStr = dateFormatter.format(new Date());
+	    
+		if(ClinicaMedica.getLoginUsuario().getRol().equals("Médico")) {
+			Medico medico = ClinicaMedica.getLoginUsuario().getMedicoRelacionado();
+			
+			for (Cita cita : ci) {
+			    String fechaCitaStr = dateFormatter.format(cita.getFecha());
+		        if(cita.getMedico().equals(medico) && fechaCitaStr.equals(fechaHoyStr)) {
+					row[0] = cita.getIdCita();
+			        row[1] = cita.getNombrePersona();
+			        row[2] = cita.getMedico().getNombre() + " " + cita.getMedico().getApellido();
+			        row[3] = dateFormatter.format(cita.getFecha());
+			        row[4] = timeFormatter.format(cita.getHora());
+			        row[5] = cita.getMotivo();
+			        modelo.addRow(row); 
+		        }
+
+		    }
+			
+		} else {
+		    for (Cita cita : ci) {
+		        row[0] = cita.getIdCita();
+		        row[1] = cita.getNombrePersona();
+		        row[2] = cita.getMedico().getNombre() + " " + cita.getMedico().getApellido();
+		        row[3] = dateFormatter.format(cita.getFecha());
+		        row[4] = timeFormatter.format(cita.getHora());
+		        row[5] = cita.getMotivo();
+		        modelo.addRow(row); 
+		    }
+		}
+	    
+
 	}
 
 }

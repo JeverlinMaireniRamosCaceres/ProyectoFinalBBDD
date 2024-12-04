@@ -56,6 +56,14 @@ public class ClinicaMedica implements Serializable {
 		codUsuario = 1;
 	}
 	
+	public static Usuario getLoginUsuario() {
+		return loginUsuario;
+	}
+
+	public static void setLoginUsuario(Usuario loginUsuario) {
+		ClinicaMedica.loginUsuario = loginUsuario;
+	}
+
 	public static ClinicaMedica getInstance() {
 		if(clinicaMedica==null) {
 			clinicaMedica = new ClinicaMedica();

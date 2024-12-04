@@ -77,7 +77,7 @@ public class RegistroUsuario extends JDialog {
 			lblNombre.setBounds(219, 20, 113, 14);
 			panel.add(lblNombre);
 		}
-		{
+		{ 
 			txtNombre = new JTextField();
 			txtNombre.setColumns(10);
 			txtNombre.setBounds(342, 17, 127, 20);

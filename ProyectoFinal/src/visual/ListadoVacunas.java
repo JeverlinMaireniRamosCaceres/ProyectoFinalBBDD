@@ -15,7 +15,6 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 
-import logico.ClinicaMedica;
 import logico.Paciente;
 import logico.Vacuna;
 
@@ -66,7 +65,7 @@ public class ListadoVacunas extends JDialog {
 					scrollPane.setViewportView(table);
 				}
 			}
-		}
+		} 
 		{
 			JPanel buttonPane = new JPanel();
 			buttonPane.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));

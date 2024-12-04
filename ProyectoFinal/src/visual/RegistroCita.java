@@ -2,10 +2,20 @@ package visual;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Calendar;
+import java.util.Date;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JSpinner;
+import javax.swing.JTextField;
+import javax.swing.SpinnerDateModel;
+import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 
@@ -13,25 +23,12 @@ import logico.Cita;
 import logico.ClinicaMedica;
 import logico.Medico;
 
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.SwingConstants;
-import javax.swing.JTextField;
-import javax.swing.JSpinner;
-import javax.swing.SpinnerDateModel;
-import java.util.Date;
-import java.util.Calendar;
-import javax.swing.JCheckBox;
-import java.awt.event.ActionListener;
-import java.text.SimpleDateFormat;
-import java.awt.event.ActionEvent;
-
 public class RegistroCita extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
 	private JTextField txtCodigo;
 	private JTextField txtNombre;
-	private JTextField txtMedico;
+	private JTextField txtMedico; 
 	private JTextField txtEspecialidad;
 	private JTextField txtMotivo;
 	private Medico medico;
@@ -172,6 +169,7 @@ public class RegistroCita extends JDialog {
 			
 			JButton btnSeleccionar = new JButton("Seleccionar");
 			btnSeleccionar.addActionListener(new ActionListener() {
+				@Override
 				public void actionPerformed(ActionEvent e) {
 					SeleccionarMedico sm = new SeleccionarMedico();
 					sm.setModal(true);
@@ -244,6 +242,7 @@ public class RegistroCita extends JDialog {
 			{
 				JButton btnCancelar = new JButton("Cancelar");
 				btnCancelar.addActionListener(new ActionListener() {
+					@Override
 					public void actionPerformed(ActionEvent e) {
 						dispose();
 					}

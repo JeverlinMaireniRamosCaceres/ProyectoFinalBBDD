@@ -2,24 +2,23 @@ package visual;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.border.EmptyBorder;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 
 import logico.ClinicaMedica;
 import logico.Paciente;
-
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.util.ArrayList;
 
 public class ListadoPacientes extends JDialog {
 
@@ -69,6 +68,7 @@ public class ListadoPacientes extends JDialog {
 						@Override
 						public void mouseClicked(MouseEvent e) {
 							index = table.getSelectedRow();
+
 							if(index >= 0) {
 								btnDetalles.setEnabled(true);
 								btnModificar.setEnabled(true);
@@ -92,6 +92,7 @@ public class ListadoPacientes extends JDialog {
 			{
 				btnDetalles = new JButton("Ver detalle");
 				btnDetalles.addActionListener(new ActionListener() {
+					@Override
 					public void actionPerformed(ActionEvent e) {
 						DetallePaciente dp = new DetallePaciente(selected);
 						dp.setModal(true);
@@ -104,6 +105,7 @@ public class ListadoPacientes extends JDialog {
 			{
 				btnModificar = new JButton("Modificar");
 				btnModificar.addActionListener(new ActionListener() {
+					@Override
 					public void actionPerformed(ActionEvent e) {
 						RegistroPaciente rp = new RegistroPaciente(selected);
 						rp.setModal(true);
@@ -118,6 +120,7 @@ public class ListadoPacientes extends JDialog {
 			{
 				JButton btnCancelar = new JButton("Cancelar");
 				btnCancelar.addActionListener(new ActionListener() {
+					@Override
 					public void actionPerformed(ActionEvent e) {
 						dispose();
 					}
