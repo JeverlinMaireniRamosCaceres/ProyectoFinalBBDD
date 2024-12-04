@@ -239,6 +239,7 @@ public class DetallePaciente extends JDialog {
 			
 			JButton btnHistorialEnf = new JButton("Abrir");
 			btnHistorialEnf.addActionListener(new ActionListener() {
+				@Override
 				public void actionPerformed(ActionEvent e) {
 					if(selected != null) {
 						ListadoEnfermedadesPaciente lep = new ListadoEnfermedadesPaciente(selected);

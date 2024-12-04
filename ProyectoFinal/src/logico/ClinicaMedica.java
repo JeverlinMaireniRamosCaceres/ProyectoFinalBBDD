@@ -53,6 +53,7 @@ public class ClinicaMedica implements Serializable {
 		codEnfermedad = 1; 
 		codCita = 1;
 		codConsulta = 1;
+		codUsuario = 1;
 	}
 	
 	public static ClinicaMedica getInstance() {
@@ -188,6 +189,14 @@ public class ClinicaMedica implements Serializable {
 	public void insertarCita (Cita cita) {
 		lasCitas.add(cita);
 		codCita++;
+	}
+
+	public static int getCodUsuario() {
+		return codUsuario;
+	}
+
+	public static void setCodUsuario(int codUsuario) {
+		ClinicaMedica.codUsuario = codUsuario;
 	}
 
 	public Medico buscarMedicoById(String codigo) {
@@ -496,4 +505,43 @@ public class ClinicaMedica implements Serializable {
 	    }
 	    return enfermedad;
 	}
+
+	public void updateUsuario(Usuario selected) {
+		int index = buscarUsuarioByID(selected.getCodigo());
+		if(index != 1) {
+			losUsuarios.set(index, selected);
+		}
+		
+	}
+
+	private int buscarUsuarioByID(String codigo) {
+		int usuario = -1;
+		boolean encontrado = false;
+		int i = 0;
+		while(!encontrado && i < losUsuarios.size()) {
+			if(losUsuarios.get(i).getCodigo().equals(codigo)) {
+				usuario = i;
+				encontrado = true;
+			}
+			i++;
+		}
+		return usuario;
+	}
+
+	
+	public Usuario buscarUsuarioByCodigo(String codigo) {
+		Usuario usuario = null;
+		boolean encontrado = false;
+	    int i = 0;
+	    while (!encontrado && i < losUsuarios.size()) { 
+	        if (losUsuarios.get(i).getCodigo().equals(codigo)) { 
+	        	usuario = losUsuarios.get(i); 
+	            encontrado = true; 
+	        }
+	        i++; 
+	    }
+	    return usuario;
+	}
+
+
 }

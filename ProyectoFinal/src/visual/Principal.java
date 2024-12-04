@@ -218,6 +218,31 @@ public class Principal extends JFrame {
 		});
 		mnNewMenu_5.add(mntmNewMenuItem_12);
 		
+		JMenu mnNewMenu_7 = new JMenu("Usuarios");
+		menuBar.add(mnNewMenu_7);
+		
+		JMenuItem mntmNewMenuItem_15 = new JMenuItem("Listado");
+		mntmNewMenuItem_15.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				ListadoUsuarios lu = new ListadoUsuarios();
+				lu.setModal(true);
+				lu.setVisible(true);
+			}
+		});
+		mnNewMenu_7.add(mntmNewMenuItem_15);
+		
+		JMenuItem mntmNewMenuItem_9 = new JMenuItem("Registrar");
+		mntmNewMenuItem_9.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				RegistroUsuario ru = new RegistroUsuario(null);
+				ru.setModal(true);
+				ru.setVisible(true);
+			}
+		});
+		mnNewMenu_7.add(mntmNewMenuItem_9);
+		
 		JMenu mnNewMenu_6 = new JMenu("Cerrar sesi\u00F3n");
 		menuBar.add(mnNewMenu_6);
 		
@@ -237,6 +262,7 @@ public class Principal extends JFrame {
 				    clinicalwrite.writeObject(ClinicaMedica.getCodEnfermedad());
 				    clinicalwrite.writeObject(ClinicaMedica.getCodCita());
 				    clinicalwrite.writeObject(ClinicaMedica.getCodConsulta());
+				    clinicalwrite.writeObject(ClinicaMedica.getCodUsuario());
 				} catch (FileNotFoundException e1) {
 				    // TODO Auto-generated catch block
 				    e1.printStackTrace();

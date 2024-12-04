@@ -65,6 +65,7 @@ public class Login extends JDialog {
 			            ClinicaMedica.setCodEnfermedad((Integer) clinicaRead.readObject());
 			            ClinicaMedica.setCodCita((Integer) clinicaRead.readObject());
 			            ClinicaMedica.setCodConsulta((Integer) clinicaRead.readObject());
+			            ClinicaMedica.setCodUsuario((Integer)clinicaRead.readObject());
 					} catch (ClassNotFoundException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -76,7 +77,7 @@ public class Login extends JDialog {
 	                try {
 	                    clinica2 = new FileOutputStream("clinica.dat");
 	                    clinicaWrite = new ObjectOutputStream(clinica2);
-	                    Usuario aux = new Usuario("admin", "admin", "Adminastrador");
+	                    Usuario aux = new Usuario("U-1","admin", "admin", "Adminastrador",null);
 	                    ClinicaMedica.getInstance().regUser(aux);
 	                    clinicaWrite.writeObject(ClinicaMedica.getInstance());
 	                    clinica2.close();
