@@ -1,30 +1,28 @@
 package visual;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.Calendar;
+import java.util.Date;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import javax.swing.border.TitledBorder;
-
-import logico.ClinicaMedica;
-import logico.Paciente;
-import logico.Vacuna;
-
-import javax.swing.UIManager;
-import java.awt.Color;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.SwingConstants;
-import javax.swing.JTextField;
+import javax.swing.JPanel;
 import javax.swing.JSpinner;
+import javax.swing.JTextField;
 import javax.swing.SpinnerDateModel;
-import java.util.Date;
-import java.util.Calendar;
+import javax.swing.SwingConstants;
+import javax.swing.UIManager;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.TitledBorder;
+
+import logico.Paciente;
+import logico.Vacuna;
 
 public class Vacunar extends JDialog {
 
@@ -61,6 +59,7 @@ public class Vacunar extends JDialog {
 	public Vacunar() {
 		setTitle("Vacunar");
 		setBounds(100, 100, 525, 353);
+		setLocationRelativeTo(null);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
@@ -117,6 +116,7 @@ public class Vacunar extends JDialog {
 			
 			JButton btnSeleccionarPac = new JButton("Seleccionar");
 			btnSeleccionarPac.addActionListener(new ActionListener() {
+				@Override
 				public void actionPerformed(ActionEvent e) {
 					SeleccionarPaciente sp = new SeleccionarPaciente();
 					sp.setModal(true);
@@ -204,6 +204,7 @@ public class Vacunar extends JDialog {
 			
 			btnSeleccionarVacuna = new JButton("Seleccionar");
 			btnSeleccionarVacuna.addActionListener(new ActionListener() {
+				@Override
 				public void actionPerformed(ActionEvent e) {
 					SeleccionarVacuna sv = new SeleccionarVacuna();
 					sv.setModal(true);
@@ -229,6 +230,7 @@ public class Vacunar extends JDialog {
 			{
 				btnRegistrar = new JButton("Registrar");
 				btnRegistrar.addActionListener(new ActionListener() {
+					@Override
 					public void actionPerformed(ActionEvent e) {
 						if(paciente != null && vacuna != null) {
 							paciente.getMisVacunas().add(vacuna);
@@ -248,6 +250,7 @@ public class Vacunar extends JDialog {
 			{
 				JButton btnCancelar = new JButton("Cancelar");
 				btnCancelar.addActionListener(new ActionListener() {
+					@Override
 					public void actionPerformed(ActionEvent e) {
 						dispose();
 					}

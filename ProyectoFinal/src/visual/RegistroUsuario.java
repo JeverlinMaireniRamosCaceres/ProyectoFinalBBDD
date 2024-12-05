@@ -61,6 +61,7 @@ public class RegistroUsuario extends JDialog {
 		}
 		
 		setBounds(100, 100, 515, 305);
+		setLocationRelativeTo(null);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);

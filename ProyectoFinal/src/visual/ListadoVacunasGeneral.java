@@ -49,6 +49,7 @@ public class ListadoVacunasGeneral extends JDialog {
 	public ListadoVacunasGeneral() {
 		setTitle("Listado general de vacunas");
 		setBounds(100, 100, 582, 355);
+		setLocationRelativeTo(null);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);

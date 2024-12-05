@@ -46,6 +46,7 @@ public class ListadoEnfermedades extends JDialog {
 	public ListadoEnfermedades() {
 		setTitle("Listado de enfermedades");
 		setBounds(100, 100, 611, 375);
+		setLocationRelativeTo(null);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);

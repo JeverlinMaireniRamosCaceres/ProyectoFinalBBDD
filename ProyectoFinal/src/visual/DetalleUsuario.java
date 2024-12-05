@@ -47,6 +47,7 @@ public class DetalleUsuario extends JDialog {
 		selected = aux;
 		setTitle("Detalle usuario");
 		setBounds(100, 100, 558, 263);
+		setLocationRelativeTo(null);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);

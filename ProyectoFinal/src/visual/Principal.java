@@ -3,6 +3,7 @@ package visual;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.EventQueue;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
@@ -11,10 +12,12 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 
@@ -51,6 +54,7 @@ public class Principal extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		dim = getToolkit().getScreenSize();
 		setBounds(100, 100, 450, 300);
+		setLocationRelativeTo(null);
 		
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
@@ -316,6 +320,12 @@ public class Principal extends JFrame {
 		panel.setBorder(new TitledBorder(null, "", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		contentPane.add(panel, BorderLayout.CENTER);
 		panel.setLayout(null);
+		
+		JLabel lblClinicaMedica = new JLabel("Cl\u00EDnica M\u00E9dica");
+		lblClinicaMedica.setHorizontalAlignment(SwingConstants.CENTER);
+		lblClinicaMedica.setFont(new Font("Tahoma", Font.PLAIN, 62));
+		lblClinicaMedica.setBounds(464, 249, 464, 178);
+		panel.add(lblClinicaMedica);
 		
 		setSize(dim.width, dim.height-45);
 		setLocationRelativeTo(null);

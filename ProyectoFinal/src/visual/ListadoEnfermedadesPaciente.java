@@ -2,25 +2,24 @@ package visual;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.border.EmptyBorder;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.awt.event.ActionEvent;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 
 import logico.ClinicaMedica;
 import logico.Enfermedad;
 import logico.Paciente;
-
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 public class ListadoEnfermedadesPaciente extends JDialog {
 
@@ -53,6 +52,7 @@ public class ListadoEnfermedadesPaciente extends JDialog {
 		paciente = aux;
 		setTitle("Listado de enfermedades de "+paciente.getNombre()+" "+paciente.getApellido());
 		setBounds(100, 100, 584, 347);
+		setLocationRelativeTo(null);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
@@ -94,6 +94,7 @@ public class ListadoEnfermedadesPaciente extends JDialog {
 			{
 				JButton btnCancelar = new JButton("Cancelar");
 				btnCancelar.addActionListener(new ActionListener() {
+					@Override
 					public void actionPerformed(ActionEvent e) {
 						dispose();
 					}
@@ -101,6 +102,7 @@ public class ListadoEnfermedadesPaciente extends JDialog {
 				{
 					btnCurar = new JButton("Curar Enfermedad");
 					btnCurar.addActionListener(new ActionListener() {
+						@Override
 						public void actionPerformed(ActionEvent e) {
 							enf.setCurada(true);
 							btnCurar.setEnabled(false);
