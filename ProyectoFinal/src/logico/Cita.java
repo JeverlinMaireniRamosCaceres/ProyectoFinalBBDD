@@ -1,6 +1,7 @@
 package logico;
 
 import java.io.Serializable;
+import java.sql.Time;
 import java.util.Date;
 
 public class Cita implements Serializable {
@@ -14,10 +15,10 @@ public class Cita implements Serializable {
 	private String nombrePersona;
 	private Medico medico;
 	private Date fecha;
-	private Date hora;
+	private Time hora;
 	private String motivo;
 	
-	public Cita(String idCita, String nombrePersona, Medico medico, Date fecha, Date hora, String motivo) {
+	public Cita(String idCita, String nombrePersona, Medico medico, Date fecha, Time hora, String motivo) {
 		super();
 		this.idCita = idCita;
 		this.nombrePersona = nombrePersona;
@@ -63,7 +64,7 @@ public class Cita implements Serializable {
 		return hora;
 	}
 
-	public void setHora(Date hora) {
+	public void setHora(Time hora) {
 		this.hora = hora;
 	}
 

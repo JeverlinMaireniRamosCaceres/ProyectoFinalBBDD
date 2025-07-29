@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Time;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -211,7 +212,7 @@ public class RegistroCita extends JDialog {
 							        txtNombre.getText(),
 							        medico,
 							        (Date) spnFecha.getValue(),
-							        (Date) spnHora.getValue(),
+							        (Time) spnHora.getValue(),
 							        txtMotivo.getText()
 							    );
 
@@ -227,7 +228,7 @@ public class RegistroCita extends JDialog {
 							selected.setNombrePersona(txtNombre.getText());
 							selected.setMedico(medico);
 							selected.setFecha((Date) spnFecha.getValue()); 
-							selected.setHora((Date) spnHora.getValue());
+							selected.setHora((Time) spnHora.getValue());
 							selected.setMotivo(txtMotivo.getText());
 							ClinicaMedica.getInstance().updateCita(selected);
 							ListadoCitas.loadCitas();

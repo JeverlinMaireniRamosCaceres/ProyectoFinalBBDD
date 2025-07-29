@@ -7,7 +7,8 @@ import java.sql.SQLException;
 public class VerificarLogin {
 
 	public static Usuario obtenerUsuario(String nombreUsuario, String contrasena) {
-	    String sql = "SELECT u.idUsuario, u.nombre, u.contrasenia, r.nombre AS nombreRol " +
+	    
+		String sql = "SELECT u.idUsuario, u.nombre, u.contrasenia, r.nombre AS nombreRol " +
 	                 "FROM Usuario u " +
 	                 "JOIN Rol r ON u.idRol = r.idRol " +
 	                 "WHERE u.nombre = ? AND u.contrasenia = ?";
