@@ -25,6 +25,7 @@ import javax.swing.border.SoftBevelBorder;
 
 import logico.ClinicaMedica;
 import logico.Usuario;
+import logico.VerificarLogin;
 
 public class Login extends JDialog {
 
@@ -145,11 +146,24 @@ public class Login extends JDialog {
 				btnLogin.addActionListener(new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent e) {
-						if(ClinicaMedica.getInstance().confirmarLogin(txtUsuario.getText(), txtContrasena.getText())) {
-							Principal frame = new Principal();
-							dispose();
-							frame.setVisible(true);
-						}
+						
+				        String usuario = txtUsuario.getText();
+				        String contrasena = txtContrasena.getText();
+
+				        Usuario usuarioLogueado = VerificarLogin.obtenerUsuario(usuario, contrasena);
+
+				        if (usuarioLogueado != null) {
+				            ClinicaMedica.setLoginUsuario(usuarioLogueado);
+				            Principal frame = new Principal();
+				            dispose();
+				            frame.setVisible(true);
+				        } else {
+				            javax.swing.JOptionPane.showMessageDialog(null, 
+				                "Usuario o contraseña inválidos", 
+				                "Error de login", 
+				                javax.swing.JOptionPane.ERROR_MESSAGE);
+				        }
+						
 					}
 				});
 				btnLogin.setActionCommand("OK");
