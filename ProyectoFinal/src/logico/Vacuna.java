@@ -13,17 +13,17 @@ public class Vacuna implements Serializable {
 	private String idVacuna;
 	private Date fechaVencimiento;
 	private String nombreVacuna;
-	private String tipo;
-	private String fabricante;
+	private int idTipo;
+	private int idFabricante;
 	private int cantidad;
 	
-	public Vacuna(String idVacuna, Date fecha, String nombreVacuna, String tipo, String fabricante, int cantidad) {
+	public Vacuna(String idVacuna, Date fecha, String nombreVacuna, int idTipo, int idFabricante, int cantidad) {
 		super();
 		this.idVacuna = idVacuna;
 		this.fechaVencimiento = fecha;
 		this.nombreVacuna = nombreVacuna;
-		this.tipo = tipo;
-		this.fabricante = fabricante;
+		this.idTipo = idTipo;
+		this.idFabricante = idFabricante;
 		this.cantidad = cantidad;
 	}
 	
@@ -53,19 +53,19 @@ public class Vacuna implements Serializable {
 	public void setNombreVacuna(String nombreVacuna) {
 		this.nombreVacuna = nombreVacuna;
 	}
-	public String getTipo() {
-		return tipo;
+	public int getTipo() {
+		return idTipo;
 	}
-	public void setTipo(String tipo) {
-		this.tipo = tipo;
-	}
-
-	public String getFabricante() {
-		return fabricante;
+	public void setTipo(int tipo) {
+		this.idTipo = tipo;
 	}
 
-	public void setFabricante(String fabricante) {
-		this.fabricante = fabricante;
+	public int getFabricante() {
+		return idFabricante;
+	}
+
+	public void setFabricante(int fabricante) {
+		this.idFabricante = fabricante;
 	}
 	
 	

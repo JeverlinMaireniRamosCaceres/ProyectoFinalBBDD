@@ -12,20 +12,21 @@ public class Cita implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	private String idCita;
-	private String nombrePersona;
+
 	private Medico medico;
 	private Date fecha;
 	private Time hora;
 	private String motivo;
+	private Paciente paciente;
 	
-	public Cita(String idCita, String nombrePersona, Medico medico, Date fecha, Time hora, String motivo) {
+	public Cita(String idCita, Medico medico, Date fecha, Time hora, String motivo, Paciente paciente) {
 		super();
 		this.idCita = idCita;
-		this.nombrePersona = nombrePersona;
 		this.medico = medico;
 		this.fecha = fecha;
 		this.hora = hora;
 		this.motivo = motivo;
+		this.paciente = paciente;
 	}
 
 	public String getIdCita() {
@@ -36,12 +37,12 @@ public class Cita implements Serializable {
 		this.idCita = idCita;
 	}
 
-	public String getNombrePersona() {
-		return nombrePersona;
+	public Paciente getPaciente() {
+		return paciente;
 	}
 
-	public void setNombrePersona(String nombrePersona) {
-		this.nombrePersona = nombrePersona;
+	public void setPaciente(Paciente paciente) {
+		this.paciente = paciente;
 	}
 
 	public Medico getMedico() {
@@ -60,7 +61,7 @@ public class Cita implements Serializable {
 		this.fecha = fecha;
 	}
 
-	public Date getHora() {
+	public Time getHora() {
 		return hora;
 	}
 

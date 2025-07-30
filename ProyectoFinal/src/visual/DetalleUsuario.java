@@ -15,6 +15,8 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 
+import logico.ClinicaMedica;
+import logico.Medico;
 import logico.Usuario;
 
 public class DetalleUsuario extends JDialog {
@@ -133,22 +135,41 @@ public class DetalleUsuario extends JDialog {
 	}
 
 	private void loadUsuario() {
-		if(selected != null) {
-			txtCodigo.setText(selected.getCodigo());
-			txtNombre.setText(selected.getNombre());
-			txtContrasenia.setText(selected.getContrasena());
-			txtRol.setText(selected.getRol());
-			/*if("Médico".equalsIgnoreCase(selected.getRol())){
-				txtCedula.setText(selected.getMedicoRelacionado().getCedula());
-			}*/
-			if ("Médico".equalsIgnoreCase(selected.getRol())) {
-			    if (selected.getMedicoRelacionado() != null) {
-			        txtCedula.setText(selected.getMedicoRelacionado().getCedula());
-			    } else {
-			        JOptionPane.showMessageDialog(null, "El médico relacionado no se encuentra", "Error", JOptionPane.ERROR_MESSAGE);
-			    }
-		}
-		
+	    if (selected != null) {
+	        txtCodigo.setText(selected.getCodigo());
+	        txtNombre.setText(selected.getNombre());
+	        txtContrasenia.setText(selected.getContrasena());
+
+	        int rolId = selected.getRol();
+
+	        // Mostrar el nombre del rol según su ID
+	        switch (rolId) {
+	            case 1:
+	                txtRol.setText("Administrador");
+	                txtCedula.setText(""); // No aplica
+	                break;
+	            case 2:
+	                txtRol.setText("Médico");
+	                // Buscar el médico relacionado si es rol 2
+	                Medico medico = ClinicaMedica.getInstance().buscarMedicoById(selected.getCodigo());
+	                if (medico != null) {
+	                    txtCedula.setText(medico.getCedula());
+	                } else {
+	                    JOptionPane.showMessageDialog(null, "El médico relacionado no se encuentra", "Error", JOptionPane.ERROR_MESSAGE);
+	                    txtCedula.setText("");
+	                }
+	                break;
+	            case 3:
+	                txtRol.setText("Recepcionista");
+	                txtCedula.setText("");
+	                break;
+	            default:
+	                txtRol.setText("Rol desconocido");
+	                txtCedula.setText("");
+	        }
+	    }
 	}
-   }
+
+	
+	
 }

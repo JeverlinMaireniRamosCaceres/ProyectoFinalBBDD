@@ -12,29 +12,19 @@ public class Usuario implements Serializable {
 	private String codigo;
 	private String nombre;
 	private String contrasena;
-	private String rol;
-	private Medico medicoRelacionado;
+	private int idRol;
+	//private Medico medicoRelacionado;
 	
-	public Usuario(String codigo,String nombre, String contrasena, String rol, Medico medicoRelacionado) {
+	public Usuario(String codigo,String nombre, String contrasena, int idRol) {
 		super();
 		this.codigo = codigo;
 		this.nombre = nombre;
 		this.contrasena = contrasena;
-		this.rol = rol;
-		this.medicoRelacionado = medicoRelacionado;
+		this.idRol = idRol;
+
 	}
 
 	
-	public Medico getMedicoRelacionado() {
-		return medicoRelacionado;
-	}
-
-
-	public void setMedicoRelacionado(Medico medicoRelacionado) {
-		this.medicoRelacionado = medicoRelacionado;
-	}
-
-
 	public String getCodigo() {
 		return codigo;
 	}
@@ -61,12 +51,12 @@ public class Usuario implements Serializable {
 		this.contrasena = contrasena;
 	}
 
-	public String getRol() {
-		return rol;
+	public int getRol() {
+		return idRol;
 	}
 
-	public void setRol(String rol) {
-		this.rol = rol;
+	public void setRol(int idRol) {
+		this.idRol = idRol;
 	}
 	
 	

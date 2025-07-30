@@ -9,6 +9,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -23,12 +24,12 @@ import javax.swing.border.TitledBorder;
 import logico.Cita;
 import logico.ClinicaMedica;
 import logico.Medico;
+import logico.Paciente;
 
 public class RegistroCita extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
 	private JTextField txtCodigo;
-	private JTextField txtNombre;
 	private JTextField txtMedico; 
 	private JTextField txtEspecialidad;
 	private JTextField txtMotivo;
@@ -36,6 +37,7 @@ public class RegistroCita extends JDialog {
 	private JSpinner spnFecha;
 	private JSpinner spnHora;
 	private Cita selected;
+	private JComboBox cbxPaciente;
 
 	/**
 	 * Launch the application.
@@ -94,15 +96,10 @@ public class RegistroCita extends JDialog {
 			panel_1.add(txtCodigo);
 			txtCodigo.setColumns(10);
 			
-			JLabel lblNewLabel_1 = new JLabel("Nombre:");
+			JLabel lblNewLabel_1 = new JLabel("Paciente:");
 			lblNewLabel_1.setBounds(8, 58, 55, 14);
 			panel_1.add(lblNewLabel_1);
 			lblNewLabel_1.setHorizontalAlignment(SwingConstants.RIGHT);
-			
-			txtNombre = new JTextField();
-			txtNombre.setBounds(69, 55, 342, 20);
-			panel_1.add(txtNombre);
-			txtNombre.setColumns(10);
 			
 			JLabel lblNewLabel_3 = new JLabel("Fecha:");
 			lblNewLabel_3.setBounds(18, 86, 46, 14);
@@ -140,6 +137,10 @@ public class RegistroCita extends JDialog {
 			txtMotivo.setBounds(69, 108, 342, 20);
 			panel_1.add(txtMotivo);
 			txtMotivo.setColumns(10);
+			
+			cbxPaciente = new JComboBox();
+			cbxPaciente.setBounds(69, 55, 342, 20);
+			panel_1.add(cbxPaciente);
 			
 			JPanel panel_2 = new JPanel();
 			panel_2.setBorder(new TitledBorder(null, "Informaci\u00F3n del m\u00E9dico:", TitledBorder.LEADING, TitledBorder.TOP, null, null));
@@ -179,7 +180,7 @@ public class RegistroCita extends JDialog {
 					medico = sm.getSelectedMedico();
 					if(medico != null) {
 						txtMedico.setText(medico.getNombre()+" "+medico.getApellido());
-						txtEspecialidad.setText(medico.getEspecialidad());
+						txtEspecialidad.setText(String.valueOf(medico.getEspecialidad()));
 					}
 				}
 			});
@@ -207,13 +208,21 @@ public class RegistroCita extends JDialog {
 							} else if (ClinicaMedica.getInstance().existeCita((Date) spnFecha.getValue(), (Date) spnHora.getValue(), medico)) {
 							    JOptionPane.showMessageDialog(null, "No se pudo agendar cita, horario no disponible", "Información", JOptionPane.ERROR_MESSAGE);
 							} else {
+								
+								Paciente pacienteSeleccionado = (Paciente) cbxPaciente.getSelectedItem();
+
+								if (pacienteSeleccionado == null) {
+								    JOptionPane.showMessageDialog(null, "Debe seleccionar un paciente", "Error", JOptionPane.ERROR_MESSAGE);
+								    return;
+								}
+								
 							    Cita cita = new Cita(
 							        txtCodigo.getText(),
-							        txtNombre.getText(),
 							        medico,
 							        (Date) spnFecha.getValue(),
 							        (Time) spnHora.getValue(),
-							        txtMotivo.getText()
+							        txtMotivo.getText(),
+							        pacienteSeleccionado
 							    );
 
 							    ClinicaMedica.getInstance().insertarCita(cita);
@@ -225,7 +234,7 @@ public class RegistroCita extends JDialog {
 						}
 						else {
 							selected.setIdCita(txtCodigo.getText());
-							selected.setNombrePersona(txtNombre.getText());
+							selected.setPaciente((Paciente) cbxPaciente.getSelectedItem());
 							selected.setMedico(medico);
 							selected.setFecha((Date) spnFecha.getValue()); 
 							selected.setHora((Time) spnHora.getValue());
@@ -257,7 +266,7 @@ public class RegistroCita extends JDialog {
 	}
 	private void clean() {
 	    txtCodigo.setText("C-" + ClinicaMedica.getInstance().codCita);
-	    txtNombre.setText("");
+	    cbxPaciente.setSelectedIndex(-1);
 	    spnFecha.setValue(new Date());
 	    spnHora.setValue(new Date());
 	    txtMotivo.setText("");
@@ -268,7 +277,7 @@ public class RegistroCita extends JDialog {
 
 	private boolean camposVacios() {
 		boolean estanVacios = false;
-		if(txtNombre.getText().isEmpty() || txtMotivo.getText().isEmpty() || medico == null) {
+		if(cbxPaciente.getSelectedItem() == null || txtMotivo.getText().isEmpty() || medico == null) {
 			estanVacios = true;
 		}
 		return estanVacios;
@@ -276,9 +285,9 @@ public class RegistroCita extends JDialog {
 	private void loadCita() {
 		if(selected != null) {
 			txtCodigo.setText(selected.getIdCita());
-			txtNombre.setText(selected.getNombrePersona());
+			cbxPaciente.setSelectedItem(selected.getPaciente());
 			txtMedico.setText(selected.getMedico().getNombre()+" "+selected.getMedico().getApellido());
-			txtEspecialidad.setText(selected.getMedico().getEspecialidad());
+			txtEspecialidad.setText(String.valueOf(selected.getMedico().getEspecialidad()));
 			txtMotivo.setText(selected.getMotivo());
 			medico = selected.getMedico();
 			spnFecha.setValue(selected.getFecha());

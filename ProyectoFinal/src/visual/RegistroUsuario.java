@@ -22,6 +22,7 @@ import javax.swing.border.TitledBorder;
 import logico.ClinicaMedica;
 import logico.Medico;
 import logico.Usuario;
+import logico.UsuarioCRUD;
 
 public class RegistroUsuario extends JDialog {
 
@@ -124,7 +125,7 @@ public class RegistroUsuario extends JDialog {
 					}
 				}
 			});
-			cbxRol.setModel(new DefaultComboBoxModel(new String[] {"<Seleccione>", "M\u00E9dico", "Administrativo", "Administrador"}));
+			cbxRol.setModel(new DefaultComboBoxModel(new String[] {"<Seleccione>", "Administrador", "M\u00E9dico", "Administrativo"}));
 			cbxRol.setBounds(85, 111, 127, 20);
 			panel.add(cbxRol);
 		}
@@ -139,7 +140,8 @@ public class RegistroUsuario extends JDialog {
 			txtCodigo.setColumns(10);
 			txtCodigo.setBounds(85, 17, 127, 20);
 			panel.add(txtCodigo);
-			txtCodigo.setText("U-"+ClinicaMedica.getInstance().codUsuario);
+			String nuevoCodigo = UsuarioCRUD.generarCodigoUsuario();
+			txtCodigo.setText(nuevoCodigo);
 
 		}
 		
@@ -176,10 +178,11 @@ public class RegistroUsuario extends JDialog {
 							String nombre = txtNombre.getText();
 							String contrasena = txtContrasenia.getText();
 							String confContra = txtConfContra.getText();
-							String rol = (String) cbxRol.getSelectedItem();
+							int idRol = cbxRol.getSelectedIndex();
 							Medico medicoSeleccionado;
 							String cedulaMedico = txtCedulaMedico.getText();
 							medicoSeleccionado = ClinicaMedica.getInstance().buscarMedicoByCedula(cedulaMedico);
+							
 							if("Medico".equalsIgnoreCase((String) cbxRol.getSelectedItem()) && !txtCedulaMedico.getText().equals("")) {
 								if(medicoSeleccionado==null) {
 						            JOptionPane.showMessageDialog(null, "Medico no encontrado", 
@@ -195,15 +198,34 @@ public class RegistroUsuario extends JDialog {
 					            	return;
 							}
 							
-							Usuario usuario = new Usuario(codigo,nombre,confContra,rol,medicoSeleccionado);
+							Usuario usuario = new Usuario(codigo,nombre,confContra,idRol);
 							
-							ClinicaMedica.getInstance().regUser(usuario);
+							// asociando el usuario al medico si el rol es medico
+							if (idRol == ClinicaMedica.ROL_MEDICO && medicoSeleccionado != null) {
+							    if (medicoSeleccionado.getUsuario() != null) {
+							        JOptionPane.showMessageDialog(null, "Ese médico ya tiene un usuario asignado.");
+							        return;
+							    }
+							    medicoSeleccionado.setUsuario(usuario);
+							}
+							
+							/*ClinicaMedica.getInstance().regUser(usuario);
 							JOptionPane.showMessageDialog(null,"Operacion exitosa","Informacion",JOptionPane.INFORMATION_MESSAGE);
-							clean();
+							clean();*/
+							boolean exito = UsuarioCRUD.insertarUsuario(usuario);
+
+							if (exito) {
+							    JOptionPane.showMessageDialog(null,"Usuario guardado en la base de datos correctamente.","Información",JOptionPane.INFORMATION_MESSAGE);
+							    //ClinicaMedica.getInstance().regUser(usuario); // <-- solo si también lo usas en memoria
+							    clean();
+							} else {
+							    JOptionPane.showMessageDialog(null,"Error al guardar el usuario en la base de datos.","Error",JOptionPane.ERROR_MESSAGE);
+							}
+
 						} else {
 							selected.setNombre(txtNombre.getText());
 							selected.setContrasena(txtContrasenia.getText());
-							selected.setRol((String)cbxRol.getSelectedItem());
+							selected.setRol(cbxRol.getSelectedIndex());
 							ClinicaMedica.getInstance().updateUsuario(selected);
 							ListadoUsuarios.loadUsuarios();
 							JOptionPane.showMessageDialog(null,"Operacion exitosa","Informacion",JOptionPane.INFORMATION_MESSAGE);
@@ -233,7 +255,7 @@ public class RegistroUsuario extends JDialog {
 	}
 	
 	private void clean() {
-		txtCodigo.setText("U-"+ClinicaMedica.getInstance().codUsuario);
+		txtCodigo.setText(UsuarioCRUD.generarCodigoUsuario());
 		txtNombre.setText("");
 		txtContrasenia.setText("");
 		txtConfContra.setText("");

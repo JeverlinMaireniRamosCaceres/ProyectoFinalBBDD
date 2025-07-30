@@ -270,12 +270,16 @@ public class RegistroMedico extends JDialog {
 							String direccion = txtDireccion.getText();
 							int edad = new Integer(txtEdad.getText());
 							String sexo = cbxSexo.getSelectedItem().toString();
-							String especialidad = cbxEspecialidad.getSelectedItem().toString();
 							int exequatur = new Integer(spnExequatur.getValue().toString());
 						    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 						    Date fechaNacimiento = (Date)(spnFechaNacim.getValue());
-							
-							Medico medico = new Medico(codigo,cedula,nombre,apellido,telefono,direccion,fechaNacimiento,edad,sexo,especialidad,exequatur);
+						    int especialidadIndex = cbxEspecialidad.getSelectedIndex() - 1; // porque el 0 es "<Seleccione>"
+						    if (especialidadIndex < 0) {
+						    	JOptionPane.showMessageDialog(null, "Debe seleccionar una especialidad válida", "Error", JOptionPane.ERROR_MESSAGE);
+						    	return;
+						    }
+						    Medico medico = new Medico(codigo,cedula,nombre,apellido,telefono,direccion,fechaNacimiento,edad,sexo,especialidadIndex,exequatur);
+
 							ClinicaMedica.getInstance().insertarMedico(medico);
 							JOptionPane.showMessageDialog(null,"Operacion exitosa","Informacion",JOptionPane.INFORMATION_MESSAGE);
 							clean();
@@ -287,10 +291,11 @@ public class RegistroMedico extends JDialog {
 							selected.setDireccion(txtDireccion.getText());
 							selected.setEdad(Integer.parseInt(txtEdad.getText()));
 							selected.setSexo((String) cbxSexo.getSelectedItem());
-							selected.setEspecialidad((String) cbxEspecialidad.getSelectedItem());
 							selected.setExequatur(Integer.parseInt(spnExequatur.getValue().toString()));
 							selected.setFechaNacimiento((Date) spnFechaNacim.getValue());
 							ClinicaMedica.getInstance().updateMedico(selected);
+							int especialidadIndex = cbxEspecialidad.getSelectedIndex() - 1;
+							selected.setEspecialidad(especialidadIndex);
 							ListadoMedicos.loadMedicos();
 							JOptionPane.showMessageDialog(null,"Operacion exitosa","Informacion",JOptionPane.INFORMATION_MESSAGE);
 							dispose();
@@ -342,7 +347,8 @@ public class RegistroMedico extends JDialog {
 			txtDireccion.setText(selected.getDireccion());
 			txtEdad.setText(String.valueOf(selected.getEdad()));
 			cbxSexo.setSelectedItem(selected.getSexo());
-			cbxEspecialidad.setSelectedItem(selected.getEspecialidad());
+			cbxEspecialidad.setSelectedIndex(selected.getEspecialidad() + 1); // +1 por "<Seleccione>"
+
 			spnExequatur.setValue(selected.getExequatur());
             spnFechaNacim.setValue(selected.getFechaNacimiento());
 

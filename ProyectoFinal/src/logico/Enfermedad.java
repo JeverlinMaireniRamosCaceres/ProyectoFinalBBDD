@@ -12,15 +12,15 @@ public class Enfermedad implements Serializable {
 	private String idEnfermedad;
 	private String nombre;
 	private String sintomas;
-	private String tipo;
+	private int idTipoEnfermedad;
 	private boolean curada;
 	
-	public Enfermedad(String idEnfermedad, String nombre, String sintomas, String tipo) {
+	public Enfermedad(String idEnfermedad, String nombre, String sintomas, int tipo) {
 		super();
 		this.idEnfermedad = idEnfermedad;
 		this.nombre = nombre;
 		this.sintomas = sintomas;
-		this.tipo = tipo;
+		this.idTipoEnfermedad = tipo;
 	}
 	
 	
@@ -52,11 +52,11 @@ public class Enfermedad implements Serializable {
 	public void setSintomas(String sintomas) {
 		this.sintomas = sintomas;
 	}
-	public String getTipo() {
-		return tipo;
+	public int getTipo() {
+		return idTipoEnfermedad;
 	}
-	public void setTipo(String tipo) {
-		this.tipo = tipo;
+	public void setTipo(int tipo) {
+		this.idTipoEnfermedad = tipo;
 	}
 	
 	

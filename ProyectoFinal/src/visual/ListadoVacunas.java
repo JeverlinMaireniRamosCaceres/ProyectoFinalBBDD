@@ -80,6 +80,16 @@ public class ListadoVacunas extends JDialog {
 						dispose();
 					}
 				});
+				{
+					JButton btnEliminar = new JButton("Eliminar");
+					btnEliminar.setEnabled(false);
+					buttonPane.add(btnEliminar);
+				}
+				{
+					JButton btnModificar = new JButton("Modificar");
+					btnModificar.setEnabled(false);
+					buttonPane.add(btnModificar);
+				}
 				btnCancelar.setActionCommand("Cancel");
 				buttonPane.add(btnCancelar);
 			}

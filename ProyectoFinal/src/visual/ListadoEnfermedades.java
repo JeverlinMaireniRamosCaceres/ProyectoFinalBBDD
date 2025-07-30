@@ -108,6 +108,11 @@ public class ListadoEnfermedades extends JDialog {
 						dispose();
 					}
 				});
+				{
+					JButton btnEliminar = new JButton("Eliminar");
+					btnEliminar.setEnabled(false);
+					buttonPane.add(btnEliminar);
+				}
 				btnCancelar.setActionCommand("Cancel");
 				buttonPane.add(btnCancelar);
 			}

@@ -19,8 +19,8 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 
-import logico.ClinicaMedica;
 import logico.Enfermedad;
+import logico.EnfermedadCRUD;
 
 public class RegistroEnfermedad extends JDialog {
 
@@ -78,7 +78,8 @@ public class RegistroEnfermedad extends JDialog {
 				txtCodigo.setBounds(76, 19, 362, 20);
 				panel.add(txtCodigo);
 				txtCodigo.setColumns(10);
-				txtCodigo.setText("E-"+ClinicaMedica.getInstance().codEnfermedad);
+				txtCodigo.setText(EnfermedadCRUD.generarCodigoEnfermedad());
+
 
 			}
 			{
@@ -138,18 +139,35 @@ public class RegistroEnfermedad extends JDialog {
 						if(selected == null) {
 							String codigo = txtCodigo.getText();
 							String nombre = txtNombre.getText();
-							String tipo = cbxTipo.getSelectedItem().toString();
 							String sintomas = txtASintomas.getText();
 							
-							Enfermedad enfermedad = new Enfermedad(codigo,nombre,sintomas,tipo);
-							ClinicaMedica.getInstance().insertarEnfermedad(enfermedad);
-							JOptionPane.showMessageDialog(null,"Operacion exitosa","Informacion",JOptionPane.INFORMATION_MESSAGE);
+							int tipoIndex = cbxTipo.getSelectedIndex(); // restando 1 para ignorar "<Seleccione>"
+							if (tipoIndex < 0) {
+								JOptionPane.showMessageDialog(null, "Debe seleccionar un tipo válido", "Error", JOptionPane.ERROR_MESSAGE);
+								return;
+							}
+							
+							Enfermedad enfermedad = new Enfermedad(codigo,nombre,sintomas,tipoIndex);
+							if (EnfermedadCRUD.insertarEnfermedad(enfermedad)) {
+							    JOptionPane.showMessageDialog(null, "Enfermedad registrada exitosamente.");
+							    clean();
+							} else {
+							    JOptionPane.showMessageDialog(null, "Error al registrar enfermedad.");
+							}
+							/*ClinicaMedica.getInstance().insertarEnfermedad(enfermedad);
+							JOptionPane.showMessageDialog(null,"Operacion exitosa","Informacion",JOptionPane.INFORMATION_MESSAGE);*/
 							clean();
 						} else {
 							selected.setIdEnfermedad(txtCodigo.getText());
 							selected.setNombre(txtNombre.getText());
 							selected.setSintomas(txtASintomas.getText());
-							selected.setTipo((String)cbxTipo.getSelectedItem());
+							int tipoIndex = cbxTipo.getSelectedIndex() - 1;
+							if (tipoIndex < 0) {
+								JOptionPane.showMessageDialog(null, "Debe seleccionar un tipo válido", "Error", JOptionPane.ERROR_MESSAGE);
+								return;
+							}
+							selected.setTipo(tipoIndex);
+							
 							ListadoEnfermedades.loadEnfermedades();
 							JOptionPane.showMessageDialog(null,"Operacion exitosa","Informacion",JOptionPane.INFORMATION_MESSAGE);
 							dispose();
@@ -159,7 +177,7 @@ public class RegistroEnfermedad extends JDialog {
 					}
 
 					private void clean() {
-						txtCodigo.setText("E-"+ClinicaMedica.getInstance().codEnfermedad);
+						txtCodigo.setText(EnfermedadCRUD.generarCodigoEnfermedad());
 						txtNombre.setText("");
 						cbxTipo.setSelectedIndex(0);
 						txtASintomas.setText("");
@@ -190,7 +208,7 @@ public class RegistroEnfermedad extends JDialog {
 			txtCodigo.setText(selected.getIdEnfermedad());
 			txtNombre.setText(selected.getNombre());
 			txtASintomas.setText(selected.getSintomas());
-			cbxTipo.setSelectedItem(selected.getTipo());
+			cbxTipo.setSelectedIndex(selected.getTipo() + 1);
 		}
 	}
 }

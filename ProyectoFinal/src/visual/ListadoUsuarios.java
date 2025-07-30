@@ -124,6 +124,11 @@ public class ListadoUsuarios extends JDialog {
 						dispose();
 					}
 				});
+				{
+					JButton btnEliminar = new JButton("Eliminar");
+					btnEliminar.setEnabled(false);
+					buttonPane.add(btnEliminar);
+				}
 				cancelButton.setActionCommand("Cancel");
 				buttonPane.add(cancelButton);
 			}

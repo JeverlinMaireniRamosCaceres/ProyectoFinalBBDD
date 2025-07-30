@@ -213,9 +213,10 @@ public class Vacunar extends JDialog {
 					if(vacuna != null) {
 						txtCodVacuna.setText(vacuna.getIdVacuna());
 						spnFechVencim.setValue(vacuna.getFecha());
-						txtTipoVacuna.setText(vacuna.getTipo());
 						txtNomVacuna.setText(vacuna.getNombreVacuna());
-						txtFabricante.setText(vacuna.getFabricante());
+						txtTipoVacuna.setText(String.valueOf(vacuna.getTipo()));
+						txtFabricante.setText(String.valueOf(vacuna.getFabricante()));
+
 					}
 				}
 			});

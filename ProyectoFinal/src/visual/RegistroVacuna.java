@@ -61,7 +61,7 @@ public class RegistroVacuna extends JDialog {
 			setTitle("Modificar vacuna");
 		}
 		
-		setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		setTitle("Registrar Vacuna");
 		setBounds(100, 100, 507, 236);
 		setLocationRelativeTo(null);
@@ -157,8 +157,8 @@ public class RegistroVacuna extends JDialog {
 							String nombre = txtNombre.getText();
 						    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 						    Date fechaVen = (Date)(spnFechaVen.getValue());
-						    String tipo = cbxTipo.getSelectedItem().toString();
-						    String fabricante = cbxFabricante.getSelectedItem().toString();
+						    int tipo = cbxTipo.getSelectedIndex();
+						    int fabricante = cbxFabricante.getSelectedIndex();
 						    int cantidad = new Integer(spnCantidad.getValue().toString());
 							
 							Vacuna vacuna = new Vacuna(codigo,fechaVen,nombre,tipo,fabricante,cantidad);
@@ -170,8 +170,8 @@ public class RegistroVacuna extends JDialog {
 							selected.setIdVacuna(txtCodigo.getText());
 							selected.setNombreVacuna(txtNombre.getText());
 							selected.setFecha((Date)spnFechaVen.getValue());
-							selected.setTipo(cbxTipo.getSelectedItem().toString());
-							selected.setFabricante(cbxFabricante.getSelectedItem().toString());
+							selected.setTipo(cbxTipo.getSelectedIndex());
+							selected.setFabricante(cbxFabricante.getSelectedIndex());
 							selected.setCantidad((int)spnCantidad.getValue());
 							ClinicaMedica.getInstance().updateVacuna(selected.getIdVacuna(), vacuna);
 							JOptionPane.showMessageDialog(null,"Operacion exitosa","Informacion",JOptionPane.INFORMATION_MESSAGE);
@@ -210,10 +210,10 @@ public class RegistroVacuna extends JDialog {
 		if (selected != null) {
 			txtCodigo.setText(selected.getIdVacuna());
 			txtNombre.setText(selected.getNombreVacuna());
-			cbxTipo.setSelectedItem(selected.getTipo());
 			spnCantidad.setValue(selected.getCantidad());
-			cbxFabricante.setSelectedItem(selected.getFabricante());
 			spnFechaVen.setValue(selected.getFecha());
+			cbxTipo.setSelectedIndex(selected.getTipo());
+			cbxFabricante.setSelectedIndex(selected.getFabricante());
 		}
 	}
 }

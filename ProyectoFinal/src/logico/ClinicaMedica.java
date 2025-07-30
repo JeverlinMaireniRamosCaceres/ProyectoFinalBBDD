@@ -19,6 +19,10 @@ public class ClinicaMedica implements Serializable {
 	private ArrayList<Cita> lasCitas;
 	private ArrayList<Usuario>losUsuarios;
 
+	public static final int ROL_ADMIN = 1;
+	public static final int ROL_MEDICO = 2;
+	public static final int ROL_ADMINISTRATIVO = 3;
+
 	
 	public ArrayList<Usuario> getLosUsuarios() {
 		return losUsuarios;

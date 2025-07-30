@@ -68,8 +68,8 @@ public class RegistroConsulta extends JDialog {
 	 */
 	public RegistroConsulta(Consulta aux) {
 		
-		if(ClinicaMedica.getLoginUsuario().getRol().equals("Médico")) {
-			medico = ClinicaMedica.getLoginUsuario().getMedicoRelacionado();
+		if(ClinicaMedica.getLoginUsuario().getRol() == ClinicaMedica.ROL_MEDICO) {
+			medico = ClinicaMedica.getInstance().buscarMedicoById(ClinicaMedica.getLoginUsuario().getCodigo());
 		}
 		
 		updated = aux;
@@ -102,7 +102,7 @@ public class RegistroConsulta extends JDialog {
 				panel_1.add(txtMedico);
 				txtMedico.setEditable(false);
 				txtMedico.setColumns(10);
-				if(ClinicaMedica.getLoginUsuario().getRol().equals("Médico")) {
+				if(ClinicaMedica.getLoginUsuario().getRol() == ClinicaMedica.ROL_MEDICO) {
 					txtMedico.setText(medico.getNombre()+" "+medico.getApellido());
 				}
 

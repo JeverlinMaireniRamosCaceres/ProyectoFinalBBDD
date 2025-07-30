@@ -163,14 +163,15 @@ public class ListadoCitas extends JDialog {
 
 	    String fechaHoyStr = dateFormatter.format(new Date());
 	    
-		if(ClinicaMedica.getLoginUsuario().getRol().equals("Médico")) {
-			Medico medico = ClinicaMedica.getLoginUsuario().getMedicoRelacionado();
+		if(ClinicaMedica.getLoginUsuario().getRol() == ClinicaMedica.ROL_MEDICO) {
+			Medico medico = ClinicaMedica.getInstance().buscarMedicoById(ClinicaMedica.getLoginUsuario().getCodigo());
+
 			
 			for (Cita cita : ci) {
 			    String fechaCitaStr = dateFormatter.format(cita.getFecha());
 		        if(cita.getMedico().equals(medico) && fechaCitaStr.equals(fechaHoyStr)) {
 					row[0] = cita.getIdCita();
-			        row[1] = cita.getNombrePersona();
+					row[1] = cita.getPaciente().getNombre() + " " + cita.getPaciente().getApellido();
 			        row[2] = cita.getMedico().getNombre() + " " + cita.getMedico().getApellido();
 			        row[3] = dateFormatter.format(cita.getFecha());
 			        row[4] = timeFormatter.format(cita.getHora());
@@ -183,7 +184,7 @@ public class ListadoCitas extends JDialog {
 		} else {
 		    for (Cita cita : ci) {
 		        row[0] = cita.getIdCita();
-		        row[1] = cita.getNombrePersona();
+		        row[1] = cita.getPaciente().getNombre() + " " + cita.getPaciente().getApellido();
 		        row[2] = cita.getMedico().getNombre() + " " + cita.getMedico().getApellido();
 		        row[3] = dateFormatter.format(cita.getFecha());
 		        row[4] = timeFormatter.format(cita.getHora());

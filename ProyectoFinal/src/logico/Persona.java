@@ -32,8 +32,10 @@ public abstract class Persona implements Serializable {
 		this.fechaNacimiento = fechaNacimiento;
 		this.edad = edad;
 		this.sexo = sexo;
+
 	}
 	
+
 	public String getIdPersona() {
 		return idPersona;
 	}

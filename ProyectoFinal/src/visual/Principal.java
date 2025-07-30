@@ -86,14 +86,14 @@ public class Principal extends JFrame {
 		});
 		mnNewMenu.add(mntmNewMenuItem_1);
 		
-		if(ClinicaMedica.getLoginUsuario().getRol().equalsIgnoreCase("Recepcionista")) {
+		if(ClinicaMedica.getLoginUsuario().getRol() == ClinicaMedica.ROL_ADMINISTRATIVO) {
 			mntmNewMenuItem_1.setEnabled(false);
 		}
 
 		JMenu mnNewMenu_1 = new JMenu("M\u00E9dicos");
 		menuBar.add(mnNewMenu_1);
 		
-		if(ClinicaMedica.getLoginUsuario().getRol().equalsIgnoreCase("Medico")) {
+		if(ClinicaMedica.getLoginUsuario().getRol() == ClinicaMedica.ROL_MEDICO) {
 			mnNewMenu_1.setEnabled(false);
 		}
 		
@@ -182,7 +182,7 @@ public class Principal extends JFrame {
 		});
 		mnNewMenu_3.add(mntmNewMenuItem_13);
 		
-		if(ClinicaMedica.getLoginUsuario().getRol().equalsIgnoreCase("Medico")) {
+		if(ClinicaMedica.getLoginUsuario().getRol() == ClinicaMedica.ROL_MEDICO) {
 			mntmNewMenuItem_7.setEnabled(false);
 		
 		}
@@ -193,7 +193,7 @@ public class Principal extends JFrame {
 		System.out.println("ROL LOGUEADO: [" + ClinicaMedica.getLoginUsuario().getRol() + "]");
 
 		
-		if(ClinicaMedica.getLoginUsuario().getRol().equalsIgnoreCase("Recepcionista")) {
+		if(ClinicaMedica.getLoginUsuario().getRol() == ClinicaMedica.ROL_ADMINISTRATIVO) {
 			mnNewMenu_4.setEnabled(false);
 		
 		}
@@ -247,9 +247,9 @@ public class Principal extends JFrame {
 		});
 		mnNewMenu_5.add(mntmNewMenuItem_12);
 		
-		if(ClinicaMedica.getLoginUsuario().getRol().equalsIgnoreCase("Recepcionista")) {
+		if(ClinicaMedica.getLoginUsuario().getRol() == ClinicaMedica.ROL_ADMINISTRATIVO) {
 			mntmNewMenuItem_12.setEnabled(false);
-		} else if(ClinicaMedica.getLoginUsuario().getRol().equalsIgnoreCase("Medico")) {
+		} else if(ClinicaMedica.getLoginUsuario().getRol() == ClinicaMedica.ROL_MEDICO) {
 			mntmNewMenuItem_11.setEnabled(false);
 			mntmNewMenuItem_10.setEnabled(false);
 		}
@@ -257,7 +257,7 @@ public class Principal extends JFrame {
 		JMenu mnNewMenu_7 = new JMenu("Usuarios");
 		menuBar.add(mnNewMenu_7);
 		
-		if(ClinicaMedica.getLoginUsuario().getRol().equalsIgnoreCase("Recepcionista") || ClinicaMedica.getLoginUsuario().getRol().equalsIgnoreCase("Medico") ) {
+		if(ClinicaMedica.getLoginUsuario().getRol() == ClinicaMedica.ROL_ADMINISTRATIVO || ClinicaMedica.getLoginUsuario().getRol() == ClinicaMedica.ROL_MEDICO ) {
 			mnNewMenu_7.setEnabled(false);
 		}
 		
