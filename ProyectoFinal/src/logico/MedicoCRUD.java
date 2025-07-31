@@ -10,7 +10,7 @@ import java.util.List;
  
 public class MedicoCRUD {
  
-    // Insertar datos en tabla Persona (datos básicos de la persona que es médico)
+    // Insertar datos en tabla Persona (datos bÃ¡sicos de la persona que es mÃ©dico)
     public static boolean insertarPersona(Medico medico) {
         String sql = "INSERT INTO Persona (idPersona, cedula, nombre, apellido, telefono, direccion, fechaNacimiento, sexo) "
                    + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
@@ -42,7 +42,7 @@ public class MedicoCRUD {
             stmt.setString(1, medico.getIdPersona()); // mismo id para medico y persona
             stmt.setString(2, medico.getIdPersona());
             stmt.setInt(3, medico.getExequatur());
-            // Aquí puede ser null si el usuario aún no existe, o el código asignado
+            // AquÃ­ puede ser null si el usuario aÃºn no existe, o el cÃ³digo asignado
             if(medico.getUsuario() != null) {
                 stmt.setString(4, medico.getUsuario().getCodigo());
             } else {
@@ -57,8 +57,11 @@ public class MedicoCRUD {
             return false;
         }
     }
+    
+    
+    
  
-    // Método para generar código único para médico (y persona)
+    // MÃ©todo para generar cÃ³digo Ãºnico para mÃ©dico (y persona)
     public static String generarCodigoMedico() {
         String sql = "SELECT MAX(CAST(SUBSTRING(idMedico, 3, LEN(idMedico)) AS INT)) AS ultimo_num FROM Medico WHERE idMedico LIKE 'M-%'";
         try (Connection conn = PruebaConexionBBDD.getConnection();
@@ -71,28 +74,81 @@ public class MedicoCRUD {
             return "M-" + nuevoNumero;
  
         } catch (SQLException e) {
-            System.err.println("Error al generar código de medico: " + e.getMessage());
+            System.err.println("Error al generar cÃ³digo de medico: " + e.getMessage());
             return null;
         }
     }
  
-    // Método que inserta persona y médico (sin usuario) — para usar cuando sólo creas médico
     public static boolean insertarNuevoMedicoSinUsuario(Medico medico) {
-        // Generar código único para médico y persona
         String codigo = generarCodigoMedico();
         if (codigo == null) return false;
- 
-        // Asignar código a medico
+
         medico.setIdPersona(codigo);
- 
-        // Insertar Persona
-        if (!insertarPersona(medico)) return false;
- 
-        // Insertar Médico (sin usuario aún)
-        return insertarMedico(medico);
+
+        String sqlPersona = "INSERT INTO Persona (idPersona, cedula, nombre, apellido, telefono, direccion, fechaNacimiento, sexo) "
+                          + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        String sqlMedico = "INSERT INTO Medico (idMedico, idPersona, exequatur, idUsuario) VALUES (?, ?, ?, ?)";
+
+        Connection conn = null;
+        PreparedStatement psPersona = null;
+        PreparedStatement psMedico = null;
+
+        try {
+            conn = PruebaConexionBBDD.getConnection();
+            conn.setAutoCommit(false); // ðŸ”¹ Inicia la transacciÃ³n
+
+            // Insertar Persona
+            psPersona = conn.prepareStatement(sqlPersona);
+            psPersona.setString(1, medico.getIdPersona());
+            psPersona.setString(2, medico.getCedula());
+            psPersona.setString(3, medico.getNombre());
+            psPersona.setString(4, medico.getApellido());
+            psPersona.setString(5, medico.getTelefono());
+            psPersona.setString(6, medico.getDireccion());
+            psPersona.setDate(7, new Date(medico.getFechaNacimiento().getTime()));
+            psPersona.setString(8, medico.getSexo());
+            psPersona.executeUpdate();
+
+            // Insertar MÃ©dico
+            psMedico = conn.prepareStatement(sqlMedico);
+            psMedico.setString(1, medico.getIdPersona()); // mismo id para medico y persona
+            psMedico.setString(2, medico.getIdPersona());
+            psMedico.setInt(3, medico.getExequatur());
+            if (medico.getUsuario() != null) {
+                psMedico.setString(4, medico.getUsuario().getCodigo());
+            } else {
+                psMedico.setNull(4, java.sql.Types.VARCHAR);
+            }
+            psMedico.executeUpdate();
+
+            conn.commit(); // Confirmar si todo va bien
+            return true;
+
+        } catch (SQLException e) {
+            try {
+                if (conn != null) conn.rollback(); // Deshacer si hay error
+            } catch (SQLException ex) {
+                System.err.println("Error al hacer rollback: " + ex.getMessage());
+            }
+            System.err.println("Error al insertar medico/persona: " + e.getMessage());
+            return false;
+
+        } finally {
+            try {
+                if (psPersona != null) psPersona.close();
+                if (psMedico != null) psMedico.close();
+                if (conn != null) {
+                    conn.setAutoCommit(true);
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                System.err.println("Error al cerrar recursos: " + e.getMessage());
+            }
+        }
     }
+
  
-    // Método para actualizar el idUsuario en Medico una vez creado el usuario
+    // MÃ©todo para actualizar el idUsuario en Medico una vez creado el usuario
     public static boolean actualizarUsuarioMedico(String idMedico, String idUsuario) {
         String sql = "UPDATE Medico SET idUsuario = ? WHERE idMedico = ?";
         try (Connection conn = PruebaConexionBBDD.getConnection();
@@ -153,7 +209,7 @@ public class MedicoCRUD {
             stmt.executeUpdate();
  
         } catch (SQLException e) {
-            System.err.println("Error al eliminar especialidades del médico: " + e.getMessage());
+            System.err.println("Error al eliminar especialidades del mÃ©dico: " + e.getMessage());
         }
     }
  
@@ -176,7 +232,7 @@ public class MedicoCRUD {
             }
  
         } catch (SQLException e) {
-            System.err.println("Error al obtener especialidad del médico: " + e.getMessage());
+            System.err.println("Error al obtener especialidad del mÃ©dico: " + e.getMessage());
         }
  
         return null;

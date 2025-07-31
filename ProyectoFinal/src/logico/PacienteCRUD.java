@@ -9,59 +9,74 @@ import java.sql.SQLException;
  
 public class PacienteCRUD {
  
-    // Insertar datos en tabla Persona
-    public static boolean insertarPersona(Paciente paciente) {
-        String sql = "INSERT INTO Persona (idPersona, cedula, nombre, apellido, telefono, direccion, fechaNacimiento, sexo) "
-                   + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-        try (Connection conn = PruebaConexionBBDD.getConnection(); 
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, paciente.getIdPersona());
-            stmt.setString(2, paciente.getCedula());
-            stmt.setString(3, paciente.getNombre());
-            stmt.setString(4, paciente.getApellido());
-            stmt.setString(5, paciente.getTelefono());
-            stmt.setString(6, paciente.getDireccion());
-            stmt.setDate(7, new java.sql.Date(paciente.getFechaNacimiento().getTime()));
-            stmt.setString(8, paciente.getSexo());
  
-            int filasAfectadas = stmt.executeUpdate();
-            return filasAfectadas > 0;
- 
-        } catch (SQLException e) {
-            System.err.println("Error al insertar persona: " + e.getMessage());
-            return false;
-        }
-    }
- 
-    // Insertar datos en tabla Paciente
-    public static boolean insertarPaciente(Paciente paciente) {
-        String sql = "INSERT INTO Paciente (idPersona, idPaciente, estatura, peso) VALUES (?, ?, ?, ?)";
-        try (Connection conn = PruebaConexionBBDD.getConnection(); 
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-        	stmt.setString(1, paciente.getIdPersona());
-        	stmt.setString(2, paciente.getIdPersona());
-            stmt.setFloat(3, paciente.getEstatura());
-            stmt.setFloat(4, paciente.getPeso());
- 
-            int filasAfectadas = stmt.executeUpdate();
-            return filasAfectadas > 0;
- 
-        } catch (SQLException e) {
-            System.err.println("Error al insertar paciente: " + e.getMessage());
-            return false;
-        }
-    }
- 
-    // MÈtodo que inserta persona y luego paciente
+
     public static boolean insertarNuevoPaciente(Paciente paciente) {
-        if (insertarPersona(paciente)) {
-            return insertarPaciente(paciente);
-        } else {
+        String codigo = generarCodigoPersona();
+        if (codigo == null) return false;
+
+        paciente.setIdPersona(codigo);
+
+        String sqlPersona = "INSERT INTO Persona (idPersona, cedula, nombre, apellido, telefono, direccion, fechaNacimiento, sexo) "
+                          + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        String sqlPaciente = "INSERT INTO Paciente (idPaciente, idPersona, estatura, peso) VALUES (?, ?, ?, ?)";
+
+        Connection conn = null;
+        PreparedStatement psPersona = null;
+        PreparedStatement psPaciente = null;
+
+        try {
+            conn = PruebaConexionBBDD.getConnection();
+            conn.setAutoCommit(false); // üîπ Inicia la transacci√≥n
+
+            // Insertar Persona
+            psPersona = conn.prepareStatement(sqlPersona);
+            psPersona.setString(1, paciente.getIdPersona());
+            psPersona.setString(2, paciente.getCedula());
+            psPersona.setString(3, paciente.getNombre());
+            psPersona.setString(4, paciente.getApellido());
+            psPersona.setString(5, paciente.getTelefono());
+            psPersona.setString(6, paciente.getDireccion());
+            psPersona.setDate(7, new java.sql.Date(paciente.getFechaNacimiento().getTime()));
+            psPersona.setString(8, paciente.getSexo());
+            psPersona.executeUpdate();
+
+            // Insertar Paciente
+            psPaciente = conn.prepareStatement(sqlPaciente);
+            psPaciente.setString(1, paciente.getIdPersona());
+            psPaciente.setString(2, paciente.getIdPersona());
+            psPaciente.setFloat(3, paciente.getEstatura());
+            psPaciente.setFloat(4, paciente.getPeso());
+            psPaciente.executeUpdate();
+
+            conn.commit(); 
+            return true;
+
+        } catch (SQLException e) {
+            try {
+                if (conn != null) conn.rollback(); // ‚ùå Revertir si algo falla
+            } catch (SQLException ex) {
+                System.err.println("Error al hacer rollback: " + ex.getMessage());
+            }
+            System.err.println("Error al insertar pacientepersona: " + e.getMessage());
             return false;
+
+        } finally {
+            try {
+                if (psPersona != null) psPersona.close();
+                if (psPaciente != null) psPaciente.close();
+                if (conn != null) {
+                    conn.setAutoCommit(true);
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                System.err.println("Error al cerrar recursos: " + e.getMessage());
+            }
         }
     }
+
  
-    // MÈtodo para generar cÛdigo paciente (igual que antes)
+    // M√©todo para generar c√≥digo paciente (igual que antes)
     public static String generarCodigoPersona() {
         String sql = "SELECT MAX(CAST(SUBSTRING(idPersona, 3, LEN(idPersona)) AS INT)) AS ultimo_num FROM Persona WHERE idPersona LIKE 'P-%'";
         try (Connection conn = PruebaConexionBBDD.getConnection();
@@ -74,7 +89,7 @@ public class PacienteCRUD {
             return "P-" + nuevoNumero;
  
         } catch (SQLException e) {
-            System.err.println("Error al generar cÛdigo de persona: " + e.getMessage());
+            System.err.println("Error al generar codigo de persona: " + e.getMessage());
             return null;
         }
     }
