@@ -7,6 +7,8 @@ import java.awt.event.ActionListener;
 import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
+import logico.PacienteCRUD;
+
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -97,7 +99,8 @@ public class RegistroPaciente extends JDialog {
 				txtCodigo.setBounds(74, 19, 131, 20);
 				panel.add(txtCodigo);
 				txtCodigo.setColumns(10);
-				txtCodigo.setText("P-"+ClinicaMedica.getInstance().codPaciente);
+				txtCodigo.setText(PacienteCRUD.generarCodigoPersona());
+
 			}
 			{
 				JLabel lblNewLabel_1 = new JLabel("C\u00E9dula:");
@@ -237,7 +240,7 @@ public class RegistroPaciente extends JDialog {
 			}
 			{
 				cbxSexo = new JComboBox();
-				cbxSexo.setModel(new DefaultComboBoxModel(new String[] {"<Seleccione>", "Masculino", "Femenino"}));
+				cbxSexo.setModel(new DefaultComboBoxModel(new String[] {"<Seleccione>", "M", "F"}));
 				cbxSexo.setBounds(419, 131, 105, 20);
 				panel.add(cbxSexo);
 			}
@@ -307,9 +310,16 @@ public class RegistroPaciente extends JDialog {
 					            return;
 					        }
 
-							ClinicaMedica.getInstance().insertarPaciente(paciente);
-							JOptionPane.showMessageDialog(null,"Operacion exitosa","Informacion",JOptionPane.INFORMATION_MESSAGE);
-							clean();
+					        boolean exito = PacienteCRUD.insertarNuevoPaciente(paciente);
+
+					        if (exito) {
+					        	JOptionPane.showMessageDialog(null, "Paciente registrado exitosamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+					        	clean();
+					        } else {
+					        	JOptionPane.showMessageDialog(null, "Ocurrió un error al registrar el paciente.", "Error", JOptionPane.ERROR_MESSAGE);
+					        }
+
+							
 						}
 						else {
 							selected.setCedula(txtCedula.getText());
@@ -363,7 +373,7 @@ public class RegistroPaciente extends JDialog {
         }
 	}
 	private void clean() {
-		txtCodigo.setText("P-"+ClinicaMedica.getInstance().codPaciente);
+		txtCodigo.setText(PacienteCRUD.generarCodigoPersona());
 		txtCedula.setText("");
 		txtNombre.setText("");
 		txtApellido.setText("");

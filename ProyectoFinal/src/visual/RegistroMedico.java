@@ -28,7 +28,9 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import logico.ClinicaMedica;
+import logico.Especialidad;
 import logico.Medico;
+import logico.MedicoCRUD;
 
 public class RegistroMedico extends JDialog {
 
@@ -94,7 +96,8 @@ public class RegistroMedico extends JDialog {
 			txtCodigo.setColumns(10);
 			txtCodigo.setBounds(84, 11, 131, 20);
 			panel.add(txtCodigo);
-			txtCodigo.setText("M-"+ClinicaMedica.getInstance().codMedico);
+			String nuevoCodigo = MedicoCRUD.generarCodigoMedico();
+			txtCodigo.setText(nuevoCodigo);
 			
 			JLabel label_1 = new JLabel("C\u00E9dula:");
 			label_1.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -204,7 +207,7 @@ public class RegistroMedico extends JDialog {
 			panel.add(label_8);
 			
 			cbxSexo = new JComboBox();
-			cbxSexo.setModel(new DefaultComboBoxModel(new String[] {"<Seleccione>", "Masculino", "Femenino"}));
+			cbxSexo.setModel(new DefaultComboBoxModel(new String[] {"<Seleccione>", "M", "F"}));
 			cbxSexo.setBounds(423, 123, 108, 20);
 			panel.add(cbxSexo);
 			
@@ -214,7 +217,7 @@ public class RegistroMedico extends JDialog {
 			panel.add(lblNewLabel);
 			
 			cbxEspecialidad = new JComboBox();
-			cbxEspecialidad.setModel(new DefaultComboBoxModel(new String[] {"<Seleccione>", "Medicina General", "Pediatr\u00EDa", "Ginecolog\u00EDa y Obstetricia", "Cardiolog\u00EDa", "Dermatolog\u00EDa", "Oftalmolog\u00EDa", "Otorrinolaringolog\u00EDa", "Endocrinolog\u00EDa", "Ortopedia y Traumatolog\u00EDa", "Psiquiatr\u00EDa", "Urolog\u00EDa", "Neumolog\u00EDa"}));
+			cargarEspecialidades(); // este método lo defines abajo
 			cbxEspecialidad.setBounds(107, 159, 164, 20);
 			panel.add(cbxEspecialidad);
 			
@@ -253,57 +256,116 @@ public class RegistroMedico extends JDialog {
 				                                          "Campos vacíos", JOptionPane.WARNING_MESSAGE);
 				            return; 
 				        }
-				        
-						if(selected == null) {
-							String codigo = txtCodigo.getText();
-							String cedula = txtCedula.getText();
-							
-					        if (ClinicaMedica.getInstance().cedulaMedicoExiste(cedula)) {
-					            JOptionPane.showMessageDialog(null, "La cédula ya está registrada.", 
-					                                          "Error", JOptionPane.ERROR_MESSAGE);
-					            return;
-					        }
-							
-							String nombre = txtNombre.getText();
-							String apellido = txtApellido.getText();
-							String telefono = txtTelefono.getText();
-							String direccion = txtDireccion.getText();
-							int edad = new Integer(txtEdad.getText());
-							String sexo = cbxSexo.getSelectedItem().toString();
-							int exequatur = new Integer(spnExequatur.getValue().toString());
-						    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-						    Date fechaNacimiento = (Date)(spnFechaNacim.getValue());
-						    int especialidadIndex = cbxEspecialidad.getSelectedIndex() - 1; // porque el 0 es "<Seleccione>"
-						    if (especialidadIndex < 0) {
-						    	JOptionPane.showMessageDialog(null, "Debe seleccionar una especialidad válida", "Error", JOptionPane.ERROR_MESSAGE);
-						    	return;
-						    }
-						    Medico medico = new Medico(codigo,cedula,nombre,apellido,telefono,direccion,fechaNacimiento,edad,sexo,especialidadIndex,exequatur);
+				        if (selected == null) {
+				            // Generar código de médico
+				            String codigo = MedicoCRUD.generarCodigoMedico();
+				            if (codigo == null) {
+				                JOptionPane.showMessageDialog(null, "Error generando código para el médico", "Error", JOptionPane.ERROR_MESSAGE);
+				                return;
+				            }
 
-							ClinicaMedica.getInstance().insertarMedico(medico);
-							JOptionPane.showMessageDialog(null,"Operacion exitosa","Informacion",JOptionPane.INFORMATION_MESSAGE);
-							clean();
-						} else {
-							selected.setCedula(txtCedula.getText());
-							selected.setNombre(txtNombre.getText());
-							selected.setApellido(txtApellido.getText());
-							selected.setTelefono(txtTelefono.getText());
-							selected.setDireccion(txtDireccion.getText());
-							selected.setEdad(Integer.parseInt(txtEdad.getText()));
-							selected.setSexo((String) cbxSexo.getSelectedItem());
-							selected.setExequatur(Integer.parseInt(spnExequatur.getValue().toString()));
-							selected.setFechaNacimiento((Date) spnFechaNacim.getValue());
-							ClinicaMedica.getInstance().updateMedico(selected);
-							int especialidadIndex = cbxEspecialidad.getSelectedIndex() - 1;
-							selected.setEspecialidad(especialidadIndex);
-							ListadoMedicos.loadMedicos();
-							JOptionPane.showMessageDialog(null,"Operacion exitosa","Informacion",JOptionPane.INFORMATION_MESSAGE);
-							dispose();
-						}
+				            String cedula = txtCedula.getText();
+
+				            // Verificar que la cédula no exista
+				            if (ClinicaMedica.getInstance().idMedicoExiste(codigo)) {
+				                JOptionPane.showMessageDialog(null, "Ya existe un médico con este código.", 
+				                                              "Error", JOptionPane.ERROR_MESSAGE);
+				                return;
+				            }
+
+
+				            String nombre = txtNombre.getText();
+				            String apellido = txtApellido.getText();
+				            String telefono = txtTelefono.getText();
+				            String direccion = txtDireccion.getText();
+				            int edad = Integer.parseInt(txtEdad.getText());
+				            String sexo = cbxSexo.getSelectedItem().toString();
+				            int exequatur = Integer.parseInt(spnExequatur.getValue().toString());
+				            Date fechaNacimiento = (Date) spnFechaNacim.getValue();
+
+				            // Verificar que la especialidad esté seleccionada correctamente
+				            Especialidad espSeleccionada = (Especialidad) cbxEspecialidad.getSelectedItem();
+				            if (espSeleccionada.getId() == 0) {
+				                JOptionPane.showMessageDialog(null, "Debe seleccionar una especialidad válida", "Error", JOptionPane.ERROR_MESSAGE);
+				                return;
+				            }
+
+				            // Crear el objeto médico
+				            Medico medico = new Medico(
+				            	    codigo,
+				            	    cedula,
+				            	    nombre,
+				            	    apellido,
+				            	    telefono,
+				            	    direccion,
+				            	    new java.sql.Date(fechaNacimiento.getTime()),
+				            	    edad,
+				            	    sexo,
+				            	    exequatur
+				            );
+
+				         // Inserta en la tabla intermedia
+				            boolean exitoPersona = MedicoCRUD.insertarPersona(medico);
+				            if (!exitoPersona) {
+				                JOptionPane.showMessageDialog(null, "Error al insertar en Persona.", "Error", JOptionPane.ERROR_MESSAGE);
+				                return;
+				            }
+
+				            boolean exitoMedico = MedicoCRUD.insertarMedico(medico);
+				            if (!exitoMedico) {
+				                JOptionPane.showMessageDialog(null, "Error al insertar en Medico.", "Error", JOptionPane.ERROR_MESSAGE);
+				                return;
+				            }
+
+				            boolean exitoEspecialidad = MedicoCRUD.insertarMedicoEspecialidad(medico.getIdPersona(), espSeleccionada.getId());
+				            if (!exitoEspecialidad) {
+				                JOptionPane.showMessageDialog(null, "Error al insertar especialidad.", "Error", JOptionPane.ERROR_MESSAGE);
+				                return;
+				            }
+
+				            JOptionPane.showMessageDialog(null, "Médico registrado correctamente.", "Información", JOptionPane.INFORMATION_MESSAGE);
+				            clean();
+				        }
+
+				        else {
+				            selected.setCedula(txtCedula.getText());
+				            selected.setNombre(txtNombre.getText());
+				            selected.setApellido(txtApellido.getText());
+				            selected.setTelefono(txtTelefono.getText());
+				            selected.setDireccion(txtDireccion.getText());
+				            selected.setEdad(Integer.parseInt(txtEdad.getText()));
+				            selected.setSexo((String) cbxSexo.getSelectedItem());
+				            selected.setExequatur(Integer.parseInt(spnExequatur.getValue().toString()));
+				            selected.setFechaNacimiento((Date) spnFechaNacim.getValue());
+
+				            // Actualizar en BD
+				            ClinicaMedica.getInstance().updateMedico(selected);
+
+				            // Actualizar especialidad
+				            Especialidad espSeleccionada = (Especialidad) cbxEspecialidad.getSelectedItem();
+				            if (espSeleccionada.getId() == 0) {
+				                JOptionPane.showMessageDialog(null, "Debe seleccionar una especialidad válida", "Error", JOptionPane.ERROR_MESSAGE);
+				                return;
+				            }
+
+				            MedicoCRUD.eliminarEspecialidadesDelMedico(selected.getIdPersona());
+				            MedicoCRUD.insertarMedicoEspecialidad(selected.getIdPersona(), espSeleccionada.getId());
+
+				            ListadoMedicos.loadMedicos();
+				            JOptionPane.showMessageDialog(null, "Operación exitosa", "Información", JOptionPane.INFORMATION_MESSAGE);
+				            dispose();
+				        }
+
 					}
 
 					private void clean() {
-						txtCodigo.setText("M-"+ClinicaMedica.getInstance().codMedico);
+						  try {
+						        String nuevoCodigo = MedicoCRUD.generarCodigoMedico();
+						        txtCodigo.setText(nuevoCodigo);
+						    } catch (Exception e) {
+						        txtCodigo.setText("ERROR");
+						        e.printStackTrace();
+						    }
 						txtCedula.setText("");
 						txtNombre.setText("");
 						txtApellido.setText("");
@@ -336,25 +398,46 @@ public class RegistroMedico extends JDialog {
 		loadMedico();
 		
 	}
-
 	private void loadMedico() {
-		if(selected!=null) {
-			txtCodigo.setText(selected.getIdPersona());
-			txtCedula.setText(selected.getCedula());
-			txtNombre.setText(selected.getNombre());
-			txtApellido.setText(selected.getApellido());
-			txtTelefono.setText(selected.getTelefono());
-			txtDireccion.setText(selected.getDireccion());
-			txtEdad.setText(String.valueOf(selected.getEdad()));
-			cbxSexo.setSelectedItem(selected.getSexo());
-			cbxEspecialidad.setSelectedIndex(selected.getEspecialidad() + 1); // +1 por "<Seleccione>"
+	    if (selected != null) {
+	        txtCodigo.setText(selected.getIdPersona());
+	        txtCedula.setText(selected.getCedula());
+	        txtNombre.setText(selected.getNombre());
+	        txtApellido.setText(selected.getApellido());
+	        txtTelefono.setText(selected.getTelefono());
+	        txtDireccion.setText(selected.getDireccion());
+	        txtEdad.setText(String.valueOf(selected.getEdad()));
+	        cbxSexo.setSelectedItem(selected.getSexo());
 
-			spnExequatur.setValue(selected.getExequatur());
-            spnFechaNacim.setValue(selected.getFechaNacimiento());
+	        spnExequatur.setValue(selected.getExequatur());
+	        spnFechaNacim.setValue(selected.getFechaNacimiento());
 
-			
-		}
+	        // Obtener especialidad desde la BD y seleccionarla en el combo
+	        Especialidad esp = MedicoCRUD.obtenerEspecialidadDelMedico(selected.getIdPersona());
+	        if (esp != null) {
+	            for (int i = 0; i < cbxEspecialidad.getItemCount(); i++) {
+	                Especialidad item = (Especialidad) cbxEspecialidad.getItemAt(i);
+	                if (item.getId() == esp.getId()) {
+	                    cbxEspecialidad.setSelectedIndex(i);
+	                    break;
+	                }
+	            }
+	        }
+	    }
 	}
+
+	
+	private void cargarEspecialidades() {
+	    DefaultComboBoxModel<Especialidad> modelo = new DefaultComboBoxModel<>();
+	    modelo.addElement(new Especialidad(0, "<Seleccione>"));
+
+	    for (Especialidad esp : MedicoCRUD.obtenerEspecialidades()) {
+	        modelo.addElement(esp);
+	    }
+
+	    cbxEspecialidad.setModel(modelo);
+	}
+
 	
 	private boolean camposVacios() {
 	    return txtNombre.getText().isEmpty() || 

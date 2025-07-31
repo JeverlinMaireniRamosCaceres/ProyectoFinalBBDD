@@ -367,10 +367,20 @@ public class ClinicaMedica implements Serializable {
 	
 	public void updateMedico(Medico selected) {
 		int index = buscarMedicoByCedulaGetIndex(selected.getCedula());
-		if(index != 1) {
+		if(index != -1) {
 			losMedicos.set(index, selected);
 		}
 	}
+	
+	public boolean idMedicoExiste(String idMedico) {
+	    for (Medico medico : losMedicos) {
+	        if (medico.getIdPersona().equals(idMedico)) {
+	            return true;
+	        }
+	    }
+	    return false;
+	}
+
 	
 	public Cita buscarCitaByIdCita(String idCita) {
 	    Cita cita = null;
@@ -554,6 +564,9 @@ public class ClinicaMedica implements Serializable {
 	    }
 	    return usuario;
 	}
+
+	
+
 
 
 }
