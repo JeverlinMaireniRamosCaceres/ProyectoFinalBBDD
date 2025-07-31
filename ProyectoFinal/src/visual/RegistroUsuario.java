@@ -21,6 +21,7 @@ import javax.swing.border.TitledBorder;
 
 import logico.ClinicaMedica;
 import logico.Medico;
+import logico.MedicoCRUD;
 import logico.Usuario;
 import logico.UsuarioCRUD;
 
@@ -214,12 +215,25 @@ public class RegistroUsuario extends JDialog {
 							clean();*/
 							boolean exito = UsuarioCRUD.insertarUsuario(usuario);
 
-							if (exito) {
+							/*if (exito) {
 							    JOptionPane.showMessageDialog(null,"Usuario guardado en la base de datos correctamente.","Información",JOptionPane.INFORMATION_MESSAGE);
-							    //ClinicaMedica.getInstance().regUser(usuario); // <-- solo si también lo usas en memoria
 							    clean();
 							} else {
 							    JOptionPane.showMessageDialog(null,"Error al guardar el usuario en la base de datos.","Error",JOptionPane.ERROR_MESSAGE);
+							}*/
+							if (exito) {
+							    // Si el rol es médico, actualiza el idUsuario en Medico
+							    if (idRol == ClinicaMedica.ROL_MEDICO && medicoSeleccionado != null) {
+							        boolean actualizacionOk = MedicoCRUD.actualizarUsuarioMedico(medicoSeleccionado.getCedula(), usuario.getCodigo());
+							        if (!actualizacionOk) {
+							            JOptionPane.showMessageDialog(null, "No se pudo actualizar el usuario en la tabla Médico.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+							        }
+							    }
+
+							    JOptionPane.showMessageDialog(null, "Usuario guardado en la base de datos correctamente.", "Información", JOptionPane.INFORMATION_MESSAGE);
+							    clean();
+							} else {
+							    JOptionPane.showMessageDialog(null, "Error al guardar el usuario en la base de datos.", "Error", JOptionPane.ERROR_MESSAGE);
 							}
 
 						} else {
