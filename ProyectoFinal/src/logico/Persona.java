@@ -1,6 +1,7 @@
 package logico;
 
 import java.io.Serializable;
+import java.util.Calendar;
 import java.util.Date;
 
 public abstract class Persona implements Serializable {
@@ -17,11 +18,10 @@ public abstract class Persona implements Serializable {
 	protected String telefono;
 	protected String direccion;
 	protected Date fechaNacimiento;
-	protected int edad;
 	protected String sexo;
 		
 	public Persona(String idPersona, String cedula, String nombre, String apellido, String telefono, String direccion,
-			Date fechaNacimiento, int edad, String sexo) {
+			Date fechaNacimiento, String sexo) {
 		super();
 		this.idPersona = idPersona;
 		this.cedula = cedula;
@@ -30,7 +30,6 @@ public abstract class Persona implements Serializable {
 		this.telefono = telefono;
 		this.direccion = direccion;
 		this.fechaNacimiento = fechaNacimiento;
-		this.edad = edad;
 		this.sexo = sexo;
 
 	}
@@ -78,18 +77,36 @@ public abstract class Persona implements Serializable {
 	public void setFechaNacimiento(Date fechaNacimiento) {
 		this.fechaNacimiento = fechaNacimiento;
 	}
-	public int getEdad() {
-		return edad;
-	}
-	public void setEdad(int edad) {
-		this.edad = edad;
-	}
+
 	public String getSexo() {
 		return sexo;
 	}
 	public void setSexo(String sexo) {
 		this.sexo = sexo;
 	}
+	
+	public int getEdad() {
+	    if (fechaNacimiento == null) {
+	        return 0;
+	    }
+
+	    Calendar fechaNac = Calendar.getInstance();
+	    fechaNac.setTime(fechaNacimiento);
+
+	    Calendar hoy = Calendar.getInstance();
+
+	    int edad = hoy.get(Calendar.YEAR) - fechaNac.get(Calendar.YEAR);
+
+	    // Ajustar si aún no ha cumplido años este año
+	    if (hoy.get(Calendar.MONTH) < fechaNac.get(Calendar.MONTH) ||
+	       (hoy.get(Calendar.MONTH) == fechaNac.get(Calendar.MONTH) && hoy.get(Calendar.DAY_OF_MONTH) < fechaNac.get(Calendar.DAY_OF_MONTH))) {
+	        edad--;
+	    }
+
+	    return edad;
+	}
+
+
 	
 	
 }

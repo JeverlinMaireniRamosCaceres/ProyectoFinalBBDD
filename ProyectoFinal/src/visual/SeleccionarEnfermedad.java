@@ -71,7 +71,7 @@ public class SeleccionarEnfermedad extends JDialog {
 							if(index >= 0) {
 								btnSeleccionar.setEnabled(true);
 								String codigo = table.getValueAt(index, 0).toString();
-								selected = ClinicaMedica.getInstance().buscarEnfermedadById(codigo);
+								selected = ClinicaMedica.getInstance().buscarEnfermedadByIdBBDD(codigo);
 							}
 						}
 					});
@@ -120,7 +120,7 @@ public class SeleccionarEnfermedad extends JDialog {
 
 	private void loadEnfermedades() {
 		modelo.setRowCount(0);
-		ArrayList<Enfermedad> enf = ClinicaMedica.getInstance().getLasEnfermedades();
+		ArrayList<Enfermedad> enf = ClinicaMedica.getInstance().getLasEnfermedadesBBDD();
 		row = new Object[table.getColumnCount()];
 		for(Enfermedad enfermedad : enf) {
 			row[0] = enfermedad.getIdEnfermedad();

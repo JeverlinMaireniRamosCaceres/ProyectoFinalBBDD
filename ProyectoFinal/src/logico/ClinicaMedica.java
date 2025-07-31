@@ -1,6 +1,11 @@
 package logico;
 
 import java.io.Serializable;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -211,7 +216,7 @@ public class ClinicaMedica implements Serializable {
 		ClinicaMedica.codUsuario = codUsuario;
 	}
 
-	public Medico buscarMedicoById(String codigo) {
+	/*public Medico buscarMedicoById(String codigo) {
 		Medico medico = null;
 		boolean encontrado = false;
 		int i = 0;
@@ -223,6 +228,36 @@ public class ClinicaMedica implements Serializable {
 			i++;
 		}
 		return medico;
+	}*/
+	
+	public Medico buscarMedicoById(String id) {
+	    Medico medico = null;
+	    String sql = "SELECT p.idPersona, p.cedula, p.nombre, p.apellido, p.telefono, p.direccion, p.fechaNacimiento, p.sexo, " +
+	                 "m.idEspecialidad, m.exequatur " +
+	                 "FROM Medico m JOIN Persona p ON m.idPersona = p.idPersona " +
+	                 "WHERE m.idPersona = ?";
+	    try (Connection conn = PruebaConexionBBDD.getConnection();
+	         PreparedStatement ps = conn.prepareStatement(sql)) {
+	        ps.setString(1, id);
+	        ResultSet rs = ps.executeQuery();
+	        if (rs.next()) {
+	            medico = new Medico(
+	                rs.getString("idPersona"),
+	                rs.getString("cedula"),
+	                rs.getString("nombre"),
+	                rs.getString("apellido"),
+	                rs.getString("telefono"),
+	                rs.getString("direccion"),
+	                rs.getDate("fechaNacimiento"),
+	                rs.getString("sexo"),
+	                rs.getInt("idEspecialidad"),
+	                rs.getInt("exequatur")
+	            );
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    return medico;
 	}
 
 	public void insertarConsulta(Consulta consulta) {
@@ -564,6 +599,169 @@ public class ClinicaMedica implements Serializable {
 	    }
 	    return usuario;
 	}
+	
+	public ArrayList<Paciente> obtenerPacientesDesdeBDD() {
+	    ArrayList<Paciente> listaPacientes = new ArrayList<>();
+	    String sql = "SELECT p.idPersona, p.cedula, p.nombre, p.apellido, p.telefono, p.direccion, " +
+	                 "p.fechaNacimiento, p.sexo, pa.estatura, pa.peso " +
+	                 "FROM Persona p JOIN Paciente pa ON p.idPersona = pa.idPersona";
+
+	    try (Connection conn = PruebaConexionBBDD.getConnection();
+	         PreparedStatement ps = conn.prepareStatement(sql);
+	         ResultSet rs = ps.executeQuery()) {
+	        
+	        while(rs.next()) {
+	            Paciente paciente = new Paciente(
+	                rs.getString("idPersona"),
+	                rs.getString("cedula"),
+	                rs.getString("nombre"),
+	                rs.getString("apellido"),
+	                rs.getString("telefono"),
+	                rs.getString("direccion"),
+	                rs.getDate("fechaNacimiento"),
+	                rs.getString("sexo"),
+	                rs.getFloat("estatura"),
+	                rs.getFloat("peso")
+	            );
+	            listaPacientes.add(paciente);
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+
+	    return listaPacientes;
+	}
+	
+	public Paciente buscarPacienteByCedulaBBDD(String cedula) {
+	    Paciente paciente = null;
+	    String sql = "SELECT p.idPersona, p.cedula, p.nombre, p.apellido, p.telefono, p.direccion, " +
+	                 "p.fechaNacimiento, p.sexo, pa.estatura, pa.peso " +
+	                 "FROM Persona p JOIN Paciente pa ON p.idPersona = pa.idPersona " +
+	                 "WHERE p.cedula = ?";
+
+	    try (Connection conn = PruebaConexionBBDD.getConnection();
+	         PreparedStatement ps = conn.prepareStatement(sql)) {
+	        
+	        ps.setString(1, cedula);
+	        ResultSet rs = ps.executeQuery();
+	        
+	        if (rs.next()) {
+	            paciente = new Paciente(
+	                rs.getString("idPersona"),
+	                rs.getString("cedula"),
+	                rs.getString("nombre"),
+	                rs.getString("apellido"),
+	                rs.getString("telefono"),
+	                rs.getString("direccion"),
+	                rs.getDate("fechaNacimiento"),
+	                rs.getString("sexo"),
+	                rs.getFloat("estatura"),
+	                rs.getFloat("peso")
+	            );
+	        }
+	        
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+
+	    return paciente;
+	}
+	
+	public Enfermedad buscarEnfermedadByIdBBDD(String id) {
+	    Enfermedad enfermedad = null;
+	    Connection conn = null;
+	    PreparedStatement stmt = null;
+	    ResultSet rs = null;
+
+	    try {
+	        conn = PruebaConexionBBDD.getConnection(); 
+	        String query = "SELECT * FROM Enfermedad WHERE idEnfermedad = ?";
+	        stmt = conn.prepareStatement(query);
+	        stmt.setString(1, id);
+	        rs = stmt.executeQuery();
+
+	        if (rs.next()) {
+	            String nombre = rs.getString("nombre");
+	            int tipo = rs.getInt("idTipoEnfermedad");
+	            String sintomas = rs.getString("sintomas");
+	            enfermedad = new Enfermedad(id, nombre, sintomas, tipo);
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    } finally {
+	        try { if (rs != null) rs.close(); } catch (SQLException e) {}
+	        try { if (stmt != null) stmt.close(); } catch (SQLException e) {}
+	        try { if (conn != null) conn.close(); } catch (SQLException e) {}
+	    }
+
+	    return enfermedad;
+	}
+	
+	public ArrayList<Enfermedad> getLasEnfermedadesBBDD() {
+	    ArrayList<Enfermedad> enfermedades = new ArrayList<>();
+	    Connection conn = null;
+	    Statement stmt = null;
+	    ResultSet rs = null;
+
+	    try {
+	        conn = PruebaConexionBBDD.getConnection();
+	        stmt = conn.createStatement();
+	        rs = stmt.executeQuery("SELECT * FROM Enfermedad");
+
+	        while (rs.next()) {
+	            String id = rs.getString("idEnfermedad");
+	            String nombre = rs.getString("nombre");
+	            int tipo = rs.getInt("idTipoEnfermedad");
+	            String sintomas = rs.getString("sintomas");
+	            Enfermedad enf = new Enfermedad(id, nombre, sintomas, tipo);
+	            enfermedades.add(enf);
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    } finally {
+	        try { if (rs != null) rs.close(); } catch (SQLException e) {}
+	        try { if (stmt != null) stmt.close(); } catch (SQLException e) {}
+	        try { if (conn != null) conn.close(); } catch (SQLException e) {}
+	    }
+
+	    return enfermedades;
+	}
+
+	public ArrayList<Medico> obtenerMedicosDesdeBDD() {
+	    ArrayList<Medico> listaMedicos = new ArrayList<>();
+	    String sql = "SELECT p.idPersona, p.cedula, p.nombre, p.apellido, p.telefono, p.direccion, " +
+	                 "p.fechaNacimiento, p.sexo, m.IdEspecialidad, m.exequatur " +
+	                 "FROM Persona p JOIN Medico m ON p.idPersona = m.idPersona";
+
+	    try (Connection conn = PruebaConexionBBDD.getConnection();
+	         PreparedStatement ps = conn.prepareStatement(sql);
+	         ResultSet rs = ps.executeQuery()) {
+
+	        while (rs.next()) {
+	            Medico medico = new Medico(
+	                rs.getString("idPersona"),
+	                rs.getString("cedula"),
+	                rs.getString("nombre"),
+	                rs.getString("apellido"),
+	                rs.getString("telefono"),
+	                rs.getString("direccion"),
+	                rs.getDate("fechaNacimiento"),
+	                rs.getString("sexo"),
+	                rs.getInt("idEspecialidad"),
+	                rs.getInt("exequatur")
+	            );
+	            listaMedicos.add(medico);
+	        }
+
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+
+	    return listaMedicos;
+	}
+
+
+
 
 	
 

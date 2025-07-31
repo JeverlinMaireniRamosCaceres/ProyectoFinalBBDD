@@ -26,6 +26,7 @@ import javax.swing.border.TitledBorder;
 
 import logico.ClinicaMedica;
 import logico.Consulta;
+import logico.ConsultaCRUD;
 import logico.Enfermedad;
 import logico.Medico;
 import logico.Paciente;
@@ -121,7 +122,8 @@ public class RegistroConsulta extends JDialog {
 			}
 			{
 				txtCodConsulta = new JTextField();
-				txtCodConsulta.setText("Cons-"+ClinicaMedica.getInstance().codConsulta);
+				String nuevoCodigo = ConsultaCRUD.generarCodigoConsulta();
+				txtCodConsulta.setText(nuevoCodigo);
 				txtCodConsulta.setBounds(66, 14, 182, 20);
 				panel_2.add(txtCodConsulta);
 				txtCodConsulta.setEditable(false);
@@ -265,19 +267,29 @@ public class RegistroConsulta extends JDialog {
 				btnRegistrar.addActionListener(new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent e) {
-						if(camposVacios()) {
-				            JOptionPane.showMessageDialog(null, "Todos los campos son obligatorios", "Información", JOptionPane.ERROR_MESSAGE);
-						}else {
-							Consulta consulta = new Consulta(txtCodConsulta.getText(), medico, paciente, txtDiagnostico.getText(), txtAIndicacion.getText(), chckbxImportante.isSelected());
-							ClinicaMedica.getInstance().insertarConsulta(consulta);
-							if(chckbxImportante.isSelected()) {
-								paciente.getMiHistorial().getLasConsultas().add(consulta);
-							}
-							if(enfermedad!=null) {
-								paciente.getMisEnfermedades().add(enfermedad);
-							}
-							JOptionPane.showMessageDialog(null, "Operacion Satisfactoria", "Informacion", JOptionPane.INFORMATION_MESSAGE);
+
+						if (camposVacios()) {
+							JOptionPane.showMessageDialog(null, "Todos los campos son obligatorios", "Información", JOptionPane.ERROR_MESSAGE);
+							return;
+						}
+
+						Date fecha = (Date) spnFecha.getValue();
+						Consulta consulta = new Consulta(txtCodConsulta.getText(), fecha, medico, paciente, txtDiagnostico.getText(), txtAIndicacion.getText(), chckbxImportante.isSelected());
+
+
+
+						boolean exitoConsulta = ConsultaCRUD.insertarConsulta(consulta);
+						boolean exitoEnfermedad = true;
+
+						if (exitoConsulta && enfermedad != null) {
+							exitoEnfermedad = ConsultaCRUD.insertarConsultaEnfermedad(consulta.getIdConsulta(), enfermedad.getIdEnfermedad());
+						}
+
+						if (exitoConsulta && exitoEnfermedad) {
+							JOptionPane.showMessageDialog(null, "Consulta registrada exitosamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
 							dispose();
+						} else {
+							JOptionPane.showMessageDialog(null, "Error al registrar la consulta en la base de datos", "Error", JOptionPane.ERROR_MESSAGE);
 						}
 					}
 				});

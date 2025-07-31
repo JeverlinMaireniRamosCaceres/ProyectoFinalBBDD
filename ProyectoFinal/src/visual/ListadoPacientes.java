@@ -139,7 +139,7 @@ public class ListadoPacientes extends JDialog {
 	}
 	public static void loadPacientes() {
 		modelo.setRowCount(0);
-		ArrayList<Paciente> pac = ClinicaMedica.getInstance().getLosPacientes();
+		ArrayList<Paciente> pac = ClinicaMedica.getInstance().obtenerPacientesDesdeBDD();
 		row = new Object[table.getColumnCount()];
 		for(Paciente paciente:pac) {
 			row[0] = paciente.getCedula();

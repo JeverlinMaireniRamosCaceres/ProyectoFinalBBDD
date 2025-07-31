@@ -13,9 +13,8 @@ public class Medico extends Persona {
 	protected Usuario usuario;
 	
 	public Medico(String idPersona, String cedula, String nombre, String apellido, String telefono, String direccion,
-			Date fechaNacimiento, int edad, String sexo,  int exequatur) {
-		super(idPersona, cedula, nombre, apellido, telefono, direccion, fechaNacimiento, edad, sexo);
-
+			Date fechaNacimiento, String sexo, int idEspecialidad, int exequatur) {
+		super(idPersona, cedula, nombre, apellido, telefono, direccion, fechaNacimiento, sexo);
 		this.exequatur = exequatur;
 	}
 	

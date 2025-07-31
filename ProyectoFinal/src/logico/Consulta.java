@@ -18,7 +18,7 @@ public class Consulta implements Serializable{
 	private String indicacion;
 	private boolean importante;
 	
-	public Consulta(String idConsulta, Medico medico, Paciente paciente, String diagnostico,
+	public Consulta(String idConsulta,Date fecha, Medico medico, Paciente paciente, String diagnostico,
 			String indicacion, boolean importante) {
 		super();
 		this.idConsulta = idConsulta;

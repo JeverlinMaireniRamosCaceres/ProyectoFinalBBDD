@@ -119,7 +119,7 @@ public class SeleccionarMedico extends JDialog {
 	}
 	private void loadMedicos() {
 		modelo.setRowCount(0);
-		ArrayList<Medico> selected = ClinicaMedica.getInstance().getLosMedicos();
+		ArrayList<Medico> selected = ClinicaMedica.getInstance().obtenerMedicosDesdeBDD();
 		row = new Object[table.getColumnCount()];
 		for(Medico medico:selected) {
 			row[0] = medico.getIdPersona();
