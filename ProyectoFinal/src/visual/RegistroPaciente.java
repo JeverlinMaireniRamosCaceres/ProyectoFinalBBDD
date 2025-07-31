@@ -297,7 +297,6 @@ public class RegistroPaciente extends JDialog {
 								    txtTelefono.getText(),
 								    txtDireccion.getText(),
 								    (Date) spnFecha.getValue(),
-								    Integer.parseInt(txtEdad.getText()),
 								    (String) cbxSexo.getSelectedItem(),
 								    Float.parseFloat(spnEstatura.getValue().toString()),
 								    Float.parseFloat(spnPeso.getValue().toString())

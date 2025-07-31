@@ -332,7 +332,6 @@ public class RegistroMedico extends JDialog {
 				            selected.setApellido(txtApellido.getText());
 				            selected.setTelefono(txtTelefono.getText());
 				            selected.setDireccion(txtDireccion.getText());
-				            selected.setEdad(Integer.parseInt(txtEdad.getText()));
 				            selected.setSexo((String) cbxSexo.getSelectedItem());
 				            selected.setExequatur(Integer.parseInt(spnExequatur.getValue().toString()));
 				            selected.setFechaNacimiento((Date) spnFechaNacim.getValue());
