@@ -7,8 +7,6 @@ import java.awt.event.ActionListener;
 import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
-import logico.PacienteCRUD;
-
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -30,6 +28,7 @@ import javax.swing.event.ChangeListener;
 
 import logico.ClinicaMedica;
 import logico.Paciente;
+import logico.PacienteCRUD;
 
 public class RegistroPaciente extends JDialog {
 
@@ -327,7 +326,6 @@ public class RegistroPaciente extends JDialog {
 							selected.setApellido(txtApellido.getText());
 							selected.setTelefono(txtTelefono.getText());
 							selected.setDireccion(txtDireccion.getText());
-							selected.setEdad(Integer.parseInt(txtEdad.getText()));
 							selected.setSexo((String) cbxSexo.getSelectedItem());
 							selected.setEstatura(Float.parseFloat(spnEstatura.getValue().toString()));
 							selected.setPeso(Float.parseFloat(spnPeso.getValue().toString()));

@@ -211,7 +211,6 @@ public class DetalleMedico extends JDialog {
 			txtFecha.setText(dateFormat.format(selected.getFechaNacimiento()));
 			spnEdad.setValue(selected.getEdad());
 			txtSexo.setText(selected.getSexo());
-			txtEspecialidad.setText(String.valueOf(selected.getEspecialidad()));
 			spnExequatur.setValue(selected.getExequatur());
 		}
 		

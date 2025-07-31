@@ -5,7 +5,6 @@ import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -299,8 +298,8 @@ public class RegistroMedico extends JDialog {
 				            	    telefono,
 				            	    direccion,
 				            	    new java.sql.Date(fechaNacimiento.getTime()),
-				            	    edad,
 				            	    sexo,
+				            	    edad,
 				            	    exequatur
 				            );
 

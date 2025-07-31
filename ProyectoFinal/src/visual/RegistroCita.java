@@ -200,7 +200,7 @@ public class RegistroCita extends JDialog {
 					medico = sm.getSelectedMedico();
 					if(medico != null) {
 						txtMedico.setText(medico.getNombre()+" "+medico.getApellido());
-						txtEspecialidad.setText(String.valueOf(medico.getEspecialidad()));
+
 					}
 				}
 			});
@@ -306,7 +306,7 @@ public class RegistroCita extends JDialog {
 			txtCodigo.setText(selected.getIdCita());
 			txtPaciente.setText(selected.getPaciente().getNombre()+" "+selected.getPaciente().getApellido());
 			txtMedico.setText(selected.getMedico().getNombre()+" "+selected.getMedico().getApellido());
-			txtEspecialidad.setText(String.valueOf(selected.getMedico().getEspecialidad()));
+
 			txtMotivo.setText(selected.getMotivo());
 			medico = selected.getMedico();
 			spnFecha.setValue(selected.getFecha());

@@ -125,7 +125,6 @@ public class SeleccionarMedico extends JDialog {
 			row[0] = medico.getIdPersona();
 			row[1] = medico.getNombre();
 			row[2] = medico.getApellido();
-			row[3] = medico.getEspecialidad();
 			modelo.addRow(row);
 		}
 	}
