@@ -30,6 +30,8 @@ public class RegistroEnfermedad extends JDialog {
 	private JComboBox cbxTipo;
 	private JTextArea txtASintomas;
 	private Enfermedad selected;
+	private ListadoEnfermedades listado;
+
 
 	/**
 	 * Launch the application.
@@ -47,13 +49,15 @@ public class RegistroEnfermedad extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	public RegistroEnfermedad(Enfermedad enfermedad) {
-		selected = enfermedad;
-		if(selected == null) {
-			setTitle("Registro de enfermedad");
-		} else {
-			setTitle("Modificar enfermedad");	
-		}
+	public RegistroEnfermedad(Enfermedad enfermedad, ListadoEnfermedades listado) {
+	    this.selected = enfermedad;
+	    this.listado = listado;
+
+	    if (selected == null) {
+	        setTitle("Registro de enfermedad");
+	    } else {
+	        setTitle("Modificar enfermedad");    
+	    }
 		
 		setBounds(100, 100, 474, 292);
 		setLocationRelativeTo(null);
@@ -168,7 +172,9 @@ public class RegistroEnfermedad extends JDialog {
 							}
 							selected.setTipo(tipoIndex);
 							
-							ListadoEnfermedades.loadEnfermedades();
+							if (listado != null) {
+							    listado.loadEnfermedades();
+							}
 							JOptionPane.showMessageDialog(null,"Operacion exitosa","Informacion",JOptionPane.INFORMATION_MESSAGE);
 							dispose();
 						}
@@ -202,6 +208,11 @@ public class RegistroEnfermedad extends JDialog {
 		}
 		loadEnfermedad();
 	}
+	
+	public RegistroEnfermedad(Enfermedad enfermedad) {
+	    this(enfermedad, null); // Reutiliza el constructor principal y asigna null al listado
+	}
+
 
 	private void loadEnfermedad() {
 		if(selected != null){

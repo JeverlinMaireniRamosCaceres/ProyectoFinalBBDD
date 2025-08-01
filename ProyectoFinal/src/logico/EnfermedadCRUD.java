@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class EnfermedadCRUD {
 
@@ -49,5 +50,62 @@ public class EnfermedadCRUD {
             return null;
         }
     }
+    
+    public static ArrayList<Enfermedad> obtenerEnfermedades() {
+        ArrayList<Enfermedad> lista = new ArrayList<>();
+        String sql = "SELECT e.idEnfermedad, e.nombre, e.sintomas, e.idTipoEnfermedad, te.nombre AS tipo " +
+                     "FROM Enfermedad e " +
+                     "JOIN Tipo_Enfermedad te ON e.idTipoEnfermedad = te.idTipoEnfermedad";
+
+        try (Connection conn = PruebaConexionBBDD.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                Enfermedad enf = new Enfermedad();
+                enf.setIdEnfermedad(rs.getString("idEnfermedad"));
+                enf.setNombre(rs.getString("nombre"));
+                enf.setSintomas(rs.getString("sintomas"));
+                enf.setTipo(rs.getInt("idTipoEnfermedad"));     // ID numérico
+                enf.setTipoNombre(rs.getString("tipo"));        // Nombre del tipo
+                lista.add(enf);
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Error al obtener enfermedades: " + e.getMessage());
+        }
+
+        return lista;
+    }
+
+    public static Enfermedad buscarEnfermedadPorCodigo(String id) {
+        String sql = "SELECT e.idEnfermedad, e.nombre, e.sintomas, e.idTipoEnfermedad, te.nombre AS tipo " +
+                     "FROM Enfermedad e " +
+                     "JOIN Tipo_Enfermedad te ON e.idTipoEnfermedad = te.idTipoEnfermedad " +
+                     "WHERE e.idEnfermedad = ?";
+
+        try (Connection conn = PruebaConexionBBDD.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, id);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                Enfermedad enf = new Enfermedad();
+                enf.setIdEnfermedad(rs.getString("idEnfermedad"));
+                enf.setNombre(rs.getString("nombre"));
+                enf.setSintomas(rs.getString("sintomas"));
+                enf.setTipo(rs.getInt("idTipoEnfermedad"));
+                enf.setTipoNombre(rs.getString("tipo"));
+                return enf;
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Error al buscar enfermedad por código: " + e.getMessage());
+        }
+
+        return null; // si no se encontró
+    }
+
 
 }

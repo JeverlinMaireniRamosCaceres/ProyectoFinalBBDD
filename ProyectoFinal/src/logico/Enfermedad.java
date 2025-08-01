@@ -3,27 +3,60 @@ package logico;
 import java.io.Serializable;
 
 public class Enfermedad implements Serializable {
-	
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
-	
+
 	private String idEnfermedad;
 	private String nombre;
 	private String sintomas;
 	private int idTipoEnfermedad;
 	private boolean curada;
-	
+	private String tipoNombre; 
+
+	// Constructor vacio
+	public Enfermedad() {
+	}
+
+	// Constructor con atributos
 	public Enfermedad(String idEnfermedad, String nombre, String sintomas, int tipo) {
-		super();
 		this.idEnfermedad = idEnfermedad;
 		this.nombre = nombre;
 		this.sintomas = sintomas;
 		this.idTipoEnfermedad = tipo;
 	}
-	
-	
+
+	public String getIdEnfermedad() {
+		return idEnfermedad;
+	}
+
+	public void setIdEnfermedad(String idEnfermedad) {
+		this.idEnfermedad = idEnfermedad;
+	}
+
+	public String getNombre() {
+		return nombre;
+	}
+
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
+
+	public String getSintomas() {
+		return sintomas;
+	}
+
+	public void setSintomas(String sintomas) {
+		this.sintomas = sintomas;
+	}
+
+	public int getTipo() {
+		return idTipoEnfermedad;
+	}
+
+	public void setTipo(int tipo) {
+		this.idTipoEnfermedad = tipo;
+	}
+
 	public boolean isCurada() {
 		return curada;
 	}
@@ -32,32 +65,11 @@ public class Enfermedad implements Serializable {
 		this.curada = curada;
 	}
 
+	public String getTipoNombre() {
+		return tipoNombre;
+	}
 
-
-	public String getIdEnfermedad() {
-		return idEnfermedad;
+	public void setTipoNombre(String tipoNombre) {
+		this.tipoNombre = tipoNombre;
 	}
-	public void setIdEnfermedad(String idEnfermedad) {
-		this.idEnfermedad = idEnfermedad;
-	}
-	public String getNombre() {
-		return nombre;
-	}
-	public void setNombre(String nombre) {
-		this.nombre = nombre;
-	}
-	public String getSintomas() {
-		return sintomas;
-	}
-	public void setSintomas(String sintomas) {
-		this.sintomas = sintomas;
-	}
-	public int getTipo() {
-		return idTipoEnfermedad;
-	}
-	public void setTipo(int tipo) {
-		this.idTipoEnfermedad = tipo;
-	}
-	
-	
 }
