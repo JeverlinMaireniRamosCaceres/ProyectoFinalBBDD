@@ -21,6 +21,7 @@ import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 
+import logico.HistorialVacunaCRUD;
 import logico.Paciente;
 import logico.Vacuna;
 
@@ -233,15 +234,29 @@ public class Vacunar extends JDialog {
 				btnRegistrar.addActionListener(new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent e) {
-						if(paciente != null && vacuna != null) {
-							paciente.getMisVacunas().add(vacuna);
-							vacuna.setCantidad(vacuna.getCantidad()-1);
-							JOptionPane.showMessageDialog(null, "Operacion Satisfactoria", "Informacion", JOptionPane.INFORMATION_MESSAGE);
-							dispose();
+						if (paciente != null && vacuna != null) {
+							String idHistorial = HistorialVacunaCRUD.generarCodigoHistorialVacuna();
+							Date fechaAplicacion = new Date(); // fecha actual
+
+							boolean exito = HistorialVacunaCRUD.registrarHistorialVacuna(
+								idHistorial,
+								fechaAplicacion,
+								vacuna.getIdVacuna(),
+								paciente.getIdPersona()
+							);
+							
+							if (exito) {
+								// Descuenta una vacuna
+								vacuna.setCantidad(vacuna.getCantidad() - 1);
+								JOptionPane.showMessageDialog(null, "Vacuna registrada en el historial", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+								dispose();
+							} else {
+								JOptionPane.showMessageDialog(null, "Error al registrar la vacuna", "Error", JOptionPane.ERROR_MESSAGE);
+							}
+						} else {
+							JOptionPane.showMessageDialog(null, "Debe seleccionar paciente y vacuna", "Error", JOptionPane.ERROR_MESSAGE);
 						}
-						else {
-							JOptionPane.showMessageDialog(null, "Se debe seleccionar el paciente y la vacuna", "Error", JOptionPane.ERROR_MESSAGE);
-						}
+						
 					}
 				});
 				btnRegistrar.setActionCommand("OK");

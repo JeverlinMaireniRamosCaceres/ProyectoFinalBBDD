@@ -19,6 +19,7 @@ import javax.swing.table.DefaultTableModel;
 
 import logico.ClinicaMedica;
 import logico.Vacuna;
+import logico.VacunaCRUD;
 
 public class SeleccionarVacuna extends JDialog {
 
@@ -71,7 +72,7 @@ public class SeleccionarVacuna extends JDialog {
 							if(index >= 0) {
 								btnSeleccionar.setEnabled(true);
 								String codigo = table.getValueAt(index, 0).toString();
-								selected = ClinicaMedica.getInstance().buscarVacunaByCodigo(codigo);
+								selected = ClinicaMedica.buscarVacunaEnBDPorCodigo(codigo);
 							}
 						}
 					});
@@ -119,7 +120,7 @@ public class SeleccionarVacuna extends JDialog {
 	}
 	public static void loadVacunas() {
 		modelo.setRowCount(0);
-		ArrayList<Vacuna> vac = ClinicaMedica.getInstance().getLasVacunas();
+		ArrayList<Vacuna> vac = VacunaCRUD.obtenerVacunasDesdeBDD();
 		row = new Object[table.getColumnCount()];
 		for(Vacuna vacunas:vac) {
 			if(vacunas.getCantidad() > 0) {

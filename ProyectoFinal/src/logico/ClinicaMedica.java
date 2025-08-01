@@ -233,7 +233,7 @@ public class ClinicaMedica implements Serializable {
 	public Medico buscarMedicoById(String id) {
 	    Medico medico = null;
 	    String sql = "SELECT p.idPersona, p.cedula, p.nombre, p.apellido, p.telefono, p.direccion, p.fechaNacimiento, p.sexo, " +
-	                 "m.idEspecialidad, m.exequatur " +
+	                 "m.exequatur " +
 	                 "FROM Medico m JOIN Persona p ON m.idPersona = p.idPersona " +
 	                 "WHERE m.idPersona = ?";
 	    try (Connection conn = PruebaConexionBBDD.getConnection();
@@ -250,7 +250,6 @@ public class ClinicaMedica implements Serializable {
 	                rs.getString("direccion"),
 	                rs.getDate("fechaNacimiento"),
 	                rs.getString("sexo"),
-	                rs.getInt("idEspecialidad"),
 	                rs.getInt("exequatur")
 	            );
 	        }
@@ -730,7 +729,7 @@ public class ClinicaMedica implements Serializable {
 	public ArrayList<Medico> obtenerMedicosDesdeBDD() {
 	    ArrayList<Medico> listaMedicos = new ArrayList<>();
 	    String sql = "SELECT p.idPersona, p.cedula, p.nombre, p.apellido, p.telefono, p.direccion, " +
-	                 "p.fechaNacimiento, p.sexo, m.IdEspecialidad, m.exequatur " +
+	                 "p.fechaNacimiento, p.sexo, m.exequatur " +
 	                 "FROM Persona p JOIN Medico m ON p.idPersona = m.idPersona";
 
 	    try (Connection conn = PruebaConexionBBDD.getConnection();
@@ -747,7 +746,6 @@ public class ClinicaMedica implements Serializable {
 	                rs.getString("direccion"),
 	                rs.getDate("fechaNacimiento"),
 	                rs.getString("sexo"),
-	                rs.getInt("idEspecialidad"),
 	                rs.getInt("exequatur")
 	            );
 	            listaMedicos.add(medico);
@@ -760,10 +758,34 @@ public class ClinicaMedica implements Serializable {
 	    return listaMedicos;
 	}
 
+	public static Vacuna buscarVacunaEnBDPorCodigo(String codigo) {
+	    Vacuna vacuna = null;
+	    String sql = "SELECT * FROM Vacuna WHERE idVacuna = ?";
+	    
+	    try (Connection conn = PruebaConexionBBDD.getConnection();
+	         PreparedStatement stmt = conn.prepareStatement(sql)) {
+	        
+	        stmt.setString(1, codigo);
+	        ResultSet rs = stmt.executeQuery();
+	        
+	        if (rs.next()) {
+	            String id = rs.getString("idVacuna");
+	            String nombre = rs.getString("nombre");
+	            int cantidad = rs.getInt("cant");
+	            java.sql.Date fechaSQL = rs.getDate("fechaVencimiento");
+	            Date fechaVencimiento = new Date(fechaSQL.getTime()); // convertir a java.util.Date si es necesario
+	            int idFabricante = rs.getInt("idFabricante");
+	            int idTipoVacuna = rs.getInt("idTipoVacuna");
 
-
-
-	
+	            vacuna = new Vacuna(id, fechaVencimiento, nombre, idTipoVacuna, idFabricante, cantidad);
+	        }
+	        
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    
+	    return vacuna;
+	}
 
 
 

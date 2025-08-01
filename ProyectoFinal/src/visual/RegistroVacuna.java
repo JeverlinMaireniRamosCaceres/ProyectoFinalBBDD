@@ -24,6 +24,7 @@ import javax.swing.border.TitledBorder;
 
 import logico.ClinicaMedica;
 import logico.Vacuna;
+import logico.VacunaCRUD;
 
 public class RegistroVacuna extends JDialog {
 
@@ -107,7 +108,8 @@ public class RegistroVacuna extends JDialog {
 			txtNombre.setBounds(74, 50, 203, 20);
 			panel.add(txtNombre);
 			txtNombre.setColumns(10);
-			txtCodigo.setText("V-"+ClinicaMedica.getInstance().codVacuna);
+			String nuevoCodigo = VacunaCRUD.generarCodigoVacuna();
+			txtCodigo.setText(nuevoCodigo);
 			
 			JLabel lblNewLabel_3 = new JLabel("Tipo:");
 			lblNewLabel_3.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -162,8 +164,13 @@ public class RegistroVacuna extends JDialog {
 						    int cantidad = new Integer(spnCantidad.getValue().toString());
 							
 							Vacuna vacuna = new Vacuna(codigo,fechaVen,nombre,tipo,fabricante,cantidad);
-							ClinicaMedica.getInstance().insertarVacuna(vacuna);
-							JOptionPane.showMessageDialog(null,"Operacion exitosa","Informacion",JOptionPane.INFORMATION_MESSAGE);
+							boolean exito = VacunaCRUD.insertarVacuna(vacuna);
+							if (exito) {
+							    JOptionPane.showMessageDialog(null, "Vacuna registrada correctamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+							    clean();
+							} else {
+							    JOptionPane.showMessageDialog(null, "Error al registrar la vacuna", "Error", JOptionPane.ERROR_MESSAGE);
+							}
 							clean();
 						}
 						else {
@@ -179,7 +186,8 @@ public class RegistroVacuna extends JDialog {
 					}
 
 					private void clean() {
-						txtCodigo.setText("V-"+ClinicaMedica.getInstance().codVacuna);
+						String nuevoCodigo = VacunaCRUD.generarCodigoVacuna();
+						txtCodigo.setText(nuevoCodigo);
 						txtNombre.setText("");
 						cbxTipo.setSelectedIndex(0);
 						spnCantidad.setValue(0);

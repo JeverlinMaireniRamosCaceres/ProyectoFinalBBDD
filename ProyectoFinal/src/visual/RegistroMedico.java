@@ -299,7 +299,6 @@ public class RegistroMedico extends JDialog {
 				            	    direccion,
 				            	    new java.sql.Date(fechaNacimiento.getTime()),
 				            	    sexo,
-				            	    edad,
 				            	    exequatur
 				            );
 
