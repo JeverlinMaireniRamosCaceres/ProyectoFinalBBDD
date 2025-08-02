@@ -22,7 +22,6 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 
-import logico.ClinicaMedica;
 import logico.Vacuna;
 import logico.VacunaCRUD;
 
@@ -174,14 +173,29 @@ public class RegistroVacuna extends JDialog {
 							clean();
 						}
 						else {
-							selected.setIdVacuna(txtCodigo.getText());
-							selected.setNombreVacuna(txtNombre.getText());
-							selected.setFecha((Date)spnFechaVen.getValue());
-							selected.setTipo(cbxTipo.getSelectedIndex());
-							selected.setFabricante(cbxFabricante.getSelectedIndex());
-							selected.setCantidad((int)spnCantidad.getValue());
-							ClinicaMedica.getInstance().updateVacuna(selected.getIdVacuna(), vacuna);
-							JOptionPane.showMessageDialog(null,"Operacion exitosa","Informacion",JOptionPane.INFORMATION_MESSAGE);
+						    // Validar que no esté seleccionado "<Seleccione>"
+						    if (cbxTipo.getSelectedIndex() <= 0 || cbxFabricante.getSelectedIndex() <= 0) {
+						        JOptionPane.showMessageDialog(null, "Seleccione tipo y fabricante válidos", 
+						                                   "Error", JOptionPane.ERROR_MESSAGE);
+						        return;
+						    }
+						    
+						    // Actualizar objeto (restando 1 a los índices)
+						    selected.setNombreVacuna(txtNombre.getText());
+						    selected.setFecha((Date)spnFechaVen.getValue());
+						    selected.setTipo(cbxTipo.getSelectedIndex() - 1); // Ajuste clave
+						    selected.setFabricante(cbxFabricante.getSelectedIndex() - 1); // Ajuste clave
+						    selected.setCantidad((int)spnCantidad.getValue());
+						    
+						    boolean exito = VacunaCRUD.actualizarVacuna(selected);
+						    
+						    if (exito) {
+						        JOptionPane.showMessageDialog(null, "Vacuna actualizada exitosamente");
+						        dispose();
+						    } else {
+						        JOptionPane.showMessageDialog(null, "Error al actualizar");
+						    }
+				            
 						}
 					}
 
@@ -220,8 +234,8 @@ public class RegistroVacuna extends JDialog {
 			txtNombre.setText(selected.getNombreVacuna());
 			spnCantidad.setValue(selected.getCantidad());
 			spnFechaVen.setValue(selected.getFecha());
-			cbxTipo.setSelectedIndex(selected.getTipo());
-			cbxFabricante.setSelectedIndex(selected.getFabricante());
+	        cbxTipo.setSelectedIndex(selected.getTipo()); 
+	        cbxFabricante.setSelectedIndex(selected.getFabricante());
 		}
 	}
 }

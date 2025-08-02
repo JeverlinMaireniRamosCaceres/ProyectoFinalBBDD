@@ -6,6 +6,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import javax.swing.JOptionPane;
+
 public class EnfermedadCRUD {
 
 	// INSERT
@@ -164,6 +166,48 @@ public class EnfermedadCRUD {
         }
 
         return lista;
+    }
+    
+    public static boolean actualizarEnfermedad(Enfermedad enfermedad) {
+        String sql = "UPDATE Enfermedad SET nombre = ?, sintomas = ?, idTipoEnfermedad = ? WHERE idEnfermedad = ?";
+        
+        try (Connection conn = PruebaConexionBBDD.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            
+            // Usamos directamente el índice del tipo (ya validado)
+            stmt.setString(1, enfermedad.getNombre());
+            stmt.setString(2, enfermedad.getSintomas());
+            stmt.setInt(3, enfermedad.getTipo());  // Cambiado: Usar el índice directamente
+            stmt.setString(4, enfermedad.getIdEnfermedad());
+            
+            int filasAfectadas = stmt.executeUpdate();
+            return filasAfectadas > 0;
+            
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error al actualizar enfermedad: " + e.getMessage(), 
+                                        "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+    }
+
+    private static int obtenerIdTipoEnfermedad(String nombreTipo) {
+        String sql = "SELECT idTipoEnfermedad FROM Tipo_Enfermedad WHERE nombre = ?";
+        
+        try (Connection conn = PruebaConexionBBDD.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            
+            stmt.setString(1, nombreTipo);
+            ResultSet rs = stmt.executeQuery();
+            
+            if (rs.next()) {
+                return rs.getInt("idTipoEnfermedad");
+            }
+            return -1;
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return -1;
+        }
     }
 
 

@@ -165,19 +165,30 @@ public class RegistroEnfermedad extends JDialog {
 							selected.setIdEnfermedad(txtCodigo.getText());
 							selected.setNombre(txtNombre.getText());
 							selected.setSintomas(txtASintomas.getText());
-							int tipoIndex = cbxTipo.getSelectedIndex() - 1;
+							int tipoIndex = cbxTipo.getSelectedIndex();
 							if (tipoIndex < 0) {
 								JOptionPane.showMessageDialog(null, "Debe seleccionar un tipo válido", "Error", JOptionPane.ERROR_MESSAGE);
 								return;
 							}
 							selected.setTipo(tipoIndex);
 							
-							if (listado != null) {
+							/*if (listado != null) {
 							    listado.loadEnfermedades();
-							}
-							JOptionPane.showMessageDialog(null,"Operacion exitosa","Informacion",JOptionPane.INFORMATION_MESSAGE);
-							dispose();
-						}
+							}*/
+				            boolean exito = EnfermedadCRUD.actualizarEnfermedad(selected);
+				            
+				            if (exito) {
+				                JOptionPane.showMessageDialog(null, "Enfermedad actualizada exitosamente.", "Información", JOptionPane.INFORMATION_MESSAGE);
+				                if (listado != null) {
+				                    listado.loadEnfermedades(); // Refrescar la tabla principal
+				                }
+				                dispose(); // Cerrar el diálogo
+				            } else {
+				                JOptionPane.showMessageDialog(null, "Error al actualizar la enfermedad.", "Error", JOptionPane.ERROR_MESSAGE);
+				            }
+				        }
+							//JOptionPane.showMessageDialog(null,"Operacion exitosa","Informacion",JOptionPane.INFORMATION_MESSAGE);
+						
 
 						
 					}
@@ -219,7 +230,7 @@ public class RegistroEnfermedad extends JDialog {
 			txtCodigo.setText(selected.getIdEnfermedad());
 			txtNombre.setText(selected.getNombre());
 			txtASintomas.setText(selected.getSintomas());
-			cbxTipo.setSelectedIndex(selected.getTipo() + 1);
+			cbxTipo.setSelectedIndex(selected.getTipo());
 		}
 	}
 }

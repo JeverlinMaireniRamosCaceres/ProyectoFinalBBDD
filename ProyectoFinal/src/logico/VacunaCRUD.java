@@ -7,6 +7,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import javax.swing.JOptionPane;
+
 public class VacunaCRUD {
 
 	// INSERTAR VACUNA
@@ -52,6 +54,7 @@ public class VacunaCRUD {
         }
     }
     
+    // SELECT VACUNA
     public static ArrayList<Vacuna> obtenerVacunasDesdeBDD() {
         ArrayList<Vacuna> listaVacunas = new ArrayList<>();
         String sql = "SELECT * FROM Vacuna";
@@ -78,6 +81,30 @@ public class VacunaCRUD {
         }
 
         return listaVacunas;
+    }
+    
+    // ACTUALIZAR LA VACUNA
+    public static boolean actualizarVacuna(Vacuna vacuna) {
+        String sql = "UPDATE Vacuna SET nombre = ?, fechaVencimiento = ?, idTipoVacuna = ?, idFabricante = ?, cant = ? WHERE idVacuna = ?";
+        
+        try (Connection conn = PruebaConexionBBDD.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            
+            stmt.setString(1, vacuna.getNombreVacuna());
+            stmt.setDate(2, new java.sql.Date(vacuna.getFecha().getTime()));
+            stmt.setInt(3, vacuna.getTipo() + 1); // +1 porque en BD los IDs empiezan en 1
+            stmt.setInt(4, vacuna.getFabricante() + 1); // +1 por la misma razón
+            stmt.setInt(5, vacuna.getCantidad());
+            stmt.setString(6, vacuna.getIdVacuna());
+            
+            int filasAfectadas = stmt.executeUpdate();
+            return filasAfectadas > 0;
+            
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "Error al actualizar vacuna: " + e.getMessage(), 
+                                        "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
     }
 
 

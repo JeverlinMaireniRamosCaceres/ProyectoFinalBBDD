@@ -69,11 +69,12 @@ public class ListadoVacunasGeneral extends JDialog {
 						@Override
 						public void mouseClicked(MouseEvent e) {
 							index = table.getSelectedRow();
-							if(index >= 0 && !ClinicaMedica.getLoginUsuario().equals("Médico")) {
+							if(index >= 0 && !ClinicaMedica.getLoginUsuario().equals(ClinicaMedica.ROL_MEDICO)) {
 								btnModificar.setEnabled(true);
 								btnModificar.setEnabled(true);
 								String codigo = table.getValueAt(index, 0).toString();
-								selected = ClinicaMedica.getInstance().buscarVacunaByCodigo(codigo);
+								ClinicaMedica.getInstance();
+								selected = ClinicaMedica.buscarVacunaEnBDPorCodigo(codigo);
 							}
 						}
 					});

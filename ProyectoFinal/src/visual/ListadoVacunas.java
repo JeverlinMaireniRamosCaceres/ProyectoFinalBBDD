@@ -3,6 +3,8 @@ import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
@@ -25,6 +27,10 @@ public class ListadoVacunas extends JDialog {
 	private static DefaultTableModel modelo;
 	private static Object[] row;
 	private Paciente paciente;
+	private int index = -1;
+	private Vacuna selected;
+	private JButton btnModificar;
+	private JButton btnEliminar;
 	
 	/**
 	 * Launch the application.
@@ -57,6 +63,19 @@ public class ListadoVacunas extends JDialog {
 			panel.setLayout(new BorderLayout(0, 0));
 			{
 				JScrollPane scrollPane = new JScrollPane();
+				scrollPane.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent e) {
+				        index = table.getSelectedRow();
+				        if (index >= 0) {
+				            btnModificar.setEnabled(true);
+
+				            btnEliminar.setEnabled(true);
+				            String codigo = table.getValueAt(index, 0).toString();
+				            selected = ClinicaMedica.getInstance().buscarVacunaEnBDPorCodigo(codigo); // Actualiza 'selected'
+				        }
+					}
+				});
 				panel.add(scrollPane, BorderLayout.CENTER);
 				{
 					table = new JTable();
@@ -82,12 +101,23 @@ public class ListadoVacunas extends JDialog {
 					}
 				});
 				{
-					JButton btnEliminar = new JButton("Eliminar");
+					btnEliminar = new JButton("Eliminar");
 					btnEliminar.setEnabled(false);
 					buttonPane.add(btnEliminar);
 				}
 				{
-					JButton btnModificar = new JButton("Modificar");
+					btnModificar = new JButton("Modificar");
+					btnModificar.addActionListener(new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							if (selected != null) {
+								RegistroVacuna re = new RegistroVacuna(selected);
+
+								re.setModal(true);
+								re.setVisible(true);
+							}
+						}
+					});
 					btnModificar.setEnabled(false);
 					buttonPane.add(btnModificar);
 				}
@@ -97,6 +127,7 @@ public class ListadoVacunas extends JDialog {
 		}
 		loadVacunas();
 	}
+	
 	private void loadVacunas() {
 	    SimpleDateFormat dateFormatter = new SimpleDateFormat("dd/MM/yyyy");
 
