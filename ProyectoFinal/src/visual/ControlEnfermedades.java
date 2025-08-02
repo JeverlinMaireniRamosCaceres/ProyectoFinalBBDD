@@ -19,6 +19,7 @@ import javax.swing.table.DefaultTableModel;
 
 import logico.ClinicaMedica;
 import logico.Enfermedad;
+import logico.EnfermedadCRUD;
 
 public class ControlEnfermedades extends JDialog {
 
@@ -71,7 +72,8 @@ public class ControlEnfermedades extends JDialog {
 							if(index >= 0) {
 								btnDetalle.setEnabled(true);
 								String codigo = table.getValueAt(index, 0).toString();
-								enfermedad = ClinicaMedica.getInstance().buscarEnfermedadByCodigo(codigo);
+								ClinicaMedica.getInstance();
+								enfermedad = ClinicaMedica.buscarEnfermedadByCodigoBDD(codigo);
 							}
 						}
 					});
@@ -122,14 +124,15 @@ public class ControlEnfermedades extends JDialog {
 	}
 	private void loadEnfermedades() {
 		modelo.setRowCount(0);
-		ArrayList<Enfermedad> enf = ClinicaMedica.getInstance().getLasEnfermedades();
-		row = new Object[table.getColumnCount()];
-		for(Enfermedad enfermedad : enf) {
-			row[0] = enfermedad.getIdEnfermedad();
-			row[1] = enfermedad.getNombre();
-			row[2] = enfermedad.getTipo();
-			row[3] = ClinicaMedica.getInstance().getCantPacientesPoseenEnfermedad(enfermedad);
-			modelo.addRow(row);
-		}
+	    ArrayList<Object[]> enfermedades = EnfermedadCRUD.obtenerEnfermedadesConPacientes();
+	    
+	    for(Object[] enfermedad : enfermedades) {
+	        modelo.addRow(new Object[] {
+	            enfermedad[0], // cod
+	            enfermedad[1], // nombre
+	            enfermedad[2], // tipo
+	            enfermedad[3]  // cantidad pacientes
+	        });
+	    }
 	}
 }

@@ -11,6 +11,7 @@ import java.util.Date;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -153,48 +154,62 @@ public class ListadoCitas extends JDialog {
 		}
 	}
 	
+
 	public static void loadCitas() {
-	    
-		modelo.setRowCount(0);
-	    ArrayList<Cita> ci = CitaCRUD.obtenerCitasDesdeBDD();
+	    modelo.setRowCount(0);
+	    ArrayList<Cita> todasLasCitas = CitaCRUD.obtenerCitasDesdeBDD();
 	    row = new Object[table.getColumnCount()];
 
 	    SimpleDateFormat dateFormatter = new SimpleDateFormat("dd/MM/yyyy");
 	    SimpleDateFormat timeFormatter = new SimpleDateFormat("hh:mm a");
-
 	    String fechaHoyStr = dateFormatter.format(new Date());
 	    
-		if(ClinicaMedica.getLoginUsuario().getRol() == ClinicaMedica.ROL_MEDICO) {
-			Medico medico = ClinicaMedica.getInstance().buscarMedicoById(ClinicaMedica.getLoginUsuario().getCodigo());
-		
-			
-			for (Cita cita : ci) {
-			    String fechaCitaStr = dateFormatter.format(cita.getFecha());
-		        if(cita.getMedico().equals(medico) && fechaCitaStr.equals(fechaHoyStr)) {
-					row[0] = cita.getIdCita();
-					row[1] = cita.getPaciente().getNombre() + " " + cita.getPaciente().getApellido();
-			        row[2] = cita.getMedico().getNombre() + " " + cita.getMedico().getApellido();
-			        row[3] = dateFormatter.format(cita.getFecha());
-			        row[4] = timeFormatter.format(cita.getHora());
-			        row[5] = cita.getMotivo();
-			        modelo.addRow(row); 
-		        }
-
-		    }
-			
-		} else {
-		    for (Cita cita : ci) {
-		        row[0] = cita.getIdCita();
-		        row[1] = cita.getPaciente().getNombre() + " " + cita.getPaciente().getApellido();
-		        row[2] = cita.getMedico().getNombre() + " " + cita.getMedico().getApellido();
-		        row[3] = dateFormatter.format(cita.getFecha());
-		        row[4] = timeFormatter.format(cita.getHora());
-		        row[5] = cita.getMotivo();
-		        modelo.addRow(row); 
-		    }
-		}
-	    
-
+	    if(ClinicaMedica.getLoginUsuario().getRol() == ClinicaMedica.ROL_MEDICO) {
+	        
+	    	// obtener el medico asociado al usuario logueado desde la base de datos
+	        Medico medico = ClinicaMedica.getInstance().buscarMedicoPorUsuario(
+	            ClinicaMedica.getLoginUsuario().getCodigo());
+	        
+	        if(medico != null) {
+	            for (Cita cita : todasLasCitas) {
+	                try {
+	                    // Comparar fechas como strings formateados
+	                    boolean mismaFecha = dateFormatter.format(cita.getFecha()).equals(fechaHoyStr);
+	                    
+	                    boolean mismoMedico = cita.getMedico().getIdPersona().equals(medico.getIdPersona());
+	                    
+	                    if(mismoMedico && mismaFecha) {
+	                        row[0] = cita.getIdCita();
+	                        row[1] = cita.getPaciente().getNombre() + " " + cita.getPaciente().getApellido();
+	                        row[2] = cita.getMedico().getNombre() + " " + cita.getMedico().getApellido();
+	                        row[3] = dateFormatter.format(cita.getFecha());
+	                        row[4] = timeFormatter.format(cita.getHora());
+	                        row[5] = cita.getMotivo();
+	                        modelo.addRow(row);
+	                    }
+	                } catch (Exception e) {
+	                    System.err.println("Error procesando cita ID: " + cita.getIdCita());
+	                    e.printStackTrace();
+	                }
+	            }
+	        } else {
+	            JOptionPane.showMessageDialog(null, 
+	                "No se encontró información médica asociada a este usuario.", 
+	                "Error", 
+	                JOptionPane.ERROR_MESSAGE);
+	        }
+	    } else {
+	        // muestra todas las citas
+	        for (Cita cita : todasLasCitas) {
+	            row[0] = cita.getIdCita();
+	            row[1] = cita.getPaciente().getNombre() + " " + cita.getPaciente().getApellido();
+	            row[2] = cita.getMedico().getNombre() + " " + cita.getMedico().getApellido();
+	            row[3] = dateFormatter.format(cita.getFecha());
+	            row[4] = timeFormatter.format(cita.getHora());
+	            row[5] = cita.getMotivo();
+	            modelo.addRow(row);
+	        }
+	    }
 	}
 
 }

@@ -15,9 +15,9 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 
-import logico.ClinicaMedica;
 import logico.Enfermedad;
-import logico.Paciente;
+import logico.EnfermedadCRUD;
+
 
 public class DetalleControlEnfermedades extends JDialog {
 
@@ -90,7 +90,7 @@ public class DetalleControlEnfermedades extends JDialog {
 	}
 	private void loadPacientes() {
 		modelo.setRowCount(0);
-		ArrayList<Paciente> pac = ClinicaMedica.getInstance().getLosPacientes();
+		/*ArrayList<Paciente> pac = ClinicaMedica.getInstance().getLosPacientes();
 		row = new Object[table.getColumnCount()];
 		for(Paciente paciente:pac) {
 			if(paciente.getMisEnfermedades().contains(enfermedad)) {
@@ -100,7 +100,13 @@ public class DetalleControlEnfermedades extends JDialog {
 		        row[3] = paciente.getTelefono();
 		        modelo.addRow(row);
 			}
-		}
+		}*/
+        ArrayList<Object[]> pacientes = EnfermedadCRUD.obtenerPacientesPorEnfermedad(enfermedad.getIdEnfermedad());
+        
+        // Llenar la tabla con los datos
+        for(Object[] paciente : pacientes) {
+            modelo.addRow(paciente);
+        }
 	}
 
 }

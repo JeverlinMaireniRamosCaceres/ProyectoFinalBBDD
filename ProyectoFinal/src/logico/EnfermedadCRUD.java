@@ -106,6 +106,66 @@ public class EnfermedadCRUD {
 
         return null; // si no se encontró
     }
+    
+    public static ArrayList<Object[]> obtenerEnfermedadesConPacientes() {
+        ArrayList<Object[]> lista = new ArrayList<>();
+        String sql = "SELECT e.idEnfermedad, e.nombre, te.nombre AS tipo, " +
+                     "(SELECT COUNT(*) FROM Paciente_Enfermedad pe WHERE pe.idEnfermedad = e.idEnfermedad) AS pacientes " +
+                     "FROM Enfermedad e " +
+                     "JOIN Tipo_Enfermedad te ON e.idTipoEnfermedad = te.idTipoEnfermedad " +
+                     "ORDER BY e.nombre";
+
+        try (Connection conn = PruebaConexionBBDD.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                Object[] fila = new Object[4];
+                fila[0] = rs.getString("idEnfermedad");    // cod
+                fila[1] = rs.getString("nombre");          // bombre enfermedad
+                fila[2] = rs.getString("tipo");           // tipo enfermedad
+                fila[3] = rs.getInt("pacientes");         // Cantidad pacientes
+                lista.add(fila);
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Error al obtener enfermedades con pacientes: " + e.getMessage());
+        }
+
+        return lista;
+    }
+    
+    public static ArrayList<Object[]> obtenerPacientesPorEnfermedad(String idEnfermedad) {
+        ArrayList<Object[]> lista = new ArrayList<>();
+        String sql = "SELECT per.cedula, per.nombre, per.apellido, per.telefono " +
+                     "FROM Paciente_Enfermedad pe " +
+                     "JOIN Paciente p ON pe.idPaciente = p.idPaciente " +
+                     "JOIN Persona per ON p.idPersona = per.idPersona " +
+                     "WHERE pe.idEnfermedad = ? " +
+                     "ORDER BY per.nombre, per.apellido";
+
+        try (Connection conn = PruebaConexionBBDD.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            
+            stmt.setString(1, idEnfermedad);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                Object[] fila = new Object[4];
+                fila[0] = rs.getString("cedula");
+                fila[1] = rs.getString("nombre");
+                fila[2] = rs.getString("apellido");
+                fila[3] = rs.getString("telefono");
+                lista.add(fila);
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Error al obtener pacientes por enfermedad: " + e.getMessage());
+        }
+
+        return lista;
+    }
+
 
 
 }

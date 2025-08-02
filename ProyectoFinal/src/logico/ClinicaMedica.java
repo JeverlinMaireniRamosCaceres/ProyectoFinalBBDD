@@ -1212,6 +1212,48 @@ public class ClinicaMedica implements Serializable {
         return null;  // Si no se encuentra
     }
     
+    public static Enfermedad buscarEnfermedadByCodigoBDD(String codigo) {
+        Enfermedad enfermedad = null;
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        
+        try {
+            conn = PruebaConexionBBDD.getConnection();
+            String sql = "SELECT e.idEnfermedad, e.nombre, e.sintomas, e.idTipoEnfermedad, te.nombre AS tipoNombre " +
+                         "FROM Enfermedad e " +
+                         "JOIN Tipo_Enfermedad te ON e.idTipoEnfermedad = te.idTipoEnfermedad " +
+                         "WHERE e.idEnfermedad = ?";
+            
+            stmt = conn.prepareStatement(sql);
+            stmt.setString(1, codigo);
+            rs = stmt.executeQuery();
+            
+            if (rs.next()) {
+                enfermedad = new Enfermedad();
+                enfermedad.setIdEnfermedad(rs.getString("idEnfermedad"));
+                enfermedad.setNombre(rs.getString("nombre"));
+                enfermedad.setSintomas(rs.getString("sintomas"));
+                enfermedad.setTipo(rs.getInt("idTipoEnfermedad"));
+                enfermedad.setTipoNombre(rs.getString("tipoNombre"));
+            }
+            
+        } catch (SQLException e) {
+            System.err.println("Error al buscar enfermedad por código: " + e.getMessage());
+        } finally {
+            // Cerrar recursos
+            try {
+                if (rs != null) rs.close();
+                if (stmt != null) stmt.close();
+                if (conn != null) conn.close();
+            } catch (SQLException e) {
+                System.err.println("Error al cerrar conexiones: " + e.getMessage());
+            }
+        }
+        
+        return enfermedad;
+    }
+    
 
 
     
