@@ -70,7 +70,7 @@ public class ListadoMedicos extends JDialog {
 								btnDetalle.setEnabled(true);
 								btnModificar.setEnabled(true);
 								String codigo = table.getValueAt(index, 0).toString();
-								selected = ClinicaMedica.getInstance().buscarMedicoByCedula(codigo);
+								selected = ClinicaMedica.getInstance().buscarMedicoPorCedulaBDD(codigo);
 							}
 						}
 					});
@@ -136,7 +136,7 @@ public class ListadoMedicos extends JDialog {
 	}
 	public static void loadMedicos() {
 		modelo.setRowCount(0);
-		ArrayList<Medico> med = ClinicaMedica.getInstance().getLosMedicos();
+		ArrayList<Medico> med = ClinicaMedica.getInstance().obtenerMedicosDesdeBDD();
 		row = new Object[table.getColumnCount()];
 		for(Medico medico : med) {
 			row[0] = medico.getCedula();

@@ -787,6 +787,259 @@ public class ClinicaMedica implements Serializable {
 	    return vacuna;
 	}
 
+	public Paciente buscarPacienteByIdBDD(String id) {
+	    Paciente paciente = null;
+	    String sql = "SELECT p.idPersona, p.cedula, p.nombre, p.apellido, p.telefono, p.direccion, " +
+	                 "p.fechaNacimiento, p.sexo, pa.estatura, pa.peso " +
+	                 "FROM Persona p JOIN Paciente pa ON p.idPersona = pa.idPersona " +
+	                 "WHERE p.idPersona = ?";
+
+	    try (Connection conn = PruebaConexionBBDD.getConnection();
+	         PreparedStatement ps = conn.prepareStatement(sql)) {
+	        
+	        ps.setString(1, id);
+	        ResultSet rs = ps.executeQuery();
+	        
+	        if (rs.next()) {
+	            paciente = new Paciente(
+	                rs.getString("idPersona"),
+	                rs.getString("cedula"),
+	                rs.getString("nombre"),
+	                rs.getString("apellido"),
+	                rs.getString("telefono"),
+	                rs.getString("direccion"),
+	                rs.getDate("fechaNacimiento"),
+	                rs.getString("sexo"),
+	                rs.getFloat("estatura"),
+	                rs.getFloat("peso")
+	            );
+	        }
+	        
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+
+	    return paciente;
+	}
+
+	public Cita buscarCitaByIdBDD(String idCita) {
+	    Cita cita = null;
+	    String sql = "SELECT * FROM Cita WHERE idCita = ?";
+
+	    try (Connection conn = PruebaConexionBBDD.getConnection();
+	         PreparedStatement stmt = conn.prepareStatement(sql)) {
+	        
+	        stmt.setString(1, idCita);
+	        ResultSet rs = stmt.executeQuery();
+	        
+	        if (rs.next()) {
+
+	            Medico medico = ClinicaMedica.getInstance().buscarMedicoById(rs.getString("idMedico"));
+	            Paciente paciente = ClinicaMedica.getInstance().buscarPacienteByIdBDD(rs.getString("idPaciente"));
+
+	            cita = new Cita(
+	                rs.getString("idCita"),
+	                medico,
+	                rs.getDate("fecha"),
+	                rs.getTime("hora"),
+	                rs.getString("motivo"),
+	                paciente
+	            );
+	        }
+
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+
+	    return cita;
+	}
+
+	public Medico buscarMedicoPorCedulaBDD(String cedula) {
+	    Medico medico = null;
+	    String sql = "SELECT p.idPersona, p.cedula, p.nombre, p.apellido, p.telefono, p.direccion, p.fechaNacimiento, p.sexo, " +
+	                 "m.exequatur " +
+	                 "FROM Medico m JOIN Persona p ON m.idPersona = p.idPersona " +
+	                 "WHERE p.cedula = ?";
+	    
+	    try (Connection conn = PruebaConexionBBDD.getConnection();
+	         PreparedStatement ps = conn.prepareStatement(sql)) {
+	        
+	        ps.setString(1, cedula);
+	        ResultSet rs = ps.executeQuery();
+	        
+	        if (rs.next()) {
+	            medico = new Medico(
+	                rs.getString("idPersona"),
+	                rs.getString("cedula"),
+	                rs.getString("nombre"),
+	                rs.getString("apellido"),
+	                rs.getString("telefono"),
+	                rs.getString("direccion"),
+	                rs.getDate("fechaNacimiento"),
+	                rs.getString("sexo"),
+	                rs.getInt("exequatur")
+	            );
+	        }
+	        
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    
+	    return medico;
+	}
+
+	public String getEspecialidadByMedicoId(String idMedico) {
+	    String especialidad = "";
+	    String sql = "SELECT e.nombre " +
+	                 "FROM Medico_Especialidad me " +
+	                 "JOIN Especialidad e ON me.idEspecialidad = e.idEspecialidad " +
+	                 "WHERE me.idMedico = ?";
+
+	    try (Connection conn = PruebaConexionBBDD.getConnection();
+	         PreparedStatement ps = conn.prepareStatement(sql)) {
+	        
+	        ps.setString(1, idMedico);
+	        ResultSet rs = ps.executeQuery();
+	        
+	        if (rs.next()) {
+	            especialidad = rs.getString("nombre");
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+
+	    return especialidad;
+	}
+	
+	public ArrayList<Usuario> getUsuariosDesdeBD() {
+	    ArrayList<Usuario> usuarios = new ArrayList<>();
+	    Connection conn = null;
+	    PreparedStatement stmt = null;
+	    ResultSet rs = null;
+
+	    try {
+	        conn = PruebaConexionBBDD.getConnection();
+	        String query = "SELECT * FROM Usuario";
+	        stmt = conn.prepareStatement(query);
+	        rs = stmt.executeQuery();
+
+	        while (rs.next()) {
+	            String id = rs.getString("idUsuario");
+	            String nombre = rs.getString("nombre");
+	            String contrasena = rs.getString("contrasenia");
+	            int rol = rs.getInt("idRol");
+	            Usuario usuario = new Usuario(id, nombre,contrasena, rol);
+	            usuarios.add(usuario);
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    } finally {
+	        try {
+	            if (rs != null) rs.close();
+	            if (stmt != null) stmt.close();
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+	    }
+
+	    return usuarios;
+	}
+
+	public Usuario buscarUsuarioByCodigoBBDD(String codigo) {
+	    Usuario usuario = null;
+	    Connection conn = null;
+	    PreparedStatement ps = null;
+	    ResultSet rs = null;
+
+	    try {
+	        conn = PruebaConexionBBDD.getConnection();
+	        String query = "SELECT * FROM Usuario WHERE idUsuario = ?";
+	        ps = conn.prepareStatement(query);
+	        ps.setString(1, codigo);
+	        rs = ps.executeQuery();
+
+	        if (rs.next()) {
+	            String id = rs.getString("idUsuario");
+	            String nombre = rs.getString("nombre");
+	            String contrasena = rs.getString("contrasenia");
+	            int rol = rs.getInt("idRol");
+
+	            usuario = new Usuario(id, nombre, contrasena, rol);
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    } finally {
+	        try {
+	            if (rs != null) rs.close();
+	            if (ps != null) ps.close();
+	            if (conn != null) conn.close();
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+	    }
+
+	    return usuario;
+	}
+
+	public Medico buscarMedicoPorUsuario(String idUsuario) {
+	    Medico medico = null;
+	    Connection con = null;
+	    PreparedStatement pst = null;
+	    ResultSet rs = null;
+
+	    try {
+	        con = PruebaConexionBBDD.getConnection();
+
+	        String sql = "SELECT p.idPersona, p.cedula, p.nombre AS nombrePersona, p.apellido, p.telefono, " +
+	                     "p.direccion, p.fechaNacimiento, p.sexo, " +
+	                     "m.exequatur, " +
+	                     "u.idUsuario, u.nombre AS nombreUsuario, u.contrasenia, u.idRol " +
+	                     "FROM Medico m " +
+	                     "JOIN Persona p ON m.idPersona = p.idPersona " +
+	                     "JOIN Usuario u ON m.idUsuario = u.idUsuario " +
+	                     "WHERE u.idUsuario = ?";
+
+	        pst = con.prepareStatement(sql);
+	        pst.setString(1, idUsuario);
+	        rs = pst.executeQuery();
+
+	        if (rs.next()) {
+	            String idPersona = rs.getString("idPersona");
+	            String cedula = rs.getString("cedula");
+	            String nombre = rs.getString("nombrePersona");
+	            String apellido = rs.getString("apellido");
+	            String telefono = rs.getString("telefono");
+	            String direccion = rs.getString("direccion");
+	            Date fechaNacimiento = rs.getDate("fechaNacimiento");
+	            String sexo = rs.getString("sexo");
+
+	            int exequatur = rs.getInt("exequatur");
+
+	            String codigoUsuario = rs.getString("idUsuario");
+	            String nombreUsuario = rs.getString("nombreUsuario");
+	            String contrasenia = rs.getString("contrasenia");
+	            int idRol = rs.getInt("idRol");
+
+	            Usuario usuario = new Usuario(codigoUsuario, nombreUsuario, contrasenia, idRol);
+
+	            medico = new Medico(idPersona, cedula, nombre, apellido, telefono, direccion, fechaNacimiento, sexo, exequatur);
+	            medico.setUsuario(usuario);
+	        }
+
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    } finally {
+	        try {
+	            if (rs != null) rs.close();
+	            if (pst != null) pst.close();
+	            if (con != null) con.close();
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+	    }
+
+	    return medico;
+	}
 
 
 }

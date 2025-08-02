@@ -262,6 +262,8 @@ public class RegistroMedico extends JDialog {
 				                JOptionPane.showMessageDialog(null, "Error generando código para el médico", "Error", JOptionPane.ERROR_MESSAGE);
 				                return;
 				            }
+				            
+				            
 
 				            String cedula = txtCedula.getText();
 
@@ -282,13 +284,6 @@ public class RegistroMedico extends JDialog {
 				            int exequatur = Integer.parseInt(spnExequatur.getValue().toString());
 				            Date fechaNacimiento = (Date) spnFechaNacim.getValue();
 
-				            // Verificar que la especialidad esté seleccionada correctamente
-				            Especialidad espSeleccionada = (Especialidad) cbxEspecialidad.getSelectedItem();
-				            if (espSeleccionada.getId() == 0) {
-				                JOptionPane.showMessageDialog(null, "Debe seleccionar una especialidad válida", "Error", JOptionPane.ERROR_MESSAGE);
-				                return;
-				            }
-
 				            // Crear el objeto médico
 				            Medico medico = new Medico(
 				            	    codigo,
@@ -301,15 +296,24 @@ public class RegistroMedico extends JDialog {
 				            	    sexo,
 				            	    exequatur
 				            );
-
-				         // Inserta en la tabla intermedia
-				            boolean exitoPersona = MedicoCRUD.insertarPersona(medico);
-				            if (!exitoPersona) {
-				                JOptionPane.showMessageDialog(null, "Error al insertar en Persona.", "Error", JOptionPane.ERROR_MESSAGE);
+				            
+				            // Verificar que la especialidad esté seleccionada correctamente
+				            Especialidad espSeleccionada = (Especialidad) cbxEspecialidad.getSelectedItem();
+				            if (espSeleccionada.getId() == 0) {
+				                JOptionPane.showMessageDialog(null, "Debe seleccionar una especialidad válida", "Error", JOptionPane.ERROR_MESSAGE);
 				                return;
 				            }
 
-				            boolean exitoMedico = MedicoCRUD.insertarMedico(medico);
+
+
+				         // Inserta en la tabla intermedia
+				           /* boolean exitoPersona = MedicoCRUD.insertarPersona(medico);
+				            if (!exitoPersona) {
+				                JOptionPane.showMessageDialog(null, "Error al insertar en Persona.", "Error", JOptionPane.ERROR_MESSAGE);
+				                return;
+				            }*/
+
+				            /*boolean exitoMedico = MedicoCRUD.insertarMedico(medico);
 				            if (!exitoMedico) {
 				                JOptionPane.showMessageDialog(null, "Error al insertar en Medico.", "Error", JOptionPane.ERROR_MESSAGE);
 				                return;
@@ -318,6 +322,14 @@ public class RegistroMedico extends JDialog {
 				            boolean exitoEspecialidad = MedicoCRUD.insertarMedicoEspecialidad(medico.getIdPersona(), espSeleccionada.getId());
 				            if (!exitoEspecialidad) {
 				                JOptionPane.showMessageDialog(null, "Error al insertar especialidad.", "Error", JOptionPane.ERROR_MESSAGE);
+				                return;
+				            }
+
+				            JOptionPane.showMessageDialog(null, "Médico registrado correctamente.", "Información", JOptionPane.INFORMATION_MESSAGE);
+				            clean();*/
+				            boolean exito = MedicoCRUD.insertarMedicoCompleto(medico, espSeleccionada.getId());
+				            if (!exito) {
+				                JOptionPane.showMessageDialog(null, "Error al registrar el médico.", "Error", JOptionPane.ERROR_MESSAGE);
 				                return;
 				            }
 

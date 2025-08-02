@@ -19,6 +19,7 @@ import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 
 import logico.Cita;
+import logico.CitaCRUD;
 import logico.ClinicaMedica;
 import logico.Medico;
 
@@ -73,7 +74,7 @@ public class ListadoCitas extends JDialog {
 								btnEliminar.setEnabled(true);
 								btnModificar.setEnabled(true);
 								String codigo = table.getValueAt(index, 0).toString();
-								selected = ClinicaMedica.getInstance().buscarCitaByIdCita(codigo);
+								selected = ClinicaMedica.getInstance().buscarCitaByIdBDD(codigo);
 							}
 						}
 					});
@@ -155,7 +156,7 @@ public class ListadoCitas extends JDialog {
 	public static void loadCitas() {
 	    
 		modelo.setRowCount(0);
-	    ArrayList<Cita> ci = ClinicaMedica.getInstance().getLasCitas();
+	    ArrayList<Cita> ci = CitaCRUD.obtenerCitasDesdeBDD();
 	    row = new Object[table.getColumnCount()];
 
 	    SimpleDateFormat dateFormatter = new SimpleDateFormat("dd/MM/yyyy");
@@ -165,7 +166,7 @@ public class ListadoCitas extends JDialog {
 	    
 		if(ClinicaMedica.getLoginUsuario().getRol() == ClinicaMedica.ROL_MEDICO) {
 			Medico medico = ClinicaMedica.getInstance().buscarMedicoById(ClinicaMedica.getLoginUsuario().getCodigo());
-
+		
 			
 			for (Cita cita : ci) {
 			    String fechaCitaStr = dateFormatter.format(cita.getFecha());

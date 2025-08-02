@@ -70,6 +70,25 @@ public class ConsultaCRUD {
             return null;
         }
     }
+    
+    public static boolean insertarPacienteEnfermedad(String idPaciente, String idEnfermedad, boolean curado) {
+        String sql = "INSERT INTO paciente_enfermedad (idPaciente, idEnfermedad, curado) VALUES (?, ?, ?)";
+
+        try (Connection conn = PruebaConexionBBDD.getConnection(); 
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, idPaciente);
+            stmt.setString(2, idEnfermedad);
+            stmt.setBoolean(3, curado);
+
+            int filasAfectadas = stmt.executeUpdate();
+            return filasAfectadas > 0;
+
+        } catch (SQLException e) {
+            System.err.println("Error al insertar en paciente_enfermedad: " + e.getMessage());
+            return false;
+        }
+    }
 
 
 	

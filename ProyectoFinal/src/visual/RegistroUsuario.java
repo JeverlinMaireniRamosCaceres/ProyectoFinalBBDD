@@ -181,10 +181,15 @@ public class RegistroUsuario extends JDialog {
 							String confContra = txtConfContra.getText();
 							int idRol = cbxRol.getSelectedIndex();
 							Medico medicoSeleccionado;
-							String cedulaMedico = txtCedulaMedico.getText();
-							medicoSeleccionado = ClinicaMedica.getInstance().buscarMedicoByCedula(cedulaMedico);
+							String cedulaMedico = txtCedulaMedico.getText().trim();
+							System.out.println("Buscando médico con cédula: '" + cedulaMedico + "'");
 							
-							if("Medico".equalsIgnoreCase((String) cbxRol.getSelectedItem()) && !txtCedulaMedico.getText().equals("")) {
+							medicoSeleccionado = ClinicaMedica.getInstance().buscarMedicoPorCedulaBDD(cedulaMedico);
+							System.out.println(medicoSeleccionado);
+							System.out.println(cbxRol.getSelectedIndex());
+							System.out.println(ClinicaMedica.ROL_MEDICO);
+							
+							if(cbxRol.getSelectedIndex() == ClinicaMedica.ROL_MEDICO && !txtCedulaMedico.getText().isEmpty()) {
 								if(medicoSeleccionado==null) {
 						            JOptionPane.showMessageDialog(null, "Medico no encontrado", 
 	                                        "Error", JOptionPane.ERROR_MESSAGE);
@@ -215,16 +220,12 @@ public class RegistroUsuario extends JDialog {
 							clean();*/
 							boolean exito = UsuarioCRUD.insertarUsuario(usuario);
 
-							/*if (exito) {
-							    JOptionPane.showMessageDialog(null,"Usuario guardado en la base de datos correctamente.","Información",JOptionPane.INFORMATION_MESSAGE);
-							    clean();
-							} else {
-							    JOptionPane.showMessageDialog(null,"Error al guardar el usuario en la base de datos.","Error",JOptionPane.ERROR_MESSAGE);
-							}*/
 							if (exito) {
 							    // Si el rol es médico, actualiza el idUsuario en Medico
 							    if (idRol == ClinicaMedica.ROL_MEDICO && medicoSeleccionado != null) {
-							        boolean actualizacionOk = MedicoCRUD.actualizarUsuarioMedico(medicoSeleccionado.getCedula(), usuario.getCodigo());
+							        boolean actualizacionOk = MedicoCRUD.actualizarUsuarioMedicoPorCedula(medicoSeleccionado.getCedula(), usuario.getCodigo());
+							        System.out.println("Actualizar idUsuario: " + usuario.getCodigo() + " para medico: " + medicoSeleccionado.getIdPersona());
+
 							        if (!actualizacionOk) {
 							            JOptionPane.showMessageDialog(null, "No se pudo actualizar el usuario en la tabla Médico.", "Advertencia", JOptionPane.WARNING_MESSAGE);
 							        }

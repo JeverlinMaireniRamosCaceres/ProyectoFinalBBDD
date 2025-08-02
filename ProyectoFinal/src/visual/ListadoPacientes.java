@@ -74,7 +74,7 @@ public class ListadoPacientes extends JDialog {
 								btnDetalles.setEnabled(true);
 								btnModificar.setEnabled(true);
 								String codigo = table.getValueAt(index, 0).toString();
-								selected = ClinicaMedica.getInstance().buscarPacienteByCedula(codigo);
+								selected = ClinicaMedica.getInstance().buscarPacienteByCedulaBBDD(codigo);
 							}
 						}
 					});

@@ -148,7 +148,7 @@ public class MedicoCRUD {
     }
 
  
-    // MÃ©todo para actualizar el idUsuario en Medico una vez creado el usuario
+    // Metodo para actualizar el idUsuario en Medico una vez creado el usuario
     public static boolean actualizarUsuarioMedico(String idMedico, String idUsuario) {
         String sql = "UPDATE Medico SET idUsuario = ? WHERE idMedico = ?";
         try (Connection conn = PruebaConexionBBDD.getConnection();
@@ -162,6 +162,28 @@ public class MedicoCRUD {
             return false;
         }
     }
+    
+    public static boolean actualizarUsuarioMedicoPorCedula(String cedula, String idUsuario) {
+        String sql = "UPDATE m " +
+                     "SET m.idUsuario = ? " +
+                     "FROM Medico m " +
+                     "JOIN Persona p ON m.idPersona = p.idPersona " +
+                     "WHERE p.cedula = ?";
+        try (Connection conn = PruebaConexionBBDD.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, idUsuario);
+            stmt.setString(2, cedula);;
+
+            int filasAfectadas = stmt.executeUpdate();
+            return filasAfectadas > 0;
+        } catch(SQLException e) {
+            System.err.println("Error al actualizar usuario de medico por cédula: " + e.getMessage());
+            return false;
+        }
+    }
+
+
+    
     public static List<Especialidad> obtenerEspecialidades() {
         List<Especialidad> lista = new ArrayList<>();
         String sql = "SELECT idEspecialidad, nombre FROM Especialidad";
@@ -182,6 +204,7 @@ public class MedicoCRUD {
  
         return lista;
     }
+    
     public static boolean insertarMedicoEspecialidad(String idMedico, int idEspecialidad) {
         String sql = "INSERT INTO Medico_Especialidad (idMedico, idEspecialidad) VALUES (?, ?)";
  
@@ -209,7 +232,7 @@ public class MedicoCRUD {
             stmt.executeUpdate();
  
         } catch (SQLException e) {
-            System.err.println("Error al eliminar especialidades del mÃ©dico: " + e.getMessage());
+            System.err.println("Error al eliminar especialidades del medico: " + e.getMessage());
         }
     }
  
@@ -232,12 +255,84 @@ public class MedicoCRUD {
             }
  
         } catch (SQLException e) {
-            System.err.println("Error al obtener especialidad del mÃ©dico: " + e.getMessage());
+            System.err.println("Error al obtener especialidad del medico: " + e.getMessage());
         }
  
         return null;
     }
  
+    public static boolean insertarMedicoCompleto(Medico medico, int idEspecialidad) {
+        String sqlPersona = "INSERT INTO Persona (idPersona, cedula, nombre, apellido, telefono, direccion, fechaNacimiento, sexo) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        String sqlMedico = "INSERT INTO Medico (idMedico, idPersona, exequatur, idUsuario) VALUES (?, ?, ?, ?)";
+        String sqlMedicoEspecialidad = "INSERT INTO Medico_Especialidad (idMedico, idEspecialidad) VALUES (?, ?)";
+
+        Connection conn = null;
+        PreparedStatement psPersona = null;
+        PreparedStatement psMedico = null;
+        PreparedStatement psMedEsp = null;
+
+        try {
+            conn = PruebaConexionBBDD.getConnection();
+            conn.setAutoCommit(false);  // Empezar transacción
+
+            // Insertar Persona
+            psPersona = conn.prepareStatement(sqlPersona);
+            psPersona.setString(1, medico.getIdPersona());
+            psPersona.setString(2, medico.getCedula());
+            psPersona.setString(3, medico.getNombre());
+            psPersona.setString(4, medico.getApellido());
+            psPersona.setString(5, medico.getTelefono());
+            psPersona.setString(6, medico.getDireccion());
+            psPersona.setDate(7, new java.sql.Date(medico.getFechaNacimiento().getTime()));
+            psPersona.setString(8, medico.getSexo());
+            psPersona.executeUpdate();
+
+            // Insertar Medico
+            psMedico = conn.prepareStatement(sqlMedico);
+            psMedico.setString(1, medico.getIdPersona());
+            psMedico.setString(2, medico.getIdPersona());
+            psMedico.setInt(3, medico.getExequatur());
+            if (medico.getUsuario() != null) {
+                psMedico.setString(4, medico.getUsuario().getCodigo());
+            } else {
+                psMedico.setNull(4, java.sql.Types.VARCHAR);
+            }
+            psMedico.executeUpdate();
+
+            // Insertar Especialidad
+            psMedEsp = conn.prepareStatement(sqlMedicoEspecialidad);
+            psMedEsp.setString(1, medico.getIdPersona());
+            psMedEsp.setInt(2, idEspecialidad);
+            psMedEsp.executeUpdate();
+
+            conn.commit();  // Confirmar transacción
+
+            return true;
+
+        } catch (SQLException e) {
+            try {
+                if (conn != null) conn.rollback(); // Rollback si falla
+            } catch (SQLException ex) {
+                System.err.println("Error en rollback: " + ex.getMessage());
+            }
+            System.err.println("Error insertando médico completo: " + e.getMessage());
+            return false;
+
+        } finally {
+            try {
+                if (psPersona != null) psPersona.close();
+                if (psMedico != null) psMedico.close();
+                if (psMedEsp != null) psMedEsp.close();
+                if (conn != null) {
+                    conn.setAutoCommit(true);
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                System.err.println("Error cerrando recursos: " + e.getMessage());
+            }
+        }
+    }
+
  
  
 }

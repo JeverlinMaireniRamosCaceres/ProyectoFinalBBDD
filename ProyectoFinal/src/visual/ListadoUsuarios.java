@@ -72,7 +72,7 @@ public class ListadoUsuarios extends JDialog {
 								btnVerDetalles.setEnabled(true);
 								btnModificar.setEnabled(true);
 								String codigo = table.getValueAt(index, 0).toString();
-								selected = ClinicaMedica.getInstance().buscarUsuarioByCodigo(codigo);
+								selected = ClinicaMedica.getInstance().buscarUsuarioByCodigoBBDD(codigo);
 							}
 						}
 					});
@@ -138,7 +138,7 @@ public class ListadoUsuarios extends JDialog {
 
 	public static void loadUsuarios() {
 		modelo.setRowCount(0);
-		ArrayList<Usuario> usua = ClinicaMedica.getInstance().getLosUsuarios();
+		ArrayList<Usuario> usua = ClinicaMedica.getInstance().getUsuariosDesdeBD();
 		row = new Object[table.getColumnCount()];
 		for(Usuario usuario:usua) {
 			row[0] = usuario.getCodigo();

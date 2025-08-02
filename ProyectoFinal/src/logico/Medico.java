@@ -9,6 +9,7 @@ public class Medico extends Persona {
 	 */
 	private static final long serialVersionUID = 1L;
 	
+	
 	protected int exequatur;
 	protected Usuario usuario;
 	
@@ -35,6 +36,16 @@ public class Medico extends Persona {
 	public void setExequatur(int exequatur) {
 		this.exequatur = exequatur;
 	}
+	
+	
+	@Override
+	public boolean equals(Object obj) {
+	    if (this == obj) return true;
+	    if (obj == null || getClass() != obj.getClass()) return false;
+	    Medico other = (Medico) obj;
+	    return this.getIdPersona().equals(other.getIdPersona());
+	}
+
 	
 
 }

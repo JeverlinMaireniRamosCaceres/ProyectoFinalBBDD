@@ -15,6 +15,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
+import logico.ClinicaMedica;
 import logico.Medico;
 
 public class DetalleMedico extends JDialog {
@@ -212,6 +213,8 @@ public class DetalleMedico extends JDialog {
 			spnEdad.setValue(selected.getEdad());
 			txtSexo.setText(selected.getSexo());
 			spnExequatur.setValue(selected.getExequatur());
+			String especialidad = ClinicaMedica.getInstance().getEspecialidadByMedicoId(selected.getIdPersona());
+			txtEspecialidad.setText(especialidad);
 		}
 		
 	}

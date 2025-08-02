@@ -1,9 +1,12 @@
 package logico;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Time;
+import java.util.ArrayList;
 
 public class CitaCRUD {
 
@@ -50,6 +53,39 @@ public class CitaCRUD {
 	        return null;
 	    }
 	}
+	
+	// SELECCIONAR DESDE LA BDD
+	public static ArrayList<Cita> obtenerCitasDesdeBDD() {
+	    ArrayList<Cita> citas = new ArrayList<>();
+	    String sql = "SELECT * FROM Cita";
+
+	    try (Connection conn = PruebaConexionBBDD.getConnection();
+	         PreparedStatement stmt = conn.prepareStatement(sql);
+	         ResultSet rs = stmt.executeQuery()) {
+
+	        while (rs.next()) {
+	            String idCita = rs.getString("idCita");
+	            Date fecha = rs.getDate("fecha");
+	            Time hora = rs.getTime("hora");
+	            String motivo = rs.getString("motivo");
+	            String idPaciente = rs.getString("idPaciente");
+	            String idMedico = rs.getString("idMedico");
+
+	            // Buscando el paciente y el medico
+	            Paciente paciente = ClinicaMedica.getInstance().buscarPacienteByIdBDD(idPaciente);
+	            Medico medico = ClinicaMedica.getInstance().buscarMedicoById(idMedico);
+
+	            Cita cita = new Cita(idCita, medico, fecha, hora, motivo, paciente);
+	            citas.add(cita);
+	        }
+
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+
+	    return citas;
+	}
+
 
 
 	

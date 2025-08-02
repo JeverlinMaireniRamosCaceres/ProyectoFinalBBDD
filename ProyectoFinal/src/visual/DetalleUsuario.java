@@ -146,12 +146,12 @@ public class DetalleUsuario extends JDialog {
 	        switch (rolId) {
 	            case 1:
 	                txtRol.setText("Administrador");
-	                txtCedula.setText(""); // No aplica
+	                txtCedula.setText(""); 
 	                break;
 	            case 2:
 	                txtRol.setText("Médico");
 	                // Buscar el médico relacionado si es rol 2
-	                Medico medico = ClinicaMedica.getInstance().buscarMedicoById(selected.getCodigo());
+	                Medico medico = ClinicaMedica.getInstance().buscarMedicoPorUsuario(selected.getCodigo());
 	                if (medico != null) {
 	                    txtCedula.setText(medico.getCedula());
 	                } else {

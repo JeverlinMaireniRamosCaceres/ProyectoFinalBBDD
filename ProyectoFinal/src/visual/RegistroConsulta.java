@@ -104,6 +104,8 @@ public class RegistroConsulta extends JDialog {
 				txtMedico.setEditable(false);
 				txtMedico.setColumns(10);
 				if(ClinicaMedica.getLoginUsuario().getRol() == ClinicaMedica.ROL_MEDICO) {
+				    medico = ClinicaMedica.getInstance().buscarMedicoPorUsuario(
+				            ClinicaMedica.getLoginUsuario().getCodigo());
 					txtMedico.setText(medico.getNombre()+" "+medico.getApellido());
 				}
 
@@ -280,12 +282,19 @@ public class RegistroConsulta extends JDialog {
 
 						boolean exitoConsulta = ConsultaCRUD.insertarConsulta(consulta);
 						boolean exitoEnfermedad = true;
+						boolean exitoPacienteEnfermedad = true;
 
 						if (exitoConsulta && enfermedad != null) {
 							exitoEnfermedad = ConsultaCRUD.insertarConsultaEnfermedad(consulta.getIdConsulta(), enfermedad.getIdEnfermedad());
+					         
+							exitoPacienteEnfermedad = ConsultaCRUD.insertarPacienteEnfermedad(
+					                  paciente.getIdPersona(), enfermedad.getIdEnfermedad(), false);
 						}
+						
 
-						if (exitoConsulta && exitoEnfermedad) {
+				          
+
+						if (exitoConsulta && exitoEnfermedad && exitoPacienteEnfermedad) {
 							JOptionPane.showMessageDialog(null, "Consulta registrada exitosamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
 							dispose();
 						} else {
