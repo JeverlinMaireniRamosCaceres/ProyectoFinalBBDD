@@ -1040,6 +1040,26 @@ public class ClinicaMedica implements Serializable {
 
 	    return medico;
 	}
+	
+    public String obtenerEspecialidadMedico(String idMedico) {
+        String sql = "SELECT e.nombre FROM Medico_Especialidad me " +
+                     "JOIN Especialidad e ON me.idEspecialidad = e.idEspecialidad " +
+                     "WHERE me.idMedico = ?";
+        
+        try (Connection conn = PruebaConexionBBDD.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            
+            stmt.setString(1, idMedico);
+            ResultSet rs = stmt.executeQuery();
+            
+            if (rs.next()) {
+                return rs.getString("nombre");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return "Sin especialidad";
+    }
 
 
 }

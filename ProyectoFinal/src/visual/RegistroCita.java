@@ -200,7 +200,8 @@ public class RegistroCita extends JDialog {
 					medico = sm.getSelectedMedico();
 					if(medico != null) {
 						txtMedico.setText(medico.getNombre()+" "+medico.getApellido());
-
+			            String especialidad = ClinicaMedica.getInstance().obtenerEspecialidadMedico(medico.getIdPersona());
+			            txtEspecialidad.setText(especialidad);
 					}
 				}
 			});
