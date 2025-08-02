@@ -143,7 +143,7 @@ public class ListadoVacunasGeneral extends JDialog {
 	    SimpleDateFormat dateFormatter = new SimpleDateFormat("dd/MM/yyyy");
 	    modelo.setRowCount(0);
 
-	    ArrayList<Vacuna> vac = ClinicaMedica.getInstance().getVacunasGenerales();
+	    ArrayList<Vacuna> vac = ClinicaMedica.getInstance().obtenerVacunasDesdeBD();
 	    if (vac == null || vac.isEmpty()) {
 	        JOptionPane.showMessageDialog(this, "No hay vacunas disponibles.");
 	        return;

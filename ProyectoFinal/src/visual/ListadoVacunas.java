@@ -15,6 +15,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 
+import logico.ClinicaMedica;
 import logico.Paciente;
 import logico.Vacuna;
 
@@ -100,7 +101,7 @@ public class ListadoVacunas extends JDialog {
 	    SimpleDateFormat dateFormatter = new SimpleDateFormat("dd/MM/yyyy");
 
 		modelo.setRowCount(0);
-		ArrayList<Vacuna> vac = paciente.getMisVacunas();
+		ArrayList<Vacuna> vac = ClinicaMedica.getInstance().obtenerVacunasDePacienteBDD(paciente.getIdPersona());
 		row = new Object[table.getColumnCount()];
 		for(Vacuna vacunas:vac) {
 			row[0] = vacunas.getIdVacuna();

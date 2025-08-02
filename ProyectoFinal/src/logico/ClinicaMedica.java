@@ -9,6 +9,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
 
+import javax.swing.JOptionPane;
+
 public class ClinicaMedica implements Serializable {
 	
 	/**
@@ -1059,6 +1061,69 @@ public class ClinicaMedica implements Serializable {
             e.printStackTrace();
         }
         return "Sin especialidad";
+    }
+    
+    public ArrayList<Vacuna> obtenerVacunasDesdeBD() {
+        ArrayList<Vacuna> vacunas = new ArrayList<>();
+        String sql = "SELECT * FROM Vacuna"; 
+        
+        try (Connection conn = PruebaConexionBBDD.getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            
+            while (rs.next()) {
+                // Crear vacuna con constructor parametrizado
+                Vacuna vacuna = new Vacuna(
+                    rs.getString("idVacuna"),
+                    rs.getDate("fechaVencimiento"),
+                    rs.getString("nombre"),
+                    rs.getInt("idTipoVacuna"),
+                    rs.getInt("idFabricante"),
+                    rs.getInt("cant")
+                );
+                vacunas.add(vacuna);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, 
+                "Error al cargar vacunas desde la base de datos: " + e.getMessage(),
+                "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        return vacunas;
+    }
+    
+    public ArrayList<Vacuna> obtenerVacunasDePacienteBDD(String idPaciente) {
+        ArrayList<Vacuna> vacunas = new ArrayList<>();
+        String sql = "SELECT v.* FROM Vacuna v " +
+                     "JOIN Historial_Vacuna pv ON v.idVacuna = pv.idVacuna " +
+                     "WHERE pv.idPaciente = ?";
+        
+        try (Connection conn = PruebaConexionBBDD.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            
+            stmt.setString(1, idPaciente);
+            ResultSet rs = stmt.executeQuery();
+            
+            while (rs.next()) {
+                
+            	Vacuna vacuna = new Vacuna(
+                        rs.getString("idVacuna"),
+                        rs.getDate("fechaVencimiento"),
+                        rs.getString("nombre"),
+                        rs.getInt("idTipoVacuna"),
+                        rs.getInt("idFabricante"),
+                        rs.getInt("cant")
+                    );
+                    vacunas.add(vacuna);
+
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, 
+                "Error al cargar vacunas del paciente: " + e.getMessage(),
+                "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        return vacunas;
     }
 
 
