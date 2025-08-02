@@ -10,6 +10,7 @@ import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -74,7 +75,7 @@ public class ListadoEnfermedadesPaciente extends JDialog {
 							if(index >= 0) {
 								btnCurar.setEnabled(true);
 								String codigo = table.getValueAt(index, 0).toString();
-								enf = ClinicaMedica.getInstance().buscarEnfermedadPacienteByCodigo(paciente, codigo);
+								enf = ClinicaMedica.getInstance().buscarEnfermedadPacienteByCodigoBDD(paciente.getIdPersona(), codigo);
 							}
 						}
 					});
@@ -104,8 +105,37 @@ public class ListadoEnfermedadesPaciente extends JDialog {
 					btnCurar.addActionListener(new ActionListener() {
 						@Override
 						public void actionPerformed(ActionEvent e) {
-							enf.setCurada(true);
-							btnCurar.setEnabled(false);
+							System.out.println(enf);
+					        if(enf != null) {
+					            int confirm = JOptionPane.showConfirmDialog(
+					                ListadoEnfermedadesPaciente.this,
+					                "¿Marcar la enfermedad '" + enf.getNombre() + "' como curada?",
+					                "Confirmar",
+					                JOptionPane.YES_NO_OPTION);
+					            
+					            if(confirm == JOptionPane.YES_OPTION) {
+					                boolean exito = ClinicaMedica.getInstance()
+					                                  .marcarEnfermedadComoCuradaBDD(
+					                                      paciente.getIdPersona(), 
+					                                      enf.getIdEnfermedad());
+					                
+					                if(exito) {
+					                    JOptionPane.showMessageDialog(
+					                        ListadoEnfermedadesPaciente.this,
+					                        "Enfermedad marcada como curada correctamente",
+					                        "Éxito",
+					                        JOptionPane.INFORMATION_MESSAGE);
+					                    loadEnfermedades(); 
+					                    btnCurar.setEnabled(false);
+					                } else {
+					                    JOptionPane.showMessageDialog(
+					                        ListadoEnfermedadesPaciente.this,
+					                        "No se pudo actualizar el estado de la enfermedad",
+					                        "Error",
+					                        JOptionPane.ERROR_MESSAGE);
+					                }
+					            }
+					        }
 							loadEnfermedades();
 						}
 					});
@@ -121,7 +151,7 @@ public class ListadoEnfermedadesPaciente extends JDialog {
 
 	private void loadEnfermedades() {
 		modelo.setRowCount(0);
-		ArrayList<Enfermedad> enf = paciente.getMisEnfermedades();
+		ArrayList<Enfermedad> enf = ClinicaMedica.getInstance().obtenerEnfermedadesDePacienteBDD(paciente.getIdPersona());
 		row = new Object[table.getColumnCount()];
 		for(Enfermedad enfermedad : enf) {
 			row[0] = enfermedad.getIdEnfermedad();

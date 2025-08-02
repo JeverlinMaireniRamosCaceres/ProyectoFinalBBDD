@@ -1125,6 +1125,89 @@ public class ClinicaMedica implements Serializable {
         }
         return vacunas;
     }
+    
+    public ArrayList<Enfermedad> obtenerEnfermedadesDePacienteBDD(String idPaciente) {
+        ArrayList<Enfermedad> enfermedades = new ArrayList<>();
+        String sql = "SELECT e.idEnfermedad, e.nombre, te.nombre AS tipoEnfermedad, pe.curado, e.idTipoEnfermedad " +
+                     "FROM Paciente_Enfermedad pe " +
+                     "JOIN Enfermedad e ON pe.idEnfermedad = e.idEnfermedad " +
+                     "JOIN Tipo_Enfermedad te ON e.idTipoEnfermedad = te.idTipoEnfermedad " +
+                     "WHERE pe.idPaciente = ?";
+        
+        try (Connection conn = PruebaConexionBBDD.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            
+            stmt.setString(1, idPaciente);
+            ResultSet rs = stmt.executeQuery();
+            
+            while (rs.next()) {
+                Enfermedad enfermedad = new Enfermedad();
+                enfermedad.setIdEnfermedad(rs.getString("idEnfermedad"));
+                enfermedad.setNombre(rs.getString("nombre"));
+                                
+                enfermedad.setTipo(rs.getInt("idTipoEnfermedad"));
+                
+                enfermedad.setCurada(rs.getBoolean("curado"));
+                enfermedades.add(enfermedad);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, 
+                "Error al cargar enfermedades del paciente: " + e.getMessage(),
+                "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        return enfermedades;
+    }
 
+    public boolean marcarEnfermedadComoCuradaBDD(String idPaciente, String idEnfermedad) {
+        String sql = "UPDATE Paciente_Enfermedad SET curado = 1 " +
+                     "WHERE idPaciente = ? AND idEnfermedad = ?";
+        
+        try (Connection conn = PruebaConexionBBDD.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            
+            stmt.setString(1, idPaciente);
+            stmt.setString(2, idEnfermedad);
+            
+            int affectedRows = stmt.executeUpdate();
+            return affectedRows > 0;
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, 
+                "Error al actualizar estado de enfermedad: " + e.getMessage(),
+                "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+    }
 
+    public Enfermedad buscarEnfermedadPacienteByCodigoBDD(String idPaciente, String idEnfermedad) {
+        String sql = "SELECT e.*, pe.curado " +
+                     "FROM Enfermedad e " +
+                     "JOIN Paciente_Enfermedad pe ON e.idEnfermedad = pe.idEnfermedad " +
+                     "WHERE pe.idPaciente = ? AND e.idEnfermedad = ?";
+        
+        try (Connection conn = PruebaConexionBBDD.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            
+            stmt.setString(1, idPaciente);
+            stmt.setString(2, idEnfermedad);
+            
+            ResultSet rs = stmt.executeQuery();
+            
+            if (rs.next()) {
+                Enfermedad enfermedad = new Enfermedad();
+                enfermedad.setIdEnfermedad(rs.getString("idEnfermedad"));
+                enfermedad.setNombre(rs.getString("nombre"));
+                enfermedad.setSintomas(rs.getString("sintomas"));
+                enfermedad.setTipo(rs.getInt("idTipoEnfermedad"));
+                enfermedad.setCurada(rs.getBoolean("curado")); 
+                return enfermedad;
+            }
+        } catch (SQLException e) {
+            System.err.println("Error al buscar enfermedad: " + e.getMessage());
+        }
+        return null;  // Si no se encuentra
+    }
+    
 }
