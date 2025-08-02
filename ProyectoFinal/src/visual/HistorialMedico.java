@@ -6,9 +6,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -18,6 +21,7 @@ import javax.swing.table.DefaultTableModel;
 
 import logico.ClinicaMedica;
 import logico.Consulta;
+import logico.HistorialMedicoCRUD;
 import logico.Paciente;
 
 public class HistorialMedico extends JDialog {
@@ -73,7 +77,8 @@ public class HistorialMedico extends JDialog {
 							if(index >= 0) {
 								btnDetalle.setEnabled(true);
 								String codigo = table.getValueAt(index, 0).toString();
-								sel = ClinicaMedica.getInstance().buscarConsultaById(codigo);
+								ClinicaMedica.getInstance();
+								sel = ClinicaMedica.buscarConsultaByIdBDD(codigo);
 							}
 						}
 					});
@@ -121,18 +126,36 @@ public class HistorialMedico extends JDialog {
 		}
 		loadHistorial();
 	}
-	private void loadHistorial(){
-		if(selected!=null) {
-			modelo.setRowCount(0);
-			//ArrayList<Consulta> consultas = selected.getMiHistorial().getLasConsultas();
-			row = new Object[table.getColumnCount()];
-			for(Consulta consulta:selected.getMiHistorial().getLasConsultas()) {
-				row[0] = consulta.getIdConsulta();
-				row[1] = consulta.getFecha();
-				row[2] = consulta.getDiagnostico();
-				row[3] = consulta.getMedico().getNombre()+" "+consulta.getMedico().getApellido();
-				modelo.addRow(row);
-			}
-		}
+
+	private void loadHistorial() {
+	    if (selected != null && selected.getIdPersona() != null) {
+	        try {
+	            modelo.setRowCount(0);
+	            
+	            // consultas desde la base de datos
+	            ArrayList<Consulta> consultas = HistorialMedicoCRUD.obtenerHistorialPorPacienteBDD(selected.getIdPersona());
+	            
+	            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+	            
+	            for (Consulta consulta : consultas) {
+	                
+	                String medicoNombre = (consulta.getMedico() != null) ? 
+	                    consulta.getMedico().getNombre() + " " + consulta.getMedico().getApellido() : "Médico no disponible";
+	                
+	                Object[] row = {
+	                    consulta.getIdConsulta(),
+	                    (consulta.getFecha() != null) ? sdf.format(consulta.getFecha()) : "Sin fecha",
+	                    (consulta.getDiagnostico() != null) ? consulta.getDiagnostico() : "Sin diagnóstico",
+	                    medicoNombre
+	                };
+	                modelo.addRow(row);
+	            }
+	        } catch (Exception e) {
+	            JOptionPane.showMessageDialog(this, 
+	                "Error al cargar historial: " + e.getMessage(), 
+	                "Error", JOptionPane.ERROR_MESSAGE);
+	        }
+	    }
 	}
+	
 }

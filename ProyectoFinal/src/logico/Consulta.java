@@ -82,4 +82,8 @@ public class Consulta implements Serializable{
 	public void setImportante(boolean importante) {
 		this.importante = importante;
 	}
+	
+	public void setFecha(Date fecha) {
+	    this.fecha = fecha;
+	}
 }

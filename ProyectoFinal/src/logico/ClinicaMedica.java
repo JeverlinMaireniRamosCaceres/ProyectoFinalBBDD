@@ -1254,6 +1254,72 @@ public class ClinicaMedica implements Serializable {
         return enfermedad;
     }
     
+    public static Consulta buscarConsultaByIdBDD(String codigo) {
+        Consulta consulta = null;
+        String sql = "SELECT c.idConsulta, c.fecha, c.diagnostico, c.indicacion, c.importante, "
+                   + "m.idMedico, per.nombre AS nombreMedico, per.apellido AS apellidoMedico, "
+                   + "p.idPaciente, per_pac.nombre AS nombrePaciente, per_pac.apellido AS apellidoPaciente "
+                   + "FROM Consulta c "
+                   + "JOIN Medico m ON c.idMedico = m.idMedico "
+                   + "JOIN Persona per ON m.idPersona = per.idPersona "
+                   + "JOIN Paciente p ON c.idPaciente = p.idPaciente "
+                   + "JOIN Persona per_pac ON p.idPersona = per_pac.idPersona "
+                   + "WHERE c.idConsulta = ?";
+
+        try (Connection conn = PruebaConexionBBDD.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            
+            stmt.setString(1, codigo);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                // 1. Crear objeto Paciente con datos mínimos
+                Paciente paciente = new Paciente(
+                    rs.getString("idPaciente"),
+                    "", // cedula (no disponible en resultset)
+                    rs.getString("nombrePaciente"),
+                    rs.getString("apellidoPaciente"),
+                    "", // telefono
+                    "", // direccion
+                    null, // fechaNacimiento
+                    "", // sexo
+                    0, // estatura
+                    0  // peso
+                );
+                
+                // 2. Crear objeto Medico con constructor completo
+                Medico medico = new Medico(
+                    rs.getString("idMedico"), // idPersona (asumiendo que idMedico es la PK)
+                    "", // cedula
+                    rs.getString("nombreMedico"),
+                    rs.getString("apellidoMedico"),
+                    "", // telefono
+                    "", // direccion
+                    null, // fechaNacimiento
+                    "", // sexo
+                    0 // exequatur (valor por defecto)
+                );
+                medico.setIdPersona(rs.getString("idMedico"));
+                
+                // 3. Crear Consulta con constructor completo
+                consulta = new Consulta(
+                    rs.getString("idConsulta"),
+                    rs.getDate("fecha"),
+                    medico,
+                    paciente,
+                    rs.getString("diagnostico"),
+                    rs.getString("indicacion"),
+                    rs.getBoolean("importante")
+                );
+            }
+            
+        } catch (SQLException e) {
+            System.err.println("Error al buscar consulta por ID: " + e.getMessage());
+        }
+        
+        return consulta;
+    }
+    
 
 
     

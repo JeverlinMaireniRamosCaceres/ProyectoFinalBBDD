@@ -110,10 +110,10 @@ public class EnfermedadCRUD {
     public static ArrayList<Object[]> obtenerEnfermedadesConPacientes() {
         ArrayList<Object[]> lista = new ArrayList<>();
         String sql = "SELECT e.idEnfermedad, e.nombre, te.nombre AS tipo, " +
-                     "(SELECT COUNT(*) FROM Paciente_Enfermedad pe WHERE pe.idEnfermedad = e.idEnfermedad) AS pacientes " +
-                     "FROM Enfermedad e " +
-                     "JOIN Tipo_Enfermedad te ON e.idTipoEnfermedad = te.idTipoEnfermedad " +
-                     "ORDER BY e.nombre";
+                "(SELECT COUNT(*) FROM Paciente_Enfermedad pe WHERE pe.idEnfermedad = e.idEnfermedad AND pe.curado = 0) AS pacientes " + 
+                "FROM Enfermedad e " +
+                "JOIN Tipo_Enfermedad te ON e.idTipoEnfermedad = te.idTipoEnfermedad " +
+                "ORDER BY e.nombre";
 
         try (Connection conn = PruebaConexionBBDD.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql);
@@ -141,7 +141,7 @@ public class EnfermedadCRUD {
                      "FROM Paciente_Enfermedad pe " +
                      "JOIN Paciente p ON pe.idPaciente = p.idPaciente " +
                      "JOIN Persona per ON p.idPersona = per.idPersona " +
-                     "WHERE pe.idEnfermedad = ? " +
+                     "WHERE pe.idEnfermedad = ? AND pe.curado = 0 " +
                      "ORDER BY per.nombre, per.apellido";
 
         try (Connection conn = PruebaConexionBBDD.getConnection();
