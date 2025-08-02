@@ -156,7 +156,7 @@ public class ListadoEnfermedadesPaciente extends JDialog {
 		for(Enfermedad enfermedad : enf) {
 			row[0] = enfermedad.getIdEnfermedad();
 			row[1] = enfermedad.getNombre();
-			row[2] = enfermedad.getTipo();
+			row[2] = enfermedad.getSintomas(); // para mostrar el nombre de la enfermedad
 			if(enfermedad.isCurada()) {
 				row[3] = "Si";
 			}

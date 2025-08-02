@@ -28,6 +28,7 @@ import logico.ClinicaMedica;
 import logico.Consulta;
 import logico.ConsultaCRUD;
 import logico.Enfermedad;
+import logico.HistorialMedicoCRUD;
 import logico.Medico;
 import logico.Paciente;
 
@@ -50,6 +51,8 @@ public class RegistroConsulta extends JDialog {
 	private JTextField txtEnfermedad;
 	private Enfermedad enfermedad;
 	private JButton btnSeleccionarEnfermedad;
+	private JTextField txtMotivoImportancia;
+	private JLabel lblMotivoImportancia;
 	
 	/**
 	 * Launch the application.
@@ -80,7 +83,7 @@ public class RegistroConsulta extends JDialog {
 		else {
 			setTitle("Detalle de consulta");
 		}
-		setBounds(100, 100, 554, 470);
+		setBounds(100, 100, 554, 544);
 		setLocationRelativeTo(null);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -228,6 +231,10 @@ public class RegistroConsulta extends JDialog {
 			chckbxImportante = new JCheckBox("\u00BFEs relevante?");
 			chckbxImportante.setBounds(90, 181, 137, 23);
 			panel_3.add(chckbxImportante);
+			chckbxImportante.addActionListener(e -> {
+			    txtMotivoImportancia.setVisible(chckbxImportante.isSelected());
+			    lblMotivoImportancia.setVisible(chckbxImportante.isSelected());
+			});
 			
 			txtEnfermedad = new JTextField();
 			txtEnfermedad.setEditable(false);
@@ -246,6 +253,9 @@ public class RegistroConsulta extends JDialog {
 					if(enfermedad != null) {
 						txtEnfermedad.setText(enfermedad.getNombre());
 						chckbxImportante.setSelected(true);
+			            // Mostrar los campos de motivo importancia
+			            txtMotivoImportancia.setVisible(true);
+			            lblMotivoImportancia.setVisible(true);
 					}
 					
 				}
@@ -257,6 +267,17 @@ public class RegistroConsulta extends JDialog {
 			lblNewLabel_2.setHorizontalAlignment(SwingConstants.RIGHT);
 			lblNewLabel_2.setBounds(0, 64, 80, 14);
 			panel_3.add(lblNewLabel_2);
+			
+			lblMotivoImportancia = new JLabel("Motivo importancia:");
+			lblMotivoImportancia.setBounds(20, 379, 141, 14);
+			panel.add(lblMotivoImportancia);
+			
+			txtMotivoImportancia = new JTextField();
+			txtMotivoImportancia.setBounds(30, 401, 469, 45);
+			panel.add(txtMotivoImportancia);
+			txtMotivoImportancia.setColumns(10);
+			txtMotivoImportancia.setVisible(false);  // Oculto inicialmente
+			lblMotivoImportancia.setVisible(false);
 		}
 		{
 			JPanel buttonPane = new JPanel();
@@ -283,18 +304,31 @@ public class RegistroConsulta extends JDialog {
 						boolean exitoConsulta = ConsultaCRUD.insertarConsulta(consulta);
 						boolean exitoEnfermedad = true;
 						boolean exitoPacienteEnfermedad = true;
+						boolean exitoHistorial = true;
 
 						if (exitoConsulta && enfermedad != null) {
+							
 							exitoEnfermedad = ConsultaCRUD.insertarConsultaEnfermedad(consulta.getIdConsulta(), enfermedad.getIdEnfermedad());
 					         
 							exitoPacienteEnfermedad = ConsultaCRUD.insertarPacienteEnfermedad(
 					                  paciente.getIdPersona(), enfermedad.getIdEnfermedad(), false);
+							
+				            // Si la consulta es relevante, agregar al historial médico
+				            if (chckbxImportante.isSelected()) {
+				                String motivo = txtMotivoImportancia.getText().trim();
+				                if (motivo.isEmpty()) {
+				                    motivo = "Consulta marcada como relevante por enfermedad: " + enfermedad.getNombre();
+				                }
+				                exitoHistorial = HistorialMedicoCRUD.agregarConsultaAHistorial(
+				                    consulta.getIdConsulta(),
+				                    paciente.getIdPersona(),
+				                    motivo
+				                );
+				            }
+				            
 						}
 						
-
-				          
-
-						if (exitoConsulta && exitoEnfermedad && exitoPacienteEnfermedad) {
+						if (exitoConsulta && exitoEnfermedad && exitoPacienteEnfermedad && exitoHistorial) {
 							JOptionPane.showMessageDialog(null, "Consulta registrada exitosamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
 							dispose();
 						} else {

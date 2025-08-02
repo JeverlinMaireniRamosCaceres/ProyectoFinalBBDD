@@ -1128,33 +1128,34 @@ public class ClinicaMedica implements Serializable {
     
     public ArrayList<Enfermedad> obtenerEnfermedadesDePacienteBDD(String idPaciente) {
         ArrayList<Enfermedad> enfermedades = new ArrayList<>();
-        String sql = "SELECT e.idEnfermedad, e.nombre, te.nombre AS tipoEnfermedad, pe.curado, e.idTipoEnfermedad " +
-                     "FROM Paciente_Enfermedad pe " +
-                     "JOIN Enfermedad e ON pe.idEnfermedad = e.idEnfermedad " +
+        String sql = "SELECT e.idEnfermedad, e.nombre, e.sintomas, e.idTipoEnfermedad, " +
+                     "te.nombre AS nombreTipo, pe.curado " + 
+                     "FROM Enfermedad e " +
+                     "JOIN Paciente_Enfermedad pe ON e.idEnfermedad = pe.idEnfermedad " +
                      "JOIN Tipo_Enfermedad te ON e.idTipoEnfermedad = te.idTipoEnfermedad " +
                      "WHERE pe.idPaciente = ?";
-        
+
         try (Connection conn = PruebaConexionBBDD.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             
             stmt.setString(1, idPaciente);
             ResultSet rs = stmt.executeQuery();
-            
+
             while (rs.next()) {
                 Enfermedad enfermedad = new Enfermedad();
                 enfermedad.setIdEnfermedad(rs.getString("idEnfermedad"));
                 enfermedad.setNombre(rs.getString("nombre"));
-                                
+                enfermedad.setSintomas(rs.getString("sintomas"));
                 enfermedad.setTipo(rs.getInt("idTipoEnfermedad"));
-                
                 enfermedad.setCurada(rs.getBoolean("curado"));
+                
+                // se guarda el nombre del tipo en un campo existente  temporalmente
+                enfermedad.setSintomas(rs.getString("nombreTipo"));  // se usa sintomas como puente
+                
                 enfermedades.add(enfermedad);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(null, 
-                "Error al cargar enfermedades del paciente: " + e.getMessage(),
-                "Error", JOptionPane.ERROR_MESSAGE);
+            System.err.println("Error al obtener enfermedades: " + e.getMessage());
         }
         return enfermedades;
     }
@@ -1180,6 +1181,7 @@ public class ClinicaMedica implements Serializable {
             return false;
         }
     }
+
 
     public Enfermedad buscarEnfermedadPacienteByCodigoBDD(String idPaciente, String idEnfermedad) {
         String sql = "SELECT e.*, pe.curado " +
@@ -1209,5 +1211,8 @@ public class ClinicaMedica implements Serializable {
         }
         return null;  // Si no se encuentra
     }
+    
+
+
     
 }
