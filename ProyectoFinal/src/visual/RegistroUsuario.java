@@ -35,6 +35,7 @@ public class RegistroUsuario extends JDialog {
 	private JComboBox cbxRol;
 	private JTextField txtCodigo;
 	private JTextField txtCedulaMedico;
+	private ListadoUsuarios listado;
 	
 	/**
 	 * Launch the application.
@@ -241,10 +242,21 @@ public class RegistroUsuario extends JDialog {
 							selected.setNombre(txtNombre.getText());
 							selected.setContrasena(txtContrasenia.getText());
 							selected.setRol(cbxRol.getSelectedIndex());
-							ClinicaMedica.getInstance().updateUsuario(selected);
+				            
+							boolean exito = UsuarioCRUD.actualizarUsuario(selected);
+				            
+				            if (exito) {
+				                JOptionPane.showMessageDialog(null, "Usuario actualizado exitosamente.", "Información", JOptionPane.INFORMATION_MESSAGE);
+				                if (listado != null) {
+				                    listado.loadUsuarios(); // Refrescar la tabla principal
+				                }
+				                dispose(); // Cerrar el diálogo
+				            } else {
+				                JOptionPane.showMessageDialog(null, "Error al actualizar la enfermedad.", "Error", JOptionPane.ERROR_MESSAGE);
+				            }
 							ListadoUsuarios.loadUsuarios();
-							JOptionPane.showMessageDialog(null,"Operacion exitosa","Informacion",JOptionPane.INFORMATION_MESSAGE);
-							dispose();
+							
+							
 						}
 					}
 

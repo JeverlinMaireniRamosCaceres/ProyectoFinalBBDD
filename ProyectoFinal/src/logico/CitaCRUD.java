@@ -86,7 +86,26 @@ public class CitaCRUD {
 	    return citas;
 	}
 
-
+	public static boolean actualizarCitaBDD(Cita cita) {
+	    String sql = "UPDATE Cita SET fecha = ?, hora = ?, motivo = ?, idMedico = ?, idPaciente = ? WHERE idCita = ?";
+	    
+	    try (Connection conn = PruebaConexionBBDD.getConnection();
+	         PreparedStatement stmt = conn.prepareStatement(sql)) {
+	        
+	        stmt.setDate(1, new java.sql.Date(cita.getFecha().getTime()));
+	        stmt.setTime(2, cita.getHora());
+	        stmt.setString(3, cita.getMotivo());
+	        stmt.setString(4, cita.getMedico().getIdPersona());
+	        stmt.setString(5, cita.getPaciente().getIdPersona());
+	        stmt.setString(6, cita.getIdCita());
+	        
+	        return stmt.executeUpdate() > 0;
+	        
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        return false;
+	    }
+	}
 
 	
 }

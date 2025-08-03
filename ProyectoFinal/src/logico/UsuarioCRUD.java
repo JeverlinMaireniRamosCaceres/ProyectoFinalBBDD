@@ -5,6 +5,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import javax.swing.JOptionPane;
+
 public class UsuarioCRUD {
     
 	// INSERT
@@ -48,6 +50,48 @@ public class UsuarioCRUD {
 	        return null;
 	    }
 	}
+	
+	public static boolean actualizarUsuario(Usuario usuario) {
+	    String sql = "UPDATE Usuario SET nombre = ?, contrasenia = ?, idRol = ? WHERE idUsuario = ?";
+	    
+	    try (Connection conn = PruebaConexionBBDD.getConnection();
+	         PreparedStatement stmt = conn.prepareStatement(sql)) {
+	        
+	        stmt.setString(1, usuario.getNombre());
+	        stmt.setString(2, usuario.getContrasena());
+	        stmt.setInt(3, usuario.getRol()); // Usamos directamente el ID del rol
+	        stmt.setString(4, usuario.getCodigo());
+	        
+	        int filasAfectadas = stmt.executeUpdate();
+	        return filasAfectadas > 0;
+	        
+	    } catch (SQLException e) {
+	        JOptionPane.showMessageDialog(null, "Error al actualizar usuario: " + e.getMessage(), 
+	                                    "Error", JOptionPane.ERROR_MESSAGE);
+	        return false;
+	    }
+	}
+    
+    // Método adicional para obtener el ID del rol por nombre
+    public static int obtenerIdRol(String nombreRol) {
+        String sql = "SELECT idRol FROM Rol WHERE nombre = ?";
+        
+        try (Connection conn = PruebaConexionBBDD.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            
+            stmt.setString(1, nombreRol);
+            ResultSet rs = stmt.executeQuery();
+            
+            if (rs.next()) {
+                return rs.getInt("idRol");
+            }
+            return -1;
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return -1;
+        }
+    }
 
 	
 	

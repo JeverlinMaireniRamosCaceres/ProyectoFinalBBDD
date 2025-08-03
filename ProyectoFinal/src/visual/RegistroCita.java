@@ -39,6 +39,7 @@ public class RegistroCita extends JDialog {
 	private Cita selected;
 	private JTextField txtPaciente;
 	private Paciente paciente = null;
+	private ListadoCitas listado;
 
 	/**
 	 * Launch the application.
@@ -257,11 +258,28 @@ public class RegistroCita extends JDialog {
 							//selected.setPaciente(txtPaciente.getText());
 							selected.setMedico(medico);
 							selected.setFecha((Date) spnFecha.getValue()); 
-							selected.setHora((Time) spnHora.getValue());
+						    Date horaUtilDate = (Date) spnHora.getValue();
+						    Time horaSqlTime = new Time(horaUtilDate.getTime());
+						    selected.setHora(horaSqlTime);
+							
 							selected.setMotivo(txtMotivo.getText());
-							ClinicaMedica.getInstance().updateCita(selected);
+					        String especialidad = ClinicaMedica.getInstance()
+	                                .obtenerEspecialidadMedico(selected.getMedico().getIdPersona());
+					        txtEspecialidad.setText(especialidad);
+							
+					        ClinicaMedica.getInstance().updateCita(selected);
+				            boolean exito = CitaCRUD.actualizarCitaBDD(selected);
+				            
+				            if (exito) {
+				                JOptionPane.showMessageDialog(null, "Cita actualizada exitosamente.", "Información", JOptionPane.INFORMATION_MESSAGE);
+				                if (listado != null) {
+				                    ListadoCitas.loadCitas(); // Refrescar la tabla principal
+				                }
+				                dispose(); // Cerrar el diálogo
+				            } else {
+				                JOptionPane.showMessageDialog(null, "Error al actualizar la cita.", "Error", JOptionPane.ERROR_MESSAGE);
+				            }
 							ListadoCitas.loadCitas();
-							JOptionPane.showMessageDialog(null, "Operación exitosa", "Información", JOptionPane.INFORMATION_MESSAGE);
 							dispose();
 						}
 					}
@@ -307,7 +325,9 @@ public class RegistroCita extends JDialog {
 			txtCodigo.setText(selected.getIdCita());
 			txtPaciente.setText(selected.getPaciente().getNombre()+" "+selected.getPaciente().getApellido());
 			txtMedico.setText(selected.getMedico().getNombre()+" "+selected.getMedico().getApellido());
-
+	        String especialidad = ClinicaMedica.getInstance()
+                    .obtenerEspecialidadMedico(selected.getMedico().getIdPersona());
+txtEspecialidad.setText(especialidad);
 			txtMotivo.setText(selected.getMotivo());
 			medico = selected.getMedico();
 			spnFecha.setValue(selected.getFecha());
