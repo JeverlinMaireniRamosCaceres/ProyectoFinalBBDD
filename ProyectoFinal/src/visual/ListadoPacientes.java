@@ -19,6 +19,7 @@ import javax.swing.table.DefaultTableModel;
 
 import logico.ClinicaMedica;
 import logico.Paciente;
+import logico.PacienteCRUD;
 
 public class ListadoPacientes extends JDialog {
 
@@ -30,6 +31,7 @@ public class ListadoPacientes extends JDialog {
 	private JButton btnDetalles;
 	private Paciente selected;
 	private JButton btnModificar;
+	private JButton btnEliminar; 
 
 	/**
 	 * Launch the application.
@@ -73,6 +75,7 @@ public class ListadoPacientes extends JDialog {
 							if(index >= 0) {
 								btnDetalles.setEnabled(true);
 								btnModificar.setEnabled(true);
+								btnEliminar.setEnabled(true);
 								String codigo = table.getValueAt(index, 0).toString();
 								selected = ClinicaMedica.getInstance().buscarPacienteByCedulaBBDD(codigo);
 							}
@@ -127,9 +130,37 @@ public class ListadoPacientes extends JDialog {
 					}
 				});
 				{
-					JButton btnEliminar = new JButton("Eliminar");
+					btnEliminar = new JButton("Eliminar");
 					btnEliminar.setEnabled(false);
+					btnEliminar.addActionListener(new ActionListener() {
+					    @Override
+					    public void actionPerformed(ActionEvent e) {
+					        if (selected != null) {
+					            int confirm = javax.swing.JOptionPane.showConfirmDialog(null,
+					                "¿Estás seguro de que deseas eliminar al paciente?",
+					                "Confirmar eliminación",
+					                javax.swing.JOptionPane.YES_NO_OPTION);
+
+					            if (confirm == javax.swing.JOptionPane.YES_OPTION) {
+					                boolean exito = PacienteCRUD.eliminarPacienteCompleto(selected.getIdPersona());
+					                if (exito) {
+					                    javax.swing.JOptionPane.showMessageDialog(null, "Paciente eliminado correctamente.");
+					                    loadPacientes();
+					                    btnEliminar.setEnabled(false);
+					                    btnModificar.setEnabled(false);
+					                    btnDetalles.setEnabled(false);
+					                } else {
+					                    javax.swing.JOptionPane.showMessageDialog(null,
+					                        "No se puede eliminar el paciente. Tiene consultas registradas.",
+					                        "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+					                }
+					            }
+					        }
+					    }
+					});
 					buttonPane.add(btnEliminar);
+
+
 				}
 				btnCancelar.setActionCommand("Cancel");
 				buttonPane.add(btnCancelar);

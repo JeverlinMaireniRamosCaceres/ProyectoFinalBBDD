@@ -18,6 +18,7 @@ import javax.swing.table.DefaultTableModel;
 
 import logico.ClinicaMedica;
 import logico.Usuario;
+import logico.UsuarioCRUD;
 
 public class ListadoUsuarios extends JDialog {
 
@@ -28,6 +29,7 @@ public class ListadoUsuarios extends JDialog {
 	private static Object[] row;
 	private JButton btnVerDetalles;
 	private JButton btnModificar;
+	private JButton btnEliminar;
 	private Usuario selected;
 	
 
@@ -71,6 +73,7 @@ public class ListadoUsuarios extends JDialog {
 							if(index>=0) {
 								btnVerDetalles.setEnabled(true);
 								btnModificar.setEnabled(true);
+								btnEliminar.setEnabled(true);
 								String codigo = table.getValueAt(index, 0).toString();
 								selected = ClinicaMedica.getInstance().buscarUsuarioByCodigoBBDD(codigo);
 							}
@@ -125,9 +128,37 @@ public class ListadoUsuarios extends JDialog {
 					}
 				});
 				{
-					JButton btnEliminar = new JButton("Eliminar");
+					btnEliminar = new JButton("Eliminar");
 					btnEliminar.setEnabled(false);
+					btnEliminar.addActionListener(new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							if (selected != null) {
+								int confirm = javax.swing.JOptionPane.showConfirmDialog(
+									null,
+									"¿Deseas eliminar este usuario?",
+									"Confirmar eliminación",
+									javax.swing.JOptionPane.YES_NO_OPTION
+								);
+								if (confirm == javax.swing.JOptionPane.YES_OPTION) {
+									boolean eliminado = UsuarioCRUD.eliminarUsuarioSeguro(selected.getCodigo());
+									if (eliminado) {
+										javax.swing.JOptionPane.showMessageDialog(null, "Usuario eliminado correctamente.");
+										loadUsuarios();
+										btnEliminar.setEnabled(false);
+										btnModificar.setEnabled(false);
+										btnVerDetalles.setEnabled(false);
+									} else {
+										javax.swing.JOptionPane.showMessageDialog(null,
+											"No se puede eliminar este usuario porque está asignado a un médico.",
+											"Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+									}
+								}
+							}
+						}
+					});
 					buttonPane.add(btnEliminar);
+
 				}
 				cancelButton.setActionCommand("Cancel");
 				buttonPane.add(cancelButton);

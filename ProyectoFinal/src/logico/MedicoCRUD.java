@@ -417,4 +417,87 @@ public class MedicoCRUD {
         }
     }
     
+    public static boolean eliminarMedicoCompleto(String idMedico) {
+        String checkCitas = "SELECT COUNT(*) FROM Cita WHERE idMedico = ?";
+        String getIdUsuario = "SELECT idUsuario FROM Medico WHERE idMedico = ?";
+        String deleteEspecialidad = "DELETE FROM Medico_Especialidad WHERE idMedico = ?";
+        String deleteMedico = "DELETE FROM Medico WHERE idMedico = ?";
+        String deletePersona = "DELETE FROM Persona WHERE idPersona = ?";
+
+        Connection conn = null;
+
+        try {
+            conn = PruebaConexionBBDD.getConnection();
+            conn.setAutoCommit(false); // Iniciar transacción
+
+            // Verificar si el médico tiene citas
+            try (PreparedStatement checkStmt = conn.prepareStatement(checkCitas)) {
+                checkStmt.setString(1, idMedico);
+                ResultSet rs = checkStmt.executeQuery();
+                if (rs.next() && rs.getInt(1) > 0) {
+                    System.err.println("El médico tiene citas asignadas y no puede ser eliminado.");
+                    return false;
+                }
+            }
+
+            // Obtener idUsuario (si tiene uno)
+            String idUsuario = null;
+            try (PreparedStatement stmtGetUser = conn.prepareStatement(getIdUsuario)) {
+                stmtGetUser.setString(1, idMedico);
+                ResultSet rs = stmtGetUser.executeQuery();
+                if (rs.next()) {
+                    idUsuario = rs.getString("idUsuario");
+                }
+            }
+
+            // Eliminar especialidades
+            try (PreparedStatement stmtEsp = conn.prepareStatement(deleteEspecialidad)) {
+                stmtEsp.setString(1, idMedico);
+                stmtEsp.executeUpdate();
+            }
+
+            // Eliminar médico
+            try (PreparedStatement stmtMed = conn.prepareStatement(deleteMedico)) {
+                stmtMed.setString(1, idMedico);
+                stmtMed.executeUpdate();
+            }
+
+            // Eliminar persona
+            try (PreparedStatement stmtPer = conn.prepareStatement(deletePersona)) {
+                stmtPer.setString(1, idMedico);
+                stmtPer.executeUpdate();
+            }
+
+            // Eliminar usuario (si tenía uno)
+            if (idUsuario != null) {
+                try (PreparedStatement stmtDelUser = conn.prepareStatement("DELETE FROM Usuario WHERE idUsuario = ?")) {
+                    stmtDelUser.setString(1, idUsuario);
+                    stmtDelUser.executeUpdate();
+                }
+            }
+
+            conn.commit(); // Confirmar todo
+            return true;
+
+        } catch (SQLException e) {
+            try {
+                if (conn != null) conn.rollback();
+            } catch (SQLException ex) {
+                System.err.println("Error en rollback: " + ex.getMessage());
+            }
+            System.err.println("Error al eliminar médico completo: " + e.getMessage());
+            return false;
+
+        } finally {
+            try {
+                if (conn != null) {
+                    conn.setAutoCommit(true);
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                System.err.println("Error al cerrar conexión: " + e.getMessage());
+            }
+        }
+    }
+
 }

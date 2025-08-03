@@ -146,4 +146,68 @@ public class PacienteCRUD {
         }
     }
  
+    public static boolean eliminarPacienteCompleto(String idPaciente) {
+        String checkConsultas = "SELECT COUNT(*) FROM Consulta WHERE idPaciente = ?";
+        String deleteEnfermedades = "DELETE FROM Paciente_Enfermedad WHERE idPaciente = ?";
+        String deletePaciente = "DELETE FROM Paciente WHERE idPaciente = ?";
+        String deletePersona = "DELETE FROM Persona WHERE idPersona = ?";
+
+        Connection conn = null;
+
+        try {
+            conn = PruebaConexionBBDD.getConnection();
+            conn.setAutoCommit(false); // iniciar transacción
+
+            // Verificar si tiene consultas
+            try (PreparedStatement checkStmt = conn.prepareStatement(checkConsultas)) {
+                checkStmt.setString(1, idPaciente);
+                ResultSet rs = checkStmt.executeQuery();
+                if (rs.next() && rs.getInt(1) > 0) {
+                    System.err.println("El paciente tiene consultas registradas y no puede ser eliminado.");
+                    return false;
+                }
+            }
+
+            // Eliminar enfermedades del paciente
+            try (PreparedStatement stmtEnf = conn.prepareStatement(deleteEnfermedades)) {
+                stmtEnf.setString(1, idPaciente);
+                stmtEnf.executeUpdate();
+            }
+
+            // Eliminar paciente
+            try (PreparedStatement stmtPac = conn.prepareStatement(deletePaciente)) {
+                stmtPac.setString(1, idPaciente);
+                stmtPac.executeUpdate();
+            }
+
+            // Eliminar persona
+            try (PreparedStatement stmtPer = conn.prepareStatement(deletePersona)) {
+                stmtPer.setString(1, idPaciente);
+                stmtPer.executeUpdate();
+            }
+
+            conn.commit(); // todo exitoso
+            return true;
+
+        } catch (SQLException e) {
+            try {
+                if (conn != null) conn.rollback();
+            } catch (SQLException ex) {
+                System.err.println("Error al hacer rollback: " + ex.getMessage());
+            }
+            System.err.println("Error al eliminar paciente completo: " + e.getMessage());
+            return false;
+
+        } finally {
+            try {
+                if (conn != null) {
+                    conn.setAutoCommit(true);
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                System.err.println("Error al cerrar conexión: " + e.getMessage());
+            }
+        }
+    }
+
 }

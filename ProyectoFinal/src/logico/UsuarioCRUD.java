@@ -94,6 +94,50 @@ public class UsuarioCRUD {
         }
     }
 
-	
+    public static boolean eliminarUsuarioPorId(String idUsuario) {
+        String sql = "DELETE FROM Usuario WHERE idUsuario = ?";
+       
+        try (Connection conn = PruebaConexionBBDD.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            
+            stmt.setString(1, idUsuario);
+            int filasAfectadas = stmt.executeUpdate();
+            return filasAfectadas > 0;
+
+        } catch (SQLException e) {
+            System.err.println("Error al eliminar usuario: " + e.getMessage());
+            return false;
+        }
+    }
+
+    public static boolean eliminarUsuarioSeguro(String idUsuario) {
+        String verificarUsoSQL = "SELECT COUNT(*) AS total FROM Medico WHERE idUsuario = ?";
+        String eliminarSQL = "DELETE FROM Usuario WHERE idUsuario = ?";
+
+        try (Connection conn = PruebaConexionBBDD.getConnection()) {
+
+            // Verificar si el usuario está vinculado a un médico
+            try (PreparedStatement psVerificar = conn.prepareStatement(verificarUsoSQL)) {
+                psVerificar.setString(1, idUsuario);
+                ResultSet rs = psVerificar.executeQuery();
+
+                if (rs.next() && rs.getInt("total") > 0) {
+                    return false; // No se puede eliminar
+                }
+            }
+
+            // Eliminar el usuario
+            try (PreparedStatement psEliminar = conn.prepareStatement(eliminarSQL)) {
+                psEliminar.setString(1, idUsuario);
+                int filas = psEliminar.executeUpdate();
+                return filas > 0;
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Error al eliminar usuario: " + e.getMessage());
+            return false;
+        }
+    }
+
 	
 }

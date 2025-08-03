@@ -18,6 +18,8 @@ import javax.swing.table.DefaultTableModel;
 
 import logico.ClinicaMedica;
 import logico.Medico;
+import logico.MedicoCRUD;
+
 
 public class ListadoMedicos extends JDialog {
 	private final JPanel contentPanel = new JPanel();
@@ -27,6 +29,7 @@ public class ListadoMedicos extends JDialog {
 	private static Object[] row;
 	private JButton btnDetalle;
 	private JButton btnModificar;
+	private JButton btnEliminar; 
 	private Medico selected;
 	
 	/** 
@@ -69,6 +72,7 @@ public class ListadoMedicos extends JDialog {
 							if(index >= 0) {
 								btnDetalle.setEnabled(true);
 								btnModificar.setEnabled(true);
+								btnEliminar.setEnabled(true);
 								String codigo = table.getValueAt(index, 0).toString();
 								selected = ClinicaMedica.getInstance().buscarMedicoPorCedulaBDD(codigo);
 							}
@@ -124,9 +128,35 @@ public class ListadoMedicos extends JDialog {
 					}
 				});
 				{
-					JButton btnEliminar = new JButton("Eliminar");
+					btnEliminar = new JButton("Eliminar");
 					btnEliminar.setEnabled(false);
+					btnEliminar.addActionListener(new ActionListener() {
+						@Override
+						public void actionPerformed(ActionEvent e) {
+							if (selected != null) {
+								int confirm = javax.swing.JOptionPane.showConfirmDialog(null,
+									"¿Estás seguro de que deseas eliminar al médico?",
+									"Confirmar eliminación",
+									javax.swing.JOptionPane.YES_NO_OPTION);
+
+								if (confirm == javax.swing.JOptionPane.YES_OPTION) {
+									boolean exito = MedicoCRUD.eliminarMedicoCompleto(selected.getIdPersona());
+									if (exito) {
+										javax.swing.JOptionPane.showMessageDialog(null, "Médico eliminado correctamente.");
+										loadMedicos();
+										btnDetalle.setEnabled(false);
+										btnModificar.setEnabled(false);
+										btnEliminar.setEnabled(false);
+									} else {
+										javax.swing.JOptionPane.showMessageDialog(null, "No se pudo eliminar al médico. Verifique si tiene citas asignadas.", "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+									}
+								}
+							}
+						}
+					});
 					buttonPane.add(btnEliminar);
+
+
 				}
 				btnCancelar.setActionCommand("Cancel");
 				buttonPane.add(btnCancelar);
