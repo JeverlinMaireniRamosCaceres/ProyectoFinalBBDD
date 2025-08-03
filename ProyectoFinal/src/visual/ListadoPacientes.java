@@ -23,7 +23,7 @@ import logico.Paciente;
 public class ListadoPacientes extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
-	private static JTable table;
+	static JTable table;
 	private int index = -1;
 	private static DefaultTableModel modelo;
 	private static Object[] row;
@@ -137,7 +137,7 @@ public class ListadoPacientes extends JDialog {
 			loadPacientes();
 		}
 	}
-	public static void loadPacientes() {
+	public void loadPacientes() {
 		modelo.setRowCount(0);
 		ArrayList<Paciente> pac = ClinicaMedica.getInstance().obtenerPacientesDesdeBDD();
 		row = new Object[table.getColumnCount()];
@@ -148,5 +148,7 @@ public class ListadoPacientes extends JDialog {
 	        row[3] = paciente.getTelefono();
 	        modelo.addRow(row);
 		}
+	    table.revalidate();
+	    table.repaint();
 	}
 }

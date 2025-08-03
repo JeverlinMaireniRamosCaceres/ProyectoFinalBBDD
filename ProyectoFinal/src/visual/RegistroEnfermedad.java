@@ -145,7 +145,7 @@ public class RegistroEnfermedad extends JDialog {
 							String nombre = txtNombre.getText();
 							String sintomas = txtASintomas.getText();
 							
-							int tipoIndex = cbxTipo.getSelectedIndex(); // restando 1 para ignorar "<Seleccione>"
+							int tipoIndex = cbxTipo.getSelectedIndex(); 
 							if (tipoIndex < 0) {
 								JOptionPane.showMessageDialog(null, "Debe seleccionar un tipo válido", "Error", JOptionPane.ERROR_MESSAGE);
 								return;
@@ -158,8 +158,7 @@ public class RegistroEnfermedad extends JDialog {
 							} else {
 							    JOptionPane.showMessageDialog(null, "Error al registrar enfermedad.");
 							}
-							/*ClinicaMedica.getInstance().insertarEnfermedad(enfermedad);
-							JOptionPane.showMessageDialog(null,"Operacion exitosa","Informacion",JOptionPane.INFORMATION_MESSAGE);*/
+
 							clean();
 						} else {
 							selected.setIdEnfermedad(txtCodigo.getText());
@@ -171,25 +170,19 @@ public class RegistroEnfermedad extends JDialog {
 								return;
 							}
 							selected.setTipo(tipoIndex);
-							
-							/*if (listado != null) {
-							    listado.loadEnfermedades();
-							}*/
+
 				            boolean exito = EnfermedadCRUD.actualizarEnfermedad(selected);
 				            
 				            if (exito) {
 				                JOptionPane.showMessageDialog(null, "Enfermedad actualizada exitosamente.", "Información", JOptionPane.INFORMATION_MESSAGE);
 				                if (listado != null) {
-				                    listado.loadEnfermedades(); // Refrescar la tabla principal
+				                    listado.loadEnfermedades(); 
 				                }
-				                dispose(); // Cerrar el diálogo
+				                dispose(); 
 				            } else {
 				                JOptionPane.showMessageDialog(null, "Error al actualizar la enfermedad.", "Error", JOptionPane.ERROR_MESSAGE);
 				            }
 				        }
-							//JOptionPane.showMessageDialog(null,"Operacion exitosa","Informacion",JOptionPane.INFORMATION_MESSAGE);
-						
-
 						
 					}
 
@@ -221,7 +214,7 @@ public class RegistroEnfermedad extends JDialog {
 	}
 	
 	public RegistroEnfermedad(Enfermedad enfermedad) {
-	    this(enfermedad, null); // Reutiliza el constructor principal y asigna null al listado
+	    this(enfermedad, null); 
 	}
 
 

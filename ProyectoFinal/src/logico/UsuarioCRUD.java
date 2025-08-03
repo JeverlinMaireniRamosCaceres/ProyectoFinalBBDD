@@ -51,6 +51,7 @@ public class UsuarioCRUD {
 	    }
 	}
 	
+	// UPDATE
 	public static boolean actualizarUsuario(Usuario usuario) {
 	    String sql = "UPDATE Usuario SET nombre = ?, contrasenia = ?, idRol = ? WHERE idUsuario = ?";
 	    
@@ -59,7 +60,7 @@ public class UsuarioCRUD {
 	        
 	        stmt.setString(1, usuario.getNombre());
 	        stmt.setString(2, usuario.getContrasena());
-	        stmt.setInt(3, usuario.getRol()); // Usamos directamente el ID del rol
+	        stmt.setInt(3, usuario.getRol()); 
 	        stmt.setString(4, usuario.getCodigo());
 	        
 	        int filasAfectadas = stmt.executeUpdate();
@@ -72,7 +73,7 @@ public class UsuarioCRUD {
 	    }
 	}
     
-    // Método adicional para obtener el ID del rol por nombre
+    // Obtener el id del rol por el nombre del rol
     public static int obtenerIdRol(String nombreRol) {
         String sql = "SELECT idRol FROM Rol WHERE nombre = ?";
         

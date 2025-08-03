@@ -71,7 +71,7 @@ public class CitaCRUD {
 	            String idPaciente = rs.getString("idPaciente");
 	            String idMedico = rs.getString("idMedico");
 
-	            // Buscando el paciente y el medico
+	            // se busca el paciente y el medico
 	            Paciente paciente = ClinicaMedica.getInstance().buscarPacienteByIdBDD(idPaciente);
 	            Medico medico = ClinicaMedica.getInstance().buscarMedicoById(idMedico);
 
@@ -86,6 +86,7 @@ public class CitaCRUD {
 	    return citas;
 	}
 
+	// UPDATE
 	public static boolean actualizarCitaBDD(Cita cita) {
 	    String sql = "UPDATE Cita SET fecha = ?, hora = ?, motivo = ?, idMedico = ?, idPaciente = ? WHERE idCita = ?";
 	    

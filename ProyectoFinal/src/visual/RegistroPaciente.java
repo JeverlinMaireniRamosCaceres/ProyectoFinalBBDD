@@ -45,6 +45,7 @@ public class RegistroPaciente extends JDialog {
 	private JSpinner spnPeso;
 	private JSpinner spnFecha;
 	private Paciente selected;
+	private ListadoPacientes listado;
 
 	/**
 	 * Launch the application.
@@ -329,10 +330,19 @@ public class RegistroPaciente extends JDialog {
 							selected.setEstatura(Float.parseFloat(spnEstatura.getValue().toString()));
 							selected.setPeso(Float.parseFloat(spnPeso.getValue().toString()));
 							selected.setFechaNacimiento((Date) spnFecha.getValue());
-							ClinicaMedica.getInstance().updatePaciente(selected);
-							ListadoPacientes.loadPacientes();
-							JOptionPane.showMessageDialog(null,"Operacion exitosa","Informacion",JOptionPane.INFORMATION_MESSAGE);
-							dispose();
+
+				            boolean exito = PacienteCRUD.actualizarPaciente(selected);
+				            
+				            if (exito) {
+				                JOptionPane.showMessageDialog(null, "Paciente actualizado exitosamente.", "Información", JOptionPane.INFORMATION_MESSAGE);
+				                if (listado != null) {
+				                    listado.loadPacientes(); 
+				                }
+				                dispose(); 
+				            } else {
+				                JOptionPane.showMessageDialog(null, "Error al actualizar el paciente.", "Error", JOptionPane.ERROR_MESSAGE);
+				            }
+				            
 						}						
 					}					
 				});
@@ -394,7 +404,7 @@ public class RegistroPaciente extends JDialog {
 	        estanVacios = true;
 	    }
 
-	    if (cbxSexo.getSelectedIndex() == 0) { // "<Seleccione>" es el índice 0
+	    if (cbxSexo.getSelectedIndex() == 0) { // "<Seleccione>" es indice 0
 	        estanVacios = true;
 	    }
 

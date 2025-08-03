@@ -68,8 +68,8 @@ public class EnfermedadCRUD {
                 enf.setIdEnfermedad(rs.getString("idEnfermedad"));
                 enf.setNombre(rs.getString("nombre"));
                 enf.setSintomas(rs.getString("sintomas"));
-                enf.setTipo(rs.getInt("idTipoEnfermedad"));     // ID numérico
-                enf.setTipoNombre(rs.getString("tipo"));        // Nombre del tipo
+                enf.setTipo(rs.getInt("idTipoEnfermedad"));    
+                enf.setTipoNombre(rs.getString("tipo"));  
                 lista.add(enf);
             }
 
@@ -80,6 +80,7 @@ public class EnfermedadCRUD {
         return lista;
     }
 
+    // BUSCAR ENFERMEDAD POR CODIGO
     public static Enfermedad buscarEnfermedadPorCodigo(String id) {
         String sql = "SELECT e.idEnfermedad, e.nombre, e.sintomas, e.idTipoEnfermedad, te.nombre AS tipo " +
                      "FROM Enfermedad e " +
@@ -106,9 +107,10 @@ public class EnfermedadCRUD {
             System.err.println("Error al buscar enfermedad por código: " + e.getMessage());
         }
 
-        return null; // si no se encontró
+        return null; 
     }
     
+    // OBTENER ENFERMEDADES CON PACIENTE (PARA CONTROL ENFERMEDADES)
     public static ArrayList<Object[]> obtenerEnfermedadesConPacientes() {
         ArrayList<Object[]> lista = new ArrayList<>();
         String sql = "SELECT e.idEnfermedad, e.nombre, te.nombre AS tipo, " +
@@ -126,7 +128,7 @@ public class EnfermedadCRUD {
                 fila[0] = rs.getString("idEnfermedad");    // cod
                 fila[1] = rs.getString("nombre");          // bombre enfermedad
                 fila[2] = rs.getString("tipo");           // tipo enfermedad
-                fila[3] = rs.getInt("pacientes");         // Cantidad pacientes
+                fila[3] = rs.getInt("pacientes");         // cant pacientes
                 lista.add(fila);
             }
 
@@ -137,6 +139,7 @@ public class EnfermedadCRUD {
         return lista;
     }
     
+    // OBTENER PACIENTES POR ENFERMEDAD (PARA CONTROL ENFERMEDAD)
     public static ArrayList<Object[]> obtenerPacientesPorEnfermedad(String idEnfermedad) {
         ArrayList<Object[]> lista = new ArrayList<>();
         String sql = "SELECT per.cedula, per.nombre, per.apellido, per.telefono " +
@@ -168,16 +171,16 @@ public class EnfermedadCRUD {
         return lista;
     }
     
+    // UPDATE
     public static boolean actualizarEnfermedad(Enfermedad enfermedad) {
         String sql = "UPDATE Enfermedad SET nombre = ?, sintomas = ?, idTipoEnfermedad = ? WHERE idEnfermedad = ?";
         
         try (Connection conn = PruebaConexionBBDD.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             
-            // Usamos directamente el índice del tipo (ya validado)
             stmt.setString(1, enfermedad.getNombre());
             stmt.setString(2, enfermedad.getSintomas());
-            stmt.setInt(3, enfermedad.getTipo());  // Cambiado: Usar el índice directamente
+            stmt.setInt(3, enfermedad.getTipo());  
             stmt.setString(4, enfermedad.getIdEnfermedad());
             
             int filasAfectadas = stmt.executeUpdate();
@@ -190,6 +193,7 @@ public class EnfermedadCRUD {
         }
     }
 
+    // obteniendo el id del tipo enfermedad mediante el nombre del tipo
     private static int obtenerIdTipoEnfermedad(String nombreTipo) {
         String sql = "SELECT idTipoEnfermedad FROM Tipo_Enfermedad WHERE nombre = ?";
         
@@ -209,7 +213,5 @@ public class EnfermedadCRUD {
             return -1;
         }
     }
-
-
 
 }

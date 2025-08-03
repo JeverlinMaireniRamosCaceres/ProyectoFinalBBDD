@@ -10,7 +10,7 @@ import java.util.List;
  
 public class MedicoCRUD {
  
-    // Insertar datos en tabla Persona (datos básicos de la persona que es médico)
+    // Insertar datos en tabla Persona (datos basicos del medico)
     public static boolean insertarPersona(Medico medico) {
         String sql = "INSERT INTO Persona (idPersona, cedula, nombre, apellido, telefono, direccion, fechaNacimiento, sexo) "
                    + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
@@ -42,7 +42,7 @@ public class MedicoCRUD {
             stmt.setString(1, medico.getIdPersona()); // mismo id para medico y persona
             stmt.setString(2, medico.getIdPersona());
             stmt.setInt(3, medico.getExequatur());
-            // Aquí puede ser null si el usuario aún no existe, o el código asignado
+            // null si no tiene usuario
             if(medico.getUsuario() != null) {
                 stmt.setString(4, medico.getUsuario().getCodigo());
             } else {
@@ -61,7 +61,7 @@ public class MedicoCRUD {
     
     
  
-    // Método para generar código único para médico (y persona)
+    // GENERAR CODIGO SECUENCIA MEDICO
     public static String generarCodigoMedico() {
         String sql = "SELECT MAX(CAST(SUBSTRING(idMedico, 3, LEN(idMedico)) AS INT)) AS ultimo_num FROM Medico WHERE idMedico LIKE 'M-%'";
         try (Connection conn = PruebaConexionBBDD.getConnection();
@@ -74,7 +74,7 @@ public class MedicoCRUD {
             return "M-" + nuevoNumero;
  
         } catch (SQLException e) {
-            System.err.println("Error al generar código de medico: " + e.getMessage());
+            System.err.println("Error al generar codigo de medico: " + e.getMessage());
             return null;
         }
     }
@@ -95,7 +95,7 @@ public class MedicoCRUD {
 
         try {
             conn = PruebaConexionBBDD.getConnection();
-            conn.setAutoCommit(false); // 🔹 Inicia la transacción
+            conn.setAutoCommit(false); // comienza la transaccion
 
             // Insertar Persona
             psPersona = conn.prepareStatement(sqlPersona);
@@ -109,7 +109,7 @@ public class MedicoCRUD {
             psPersona.setString(8, medico.getSexo());
             psPersona.executeUpdate();
 
-            // Insertar Médico
+            // Insertar medico
             psMedico = conn.prepareStatement(sqlMedico);
             psMedico.setString(1, medico.getIdPersona()); // mismo id para medico y persona
             psMedico.setString(2, medico.getIdPersona());
@@ -222,6 +222,7 @@ public class MedicoCRUD {
             return false;
         }
     }
+    
     public static void eliminarEspecialidadesDelMedico(String idMedico) {
         String sql = "DELETE FROM Medico_Especialidad WHERE idMedico = ?";
  
@@ -332,7 +333,88 @@ public class MedicoCRUD {
             }
         }
     }
+    
+    // ACTUALIZAR 
+    public static boolean actualizarMedicoCompleto(Medico medico, int idEspecialidad) {
+        // actualizar Persona
+        String sqlPersona = "UPDATE Persona SET cedula = ?, nombre = ?, apellido = ?, telefono = ?, " +
+                           "direccion = ?, fechaNacimiento = ?, sexo = ? WHERE idPersona = ?";
+        
+        // actualizar Medico
+        String sqlMedico = "UPDATE Medico SET exequatur = ?, idUsuario = ? WHERE idMedico = ?";
+        
+        // actualizar Especialidad 
+        String sqlUpdateEspecialidad = "UPDATE Medico_Especialidad SET idEspecialidad = ? WHERE idMedico = ?";
+        String sqlInsertEspecialidad = "INSERT INTO Medico_Especialidad (idMedico, idEspecialidad) VALUES (?, ?)";
 
- 
- 
+        Connection conn = null;
+        try {
+            conn = PruebaConexionBBDD.getConnection();
+            conn.setAutoCommit(false); // Iniciar transacci�n
+
+            // Actualizar Persona
+            try (PreparedStatement psPersona = conn.prepareStatement(sqlPersona)) {
+                psPersona.setString(1, medico.getCedula());
+                psPersona.setString(2, medico.getNombre());
+                psPersona.setString(3, medico.getApellido());
+                psPersona.setString(4, medico.getTelefono());
+                psPersona.setString(5, medico.getDireccion());
+                psPersona.setDate(6, new java.sql.Date(medico.getFechaNacimiento().getTime()));
+                psPersona.setString(7, String.valueOf(medico.getSexo()));
+                psPersona.setString(8, medico.getIdPersona());
+                psPersona.executeUpdate();
+            }
+
+            // Actualizar Medico
+            try (PreparedStatement psMedico = conn.prepareStatement(sqlMedico)) {
+                psMedico.setInt(1, medico.getExequatur());
+                if (medico.getUsuario() != null) {
+                    psMedico.setString(2, medico.getUsuario().getCodigo());
+                } else {
+                    psMedico.setNull(2, java.sql.Types.VARCHAR);
+                }
+                psMedico.setString(3, medico.getIdPersona());
+                psMedico.executeUpdate();
+            }
+
+            // Actualizar/Insertar Especialidad 
+            try (PreparedStatement psUpdateEsp = conn.prepareStatement(sqlUpdateEspecialidad)) {
+                psUpdateEsp.setInt(1, idEspecialidad);
+                psUpdateEsp.setString(2, medico.getIdPersona());
+                
+                int filasActualizadas = psUpdateEsp.executeUpdate();
+                
+                // si no existe registro previo, se inserta
+                if (filasActualizadas == 0) {
+                    try (PreparedStatement psInsertEsp = conn.prepareStatement(sqlInsertEspecialidad)) {
+                        psInsertEsp.setString(1, medico.getIdPersona());
+                        psInsertEsp.setInt(2, idEspecialidad);
+                        psInsertEsp.executeUpdate();
+                    }
+                }
+            }
+
+            conn.commit(); // se confirman los cambios
+            return true;
+
+        } catch (SQLException e) {
+            if (conn != null) {
+                try { conn.rollback(); } catch (SQLException ex) {
+                    System.err.println("Error al hacer rollback: " + ex.getMessage());
+                }
+            }
+            System.err.println("Error al actualizar m�dico completo: " + e.getMessage());
+            return false;
+        } finally {
+            if (conn != null) {
+                try { 
+                    conn.setAutoCommit(true); 
+                    conn.close(); 
+                } catch (SQLException e) {
+                    System.err.println("Error al cerrar conexi�n: " + e.getMessage());
+                }
+            }
+        }
+    }
+    
 }

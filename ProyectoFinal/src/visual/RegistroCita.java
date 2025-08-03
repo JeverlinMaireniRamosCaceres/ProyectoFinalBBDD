@@ -248,7 +248,7 @@ public class RegistroCita extends JDialog {
 
 							    CitaCRUD.insertarCita(cita);
 
-							    // Confirmar la operación y limpiar campos
+							    // mensaje de confirmacion
 							    JOptionPane.showMessageDialog(null, "Operación Satisfactoria", "Información", JOptionPane.INFORMATION_MESSAGE);
 							    clean();
 							}
@@ -273,9 +273,9 @@ public class RegistroCita extends JDialog {
 				            if (exito) {
 				                JOptionPane.showMessageDialog(null, "Cita actualizada exitosamente.", "Información", JOptionPane.INFORMATION_MESSAGE);
 				                if (listado != null) {
-				                    ListadoCitas.loadCitas(); // Refrescar la tabla principal
+				                    ListadoCitas.loadCitas(); 
 				                }
-				                dispose(); // Cerrar el diálogo
+				                dispose();
 				            } else {
 				                JOptionPane.showMessageDialog(null, "Error al actualizar la cita.", "Error", JOptionPane.ERROR_MESSAGE);
 				            }
@@ -325,9 +325,8 @@ public class RegistroCita extends JDialog {
 			txtCodigo.setText(selected.getIdCita());
 			txtPaciente.setText(selected.getPaciente().getNombre()+" "+selected.getPaciente().getApellido());
 			txtMedico.setText(selected.getMedico().getNombre()+" "+selected.getMedico().getApellido());
-	        String especialidad = ClinicaMedica.getInstance()
-                    .obtenerEspecialidadMedico(selected.getMedico().getIdPersona());
-txtEspecialidad.setText(especialidad);
+	        String especialidad = ClinicaMedica.getInstance().obtenerEspecialidadMedico(selected.getMedico().getIdPersona());
+	        txtEspecialidad.setText(especialidad);
 			txtMotivo.setText(selected.getMotivo());
 			medico = selected.getMedico();
 			spnFecha.setValue(selected.getFecha());

@@ -216,13 +216,11 @@ public class RegistroUsuario extends JDialog {
 							    medicoSeleccionado.setUsuario(usuario);
 							}
 							
-							/*ClinicaMedica.getInstance().regUser(usuario);
-							JOptionPane.showMessageDialog(null,"Operacion exitosa","Informacion",JOptionPane.INFORMATION_MESSAGE);
-							clean();*/
+
 							boolean exito = UsuarioCRUD.insertarUsuario(usuario);
 
 							if (exito) {
-							    // Si el rol es médico, actualiza el idUsuario en Medico
+							    // si el rol es medico, actualiza el idUsuario en Medico
 							    if (idRol == ClinicaMedica.ROL_MEDICO && medicoSeleccionado != null) {
 							        boolean actualizacionOk = MedicoCRUD.actualizarUsuarioMedicoPorCedula(medicoSeleccionado.getCedula(), usuario.getCodigo());
 							        System.out.println("Actualizar idUsuario: " + usuario.getCodigo() + " para medico: " + medicoSeleccionado.getIdPersona());
@@ -248,9 +246,9 @@ public class RegistroUsuario extends JDialog {
 				            if (exito) {
 				                JOptionPane.showMessageDialog(null, "Usuario actualizado exitosamente.", "Información", JOptionPane.INFORMATION_MESSAGE);
 				                if (listado != null) {
-				                    listado.loadUsuarios(); // Refrescar la tabla principal
+				                    listado.loadUsuarios(); 
 				                }
-				                dispose(); // Cerrar el diálogo
+				                dispose();
 				            } else {
 				                JOptionPane.showMessageDialog(null, "Error al actualizar la enfermedad.", "Error", JOptionPane.ERROR_MESSAGE);
 				            }

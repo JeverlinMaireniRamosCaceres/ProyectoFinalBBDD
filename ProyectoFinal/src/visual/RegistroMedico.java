@@ -46,6 +46,7 @@ public class RegistroMedico extends JDialog {
 	private JSpinner spnFechaNacim;
 	private Medico selected;
 	private JTextField txtEdad;
+	private ListadoMedicos listado;
 
 	/**
 	 * Launch the application.
@@ -348,7 +349,7 @@ public class RegistroMedico extends JDialog {
 				            selected.setFechaNacimiento((Date) spnFechaNacim.getValue());
 
 				            // Actualizar en BD
-				            ClinicaMedica.getInstance().updateMedico(selected);
+				            //ClinicaMedica.getInstance().updateMedico(selected);
 
 				            // Actualizar especialidad
 				            Especialidad espSeleccionada = (Especialidad) cbxEspecialidad.getSelectedItem();
@@ -357,11 +358,22 @@ public class RegistroMedico extends JDialog {
 				                return;
 				            }
 
-				            MedicoCRUD.eliminarEspecialidadesDelMedico(selected.getIdPersona());
-				            MedicoCRUD.insertarMedicoEspecialidad(selected.getIdPersona(), espSeleccionada.getId());
+				            //MedicoCRUD.eliminarEspecialidadesDelMedico(selected.getIdPersona());
+				           // MedicoCRUD.insertarMedicoEspecialidad(selected.getIdPersona(), espSeleccionada.getId());
 
+				            boolean exito = MedicoCRUD.actualizarMedicoCompleto(selected,espSeleccionada.getId());
+				            
+				            if (exito) {
+				                JOptionPane.showMessageDialog(null, "Medico actualizado exitosamente.", "Información", JOptionPane.INFORMATION_MESSAGE);
+				                if (listado != null) {
+				                    listado.loadMedicos(); 
+				                }
+				                dispose(); 
+				            } else {
+				                JOptionPane.showMessageDialog(null, "Error al actualizar el medico.", "Error", JOptionPane.ERROR_MESSAGE);
+				            }
+				            
 				            ListadoMedicos.loadMedicos();
-				            JOptionPane.showMessageDialog(null, "Operación exitosa", "Información", JOptionPane.INFORMATION_MESSAGE);
 				            dispose();
 				        }
 
