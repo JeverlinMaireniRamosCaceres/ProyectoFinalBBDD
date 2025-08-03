@@ -20,13 +20,14 @@ import javax.swing.table.DefaultTableModel;
 
 import logico.ClinicaMedica;
 import logico.Vacuna;
+import logico.VacunaCRUD;
 
 public class ListadoVacunasGeneral extends JDialog {
 	private final JPanel contentPanel = new JPanel();
 	private static JTable table;
 	private static DefaultTableModel modelo;
 	private static Object[] row;
-	private JButton btnAgregar;
+	private JButton btnEliminar;
 	private Vacuna selected;
 	private JButton btnModificar;
 	private int index = -1;
@@ -102,20 +103,40 @@ public class ListadoVacunasGeneral extends JDialog {
 				btnCancelar.setActionCommand("Cancel");
 				buttonPane.add(btnCancelar);
 				
-				btnAgregar = new JButton("Agregar");
-				btnAgregar.addActionListener(new ActionListener() {
+				btnEliminar = new JButton("Eliminar");
+				btnEliminar.addActionListener(new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent e) {
-						RegistroVacuna rv = new RegistroVacuna(null);
-						rv.setModal(true);
-						rv.setVisible(true);
-						loadVacunas();
+			            if (index >= 0 && selected != null) {
+			                int confirm = javax.swing.JOptionPane.showConfirmDialog(
+			                    null,
+			                    "¿Estás seguro de que deseas eliminar esta vacuna?",
+			                    "Confirmación de eliminación",
+			                    javax.swing.JOptionPane.YES_NO_OPTION
+			                );
+
+			                if (confirm == javax.swing.JOptionPane.YES_OPTION) {
+			                    //ClinicaMedica.getInstance().eliminarCita(selected);
+			                    if(VacunaCRUD.eliminarVacuna(selected.getIdVacuna())) {
+				                    javax.swing.JOptionPane.showMessageDialog(null, "Vacuna eliminada con éxito.");
+				                    loadVacunas();
+			                    } else {
+				                    javax.swing.JOptionPane.showMessageDialog(null, "Ocurrio un error al intentar eliminar la vacuna.");
+			                    }
+			                
+			                    
+			                    /*btnEliminar.setEnabled(false);
+			                    btnModificar.setEnabled(false);*/
+			                }
+			            } else {
+			                javax.swing.JOptionPane.showMessageDialog(null, "No se ha seleccionado ninguna vacuna.");
+			            }
 					}
 				});
-				btnAgregar.setEnabled(true);
-				btnAgregar.setActionCommand("OK");
-				buttonPane.add(btnAgregar);
-				getRootPane().setDefaultButton(btnAgregar);
+				btnEliminar.setEnabled(true);
+				btnEliminar.setActionCommand("OK");
+				buttonPane.add(btnEliminar);
+				getRootPane().setDefaultButton(btnEliminar);
 				
 				btnModificar = new JButton("Modificar");
 				

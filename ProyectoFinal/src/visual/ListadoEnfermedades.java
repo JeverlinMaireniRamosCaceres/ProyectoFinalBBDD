@@ -28,6 +28,7 @@ public class ListadoEnfermedades extends JDialog {
 	private Object[] row;
 	private Enfermedad selected;
 	private JButton btnModificar;
+	private JButton btnEliminar;
 
 	public static void main(String[] args) {
 		try {
@@ -71,6 +72,7 @@ public class ListadoEnfermedades extends JDialog {
 				index = table.getSelectedRow();
 				if (index >= 0) {
 					btnModificar.setEnabled(true);
+					btnEliminar.setEnabled(true);
 					String codigo = table.getValueAt(index, 0).toString();
 					selected = EnfermedadCRUD.buscarEnfermedadPorCodigo(codigo);
 				}
@@ -99,7 +101,36 @@ public class ListadoEnfermedades extends JDialog {
 		buttonPane.add(btnModificar);
 		getRootPane().setDefaultButton(btnModificar);
 
-		JButton btnEliminar = new JButton("Eliminar");
+		btnEliminar = new JButton("Eliminar");
+		btnEliminar.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+	            if (index >= 0 && selected != null) {
+	                int confirm = javax.swing.JOptionPane.showConfirmDialog(
+	                    null,
+	                    "¿Estás seguro de que deseas eliminar esta enfermedad?",
+	                    "Confirmación de eliminación",
+	                    javax.swing.JOptionPane.YES_NO_OPTION
+	                );
+
+	                if (confirm == javax.swing.JOptionPane.YES_OPTION) {
+	                    //ClinicaMedica.getInstance().eliminarCita(selected);
+	                    if(EnfermedadCRUD.eliminarEnfermedad(selected.getIdEnfermedad())) {
+		                    javax.swing.JOptionPane.showMessageDialog(null, "Enfermedad eliminada con éxito.");
+		                    loadEnfermedades();
+	                    } else {
+		                    javax.swing.JOptionPane.showMessageDialog(null, "Ocurrio un error al intentar eliminar la enfermedad.");
+	                    }
+	                
+	                    
+	                    /*btnEliminar.setEnabled(false);
+	                    btnModificar.setEnabled(false);*/
+	                }
+	            } else {
+	                javax.swing.JOptionPane.showMessageDialog(null, "No se ha seleccionado ninguna enfermedad.");
+	            }
+			}
+		});
 		btnEliminar.setEnabled(false);
 		buttonPane.add(btnEliminar);
 

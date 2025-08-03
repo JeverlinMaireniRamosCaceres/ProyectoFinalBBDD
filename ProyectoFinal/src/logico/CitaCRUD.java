@@ -8,6 +8,8 @@ import java.sql.SQLException;
 import java.sql.Time;
 import java.util.ArrayList;
 
+import javax.swing.JOptionPane;
+
 public class CitaCRUD {
 
 	// INSERTAR
@@ -107,6 +109,27 @@ public class CitaCRUD {
 	        return false;
 	    }
 	}
+	
+	// DELETE
+    public static boolean eliminarCita(String idCita) {
+        String sql = "DELETE FROM Cita WHERE idCita = ?";
+        
+        try (Connection conn = PruebaConexionBBDD.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            
+            stmt.setString(1, idCita);
+            int filasAfectadas = stmt.executeUpdate();
+            
+            return filasAfectadas > 0;
+            
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, 
+                "Error al eliminar cita: " + e.getMessage(), 
+                "Error", 
+                JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+    }
 
 	
 }

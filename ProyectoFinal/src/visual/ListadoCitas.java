@@ -123,13 +123,18 @@ public class ListadoCitas extends JDialog {
 			                );
 
 			                if (confirm == javax.swing.JOptionPane.YES_OPTION) {
-			                    ClinicaMedica.getInstance().eliminarCita(selected);
-			                    javax.swing.JOptionPane.showMessageDialog(null, "Cita eliminada con éxito.");
+			                    //ClinicaMedica.getInstance().eliminarCita(selected);
+			                    if(CitaCRUD.eliminarCita(selected.getIdCita())) {
+				                    javax.swing.JOptionPane.showMessageDialog(null, "Cita eliminada con éxito.");
+				                    loadCitas();
+			                    } else {
+				                    javax.swing.JOptionPane.showMessageDialog(null, "Ocurrio un error al intentar eliminar la cita.");
+			                    }
+			                
 			                    
-			                    loadCitas();
 			
-			                    btnEliminar.setEnabled(false);
-			                    btnModificar.setEnabled(false);
+			                   /* btnEliminar.setEnabled(false);
+			                    btnModificar.setEnabled(false);*/
 			                }
 			            } else {
 			                javax.swing.JOptionPane.showMessageDialog(null, "No se ha seleccionado ninguna cita.");

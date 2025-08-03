@@ -213,5 +213,88 @@ public class EnfermedadCRUD {
             return -1;
         }
     }
+    
+    public static boolean eliminarEnfermedad(String idEnfermedad) {
+        // verificar si tiene relacion con algun paciente
+        if (tienePacientesAsociados(idEnfermedad)) {
+            JOptionPane.showMessageDialog(null, 
+                "No se puede eliminar la enfermedad porque está asociada a pacientes.",
+                "Error de integridad", 
+                JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        
+        // verificar si tiene relacion con alguna consulta
+        if (tieneConsultasAsociadas(idEnfermedad)) {
+            JOptionPane.showMessageDialog(null, 
+                "No se puede eliminar la enfermedad porque está asociada a consultas médicas.",
+                "Error de integridad", 
+                JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        
+        // si esa enfermedad no esta asociada con mas nada, se elimina normal
+        String sql = "DELETE FROM Enfermedad WHERE idEnfermedad = ?";
+        
+        try (Connection conn = PruebaConexionBBDD.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            
+            stmt.setString(1, idEnfermedad);
+            int filasAfectadas = stmt.executeUpdate();
+            
+            if (filasAfectadas > 0) {
+
+                return true;
+            } else {
+
+                return false;
+            }
+            
+        } catch (SQLException e) {
+
+            return false;
+        }
+    }
+    
+    private static boolean tienePacientesAsociados(String idEnfermedad) {
+        String sql = "SELECT COUNT(*) AS total FROM Paciente_Enfermedad WHERE idEnfermedad = ?";
+        
+        try (Connection conn = PruebaConexionBBDD.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            
+            stmt.setString(1, idEnfermedad);
+            ResultSet rs = stmt.executeQuery();
+            
+            if (rs.next()) {
+                return rs.getInt("total") > 0;
+            }
+            
+        } catch (SQLException e) {
+            System.err.println("Error al verificar pacientes asociados: " + e.getMessage());
+        }
+        
+        return false;
+    }
+    
+    private static boolean tieneConsultasAsociadas(String idEnfermedad) {
+        String sql = "SELECT COUNT(*) AS total FROM Consulta_Enfermedad WHERE idEnfermedad = ?";
+        
+        try (Connection conn = PruebaConexionBBDD.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            
+            stmt.setString(1, idEnfermedad);
+            ResultSet rs = stmt.executeQuery();
+            
+            if (rs.next()) {
+                return rs.getInt("total") > 0;
+            }
+            
+        } catch (SQLException e) {
+            System.err.println("Error al verificar consultas asociadas: " + e.getMessage());
+        }
+        
+        return false;
+    }
+    
 
 }

@@ -106,6 +106,57 @@ public class VacunaCRUD {
             return false;
         }
     }
+    
+    // DELETE
+    public static boolean eliminarVacuna(String idVacuna) {
+        // se verifica si tiene registros en Historial_Vacuna
+        if (tieneAplicacionesRegistradas(idVacuna)) {
+            JOptionPane.showMessageDialog(null, 
+                "No se puede eliminar la vacuna porque tiene aplicaciones registradas en pacientes.",
+                "Error de integridad", 
+                JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        
+        // si no tiene registros, se elimina
+        String sql = "DELETE FROM Vacuna WHERE idVacuna = ?";
+        
+        try (Connection conn = PruebaConexionBBDD.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            
+            stmt.setString(1, idVacuna);
+            int filasAfectadas = stmt.executeUpdate();
+            
+            if (filasAfectadas > 0) {
+                return true;
+            } else {
+                return false;
+            }
+            
+        } catch (SQLException e) {
+            return false;
+        }
+    }
+    
+    private static boolean tieneAplicacionesRegistradas(String idVacuna) {
+        String sql = "SELECT COUNT(*) AS total FROM Historial_Vacuna WHERE idVacuna = ?";
+        
+        try (Connection conn = PruebaConexionBBDD.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            
+            stmt.setString(1, idVacuna);
+            ResultSet rs = stmt.executeQuery();
+            
+            if (rs.next()) {
+                return rs.getInt("total") > 0;
+            }
+            
+        } catch (SQLException e) {
+            System.err.println("Error al verificar aplicaciones de vacuna: " + e.getMessage());
+        }
+        
+        return false;
+    }
 
 
 	
