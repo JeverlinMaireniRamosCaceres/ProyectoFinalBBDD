@@ -5,8 +5,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -19,6 +21,7 @@ import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 
 import logico.ClinicaMedica;
+import logico.PruebaConexionBBDD;
 import logico.Vacuna;
 import logico.VacunaCRUD;
 
@@ -161,7 +164,7 @@ public class ListadoVacunasGeneral extends JDialog {
 		}
 		loadVacunas();
 	}
-	private void loadVacunas() {
+	/*private void loadVacunas() {
 	    SimpleDateFormat dateFormatter = new SimpleDateFormat("dd/MM/yyyy");
 	    modelo.setRowCount(0);
 
@@ -181,5 +184,41 @@ public class ListadoVacunasGeneral extends JDialog {
 	        row[5] = vacunas.getCantidad();
 	        modelo.addRow(row);
 	    }
+	}*/
+	
+	private void loadVacunas() {
+	    modelo.setRowCount(0);
+	    SimpleDateFormat dateFormatter = new SimpleDateFormat("dd/MM/yyyy");
+
+	    String sql = "SELECT v.idVacuna, v.nombre, v.fechaVencimiento, v.cant, " +
+	                 "tv.nombre AS nombreTipo, f.nombre AS nombreFabricante " +
+	                 "FROM Vacuna v " +
+	                 "JOIN Tipo_Vacuna tv ON v.idTipoVacuna = tv.idTipoVacuna " +
+	                 "JOIN Fabricante f ON v.idFabricante = f.idFabricante";
+
+	    try (Connection conn = PruebaConexionBBDD.getConnection();
+	         Statement stmt = conn.createStatement();
+	         ResultSet rs = stmt.executeQuery(sql)) {
+
+	        while (rs.next()) {
+	            Object[] row = new Object[6];
+	            row[0] = rs.getString("idVacuna");
+	            row[1] = (rs.getDate("fechaVencimiento") != null)
+	                    ? dateFormatter.format(rs.getDate("fechaVencimiento"))
+	                    : "Fecha no disponible";
+	            row[2] = rs.getString("nombre");
+	            row[3] = rs.getString("nombreTipo");
+	            row[4] = rs.getString("nombreFabricante");
+	            row[5] = rs.getInt("cant");
+	            modelo.addRow(row);
+	        }
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        JOptionPane.showMessageDialog(this, 
+	            "Error al cargar vacunas desde la base de datos: " + e.getMessage(),
+	            "Error", JOptionPane.ERROR_MESSAGE);
+	    }
 	}
+
 }

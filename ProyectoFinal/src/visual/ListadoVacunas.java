@@ -5,8 +5,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.Connection;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -19,6 +19,7 @@ import javax.swing.table.DefaultTableModel;
 
 import logico.ClinicaMedica;
 import logico.Paciente;
+import logico.PruebaConexionBBDD;
 import logico.Vacuna;
 
 public class ListadoVacunas extends JDialog {
@@ -128,7 +129,7 @@ public class ListadoVacunas extends JDialog {
 		loadVacunas();
 	}
 	
-	private void loadVacunas() {
+	/*private void loadVacunas() {
 	    SimpleDateFormat dateFormatter = new SimpleDateFormat("dd/MM/yyyy");
 
 		modelo.setRowCount(0);
@@ -142,5 +143,43 @@ public class ListadoVacunas extends JDialog {
 		    row[4] = dateFormatter.format(vacunas.getFecha());
 		    modelo.addRow(row);
 		}
+	}*/
+	
+	private void loadVacunas() {
+	    modelo.setRowCount(0);
+	    SimpleDateFormat dateFormatter = new SimpleDateFormat("dd/MM/yyyy");
+
+	    String sql = "SELECT v.idVacuna, v.nombre, v.fechaVencimiento, " +
+	                 "tv.nombre AS nombreTipo, f.nombre AS nombreFabricante " +
+	                 "FROM Historial_Vacuna hv " +
+	                 "JOIN Vacuna v ON hv.idVacuna = v.idVacuna " +
+	                 "JOIN Tipo_Vacuna tv ON v.idTipoVacuna = tv.idTipoVacuna " +
+	                 "JOIN Fabricante f ON v.idFabricante = f.idFabricante " +
+	                 "WHERE hv.idPaciente = '" + paciente.getIdPersona() + "'";
+
+	    try (Connection conn = PruebaConexionBBDD.getConnection();
+	         java.sql.Statement stmt = conn.createStatement();
+	         java.sql.ResultSet rs = stmt.executeQuery(sql)) {
+
+	        while (rs.next()) {
+	            Object[] row = new Object[5];
+	            row[0] = rs.getString("idVacuna");
+	            row[1] = rs.getString("nombre");
+	            row[2] = rs.getString("nombreTipo");
+	            row[3] = rs.getString("nombreFabricante");
+	            row[4] = (rs.getDate("fechaVencimiento") != null)
+	                   ? dateFormatter.format(rs.getDate("fechaVencimiento"))
+	                   : "Fecha no disponible";
+	            modelo.addRow(row);
+	        }
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        javax.swing.JOptionPane.showMessageDialog(this,
+	            "Error al cargar vacunas del paciente: " + e.getMessage(),
+	            "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+	    }
 	}
+
+
 }
